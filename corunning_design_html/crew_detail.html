@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>coRunning - 크루 상세</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel-stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 기본/전체 스타일 (모든 페이지 동일 유지) */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding-top: 60px; 
+            color: #333333;
+            background-color: #F8F9FA; 
+        }
+
+        /* 폰트 크기 조정 */
+        h1 { font-size: 32px; color: #333333; font-weight: 700; margin: 0; } 
+        h2 { font-size: 20px; color: #333333; font-weight: 700; margin: 0; } 
+        h3 { font-size: 16px; color: #1A2F4B; font-weight: 700; margin: 0; } 
+        .body-base { font-size: 16px; } 
+        .caption-small { font-size: 14px; }
+        .extra-small { font-size: 12px; }
+
+        /* 컨텐츠 중앙 정렬 및 좌우 여백 */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px; 
+        }
+
+        /* ---------------------------------- */
+        /* 헤더 스타일 (모든 페이지 동일 유지) */
+        /* ---------------------------------- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+        }
+
+        .header-content {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 22px;
+            color: #333333;
+        }
+
+        .nav-menu a {
+            font-size: 14px;
+            color: #666666;
+            text-decoration: none;
+            margin: 0 18px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-menu a:hover {
+            color: #4A69BB;
+        }
+
+        /* ---------------------------------- */
+        /* 버튼 규격 (V6 통일) */
+        /* ---------------------------------- */
+        
+        .login-btn {
+            display: inline-flex;
+            height: 32px;
+            padding: 0 16px;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 16px; 
+            transition: background 0.2s;
+            color: #FFFFFF;
+            border: none;
+            background: #415472;
+        }
+
+        /* 표준 버튼 */
+        .standard-button {
+            height: 35px; /* 크기 줄임 */
+            padding: 0 18px; 
+            align-items: center; 
+            justify-content: center;
+            border-radius: 6px; 
+            font-size: 14px; /* 폰트 크기 줄임 */
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+        }
+
+        /* 메인 액션 버튼 (신청하기) - Run Routes Detail의 버튼과 동일 역할 */
+        .btn-main-action {
+            width: 100%; 
+            background: #4A69BB;
+            color: #FFFFFF;
+            border: none;
+            margin-top: 10px;
+            height: 40px; 
+            font-size: 15px;
+        }
+        .btn-main-action:hover {
+            background: #3B54A0;
+        }
+        
+        /* 마감/정원 초과 버튼 */
+        .btn-disabled {
+            width: 100%;
+            background: #AAAAAA;
+            color: #FFFFFF;
+            border: none;
+            cursor: not-allowed;
+            opacity: 0.8;
+            margin-top: 10px;
+            height: 40px;
+            font-size: 15px;
+        }
+        
+        /* 댓글 등록 버튼 - Run Route Detail과 통일 */
+        .comment-input-area .submit-btn {
+            padding: 0 15px;
+            background: #4A69BB; 
+            color: #FFFFFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            height: 40px;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+        
+        .comment-input-area .submit-btn:hover {
+            background: #1A2F4B;
+        }
+        
+        .comment-input-area input {
+            flex-grow: 1;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            height: 40px; 
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        /* 목록 돌아가기 버튼 (페이지 하단) */
+        .back-to-list-btn {
+            display: block;
+            width: 240px;
+            margin: 40px auto 0; 
+            height: 45px;
+            background: #415472;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 22.5px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            line-height: 45px;
+            text-align: center;
+        }
+        .back-to-list-btn:hover {
+            background: #1A2F4B;
+        }
+
+        /* ---------------------------------- */
+        /* 상세 페이지 통일 레이아웃 (Run Routes 기반) */
+        /* ---------------------------------- */
+        
+        .detail-page-wrapper {
+            padding: 50px 0 80px;
+        }
+        
+        /* 중앙 정렬 컨테이너 */
+        .post-container-inner {
+            width: 100%;
+            max-width: 1120px; 
+            margin: 0 auto;
+        }
+        
+        /* 목록 돌아가기 화살표 링크 (상단) */
+        .back-link-top {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #666666;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: color 0.2s;
+        }
+
+        /* 1. 제목 영역 (핵심 정렬 수정 부분) */
+        .route-title-area {
+            border-bottom: 1px solid #AAAAAA;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* 수직 중앙 정렬 */
+        }
+
+        .title-meta-wrapper {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* 왼쪽 그룹이 공간을 차지하도록 */
+        }
+        
+        .title-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px; /* 제목과 부가정보 사이 간격 */
+        }
+
+        .title-group h1 {
+            font-size: 32px;
+            color: #1A2F4B;
+            margin-right: 30px; 
+        }
+
+        /* 메타 정보 (작성자/등록일) */
+        .meta-info-block {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #666666;
+        }
+        
+        .meta-info-block span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .meta-info-block i {
+            color: #4A69BB;
+        }
+
+        /* 신청 버튼 그룹 (우측 끝으로 밀기) */
+        .application-action-group {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+        }
+
+
+        /* 주요 콘텐츠 영역 (2:1 레이아웃) */
+        .route-content {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        /* 좌측 영역 (2/3): 이미지/경로 */
+        .image-section {
+            flex: 2;
+            background-color: #FFFFFF; 
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            min-height: 450px;
+            position: relative;
+        }
+
+        .map-visual-area {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .map-visual-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        /* 우측 영역 (1/3): 액션 및 핵심 메타 정보 */
+        .actions-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        /* 모집 정보 박스 */
+        .recruitment-info-box {
+            background-color: #FFFFFF; 
+            border: 1px solid #EEEEEE;
+            border-radius: 8px;
+            padding: 25px;
+            line-height: 1.8;
+            font-size: 15px;
+            color: #333333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            flex-grow: 1; 
+        }
+        
+        .recruitment-info-box h2 {
+            font-weight: 700;
+            color: #1A2F4B;
+            margin-bottom: 15px;
+        }
+
+        .info-detail-group {
+            margin-bottom: 20px;
+        }
+
+        .info-detail-group p {
+            margin: 0;
+            color: #666666;
+        }
+        
+        /* 상태/인원 강조 */
+        .status-highlight {
+            font-weight: 700;
+            color: #4A69BB;
+            font-size: 16px;
+        }
+        .status-tag-small {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #FFFFFF;
+            background-color: #2ECC71;
+            margin-left: 8px;
+        }
+
+        /* 신청 안내/액션 */
+        .apply-action-box {
+            background-color: #F8F9FA;
+            border: 1px solid #DDDDDD;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .apply-action-box .extra-small {
+            color: #415472;
+            display: block;
+        }
+
+        /* 본문 내용 (전체 폭) */
+        .post-body {
+            line-height: 1.8;
+            font-size: 16px;
+            color: #333333;
+            padding: 0;
+            margin-bottom: 50px;
+        }
+        .post-body h2, .post-body h3 {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            color:#1A2F4B;
+        }
+
+        /* 4. 댓글 섹션 (Run Route Detail과 통일) */
+        .comments-section {
+            padding-top: 30px;
+            border-top: 1px solid #EEEEEE;
+        }
+
+        .comments-header h2 {
+            font-weight: 700;
+            color: #1A2F4B;
+            margin-bottom: 20px;
+        }
+
+        .comment-input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            align-items: flex-end;
+        }
+
+        .comment-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 15px 0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .comment-avatar {
+            width: 40px; 
+            height: 40px;
+            border-radius: 50%;
+            background-color: #E6E9F2; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #4A69BB;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .comment-content-area {
+            flex-grow: 1;
+        }
+
+        .comment-author-info {
+            margin-bottom: 5px;
+        }
+
+        .comment-author-info strong {
+            font-size: 14px;
+            color: #1A2F4B;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+
+        .comment-author-info .date {
+            font-size: 12px;
+            color: #AAAAAA;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #666666; 
+            margin: 0;
+        }
+        
+        /* ---------------------------------- */
+        /* 푸터 스타일 (모든 페이지 동일 유지) */
+        /* ---------------------------------- */
+        footer {
+            padding: 40px 0; 
+            background: #FFFFFF; 
+            text-align: center; 
+            font-size: 16px; 
+            color: #AAAAAA;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">coRunning</div>
+            <nav class="nav-menu">
+                <a href="#">Run Routes</a>
+                <a href="#">Crew Finder</a>
+                <a href="#">Run Log</a>
+                <a href="#">My Page</a>
+            </nav>
+            <a href="#" class="login-btn">로그인</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="detail-page-wrapper">
+
+            <div class="container post-container-inner">
+                
+                <a href="#" class="back-link-top">
+                    <i class="fas fa-arrow-left"></i> 목록으로 돌아가기
+                </a>
+                
+                <div class="route-title-area">
+                    <div class="title-meta-wrapper">
+                         <div class="title-group">
+                            <h1 style="font-size: 32px;">서울 밤도깨비 러닝 크루 정기 모집</h1>
+                        </div>
+                        <div class="meta-info-block">
+                            <span><i class="fas fa-user"></i> 작성자: 크루리더A</span>
+                            <span><i class="fas fa-clock"></i> 2025.11.25 등록</span>
+                            <span><i class="fas fa-eye"></i> 452회</span>
+                        </div>
+                    </div>
+                    
+                    <div class="application-action-group">
+                        <button class="standard-button btn-main-action" style="width: auto;">
+                            <i class="fas fa-running" style="margin-right: 5px;"></i> 크루 신청하기
+                        </button>
+                    </div>
+                    
+                    </div>
+
+                <div class="route-content">
+                    
+                    <div class="image-section">
+                         <div class="map-visual-area">
+                             <img src="https://via.placeholder.com/800x450?text=CREW+RUNNING+ROUTE+MAP" alt="크루 모집 경로 지도">
+                         </div>
+                    </div>
+                    
+                    <div class="actions-section">
+                        
+                        <div class="recruitment-info-box">
+                            <h2>크루 모집 정보</h2>
+                            
+                            <div class="info-detail-group">
+                                <p><strong>모집 상태:</strong> 
+                                    <span class="status-highlight">모집 중</span>
+                                    <span class="status-tag-small">모집 중</span>
+                                </p>
+                                <p><strong>모집 인원:</strong> 
+                                    <span class="status-highlight">5명 / 10명</span>
+                                </p>
+                            </div>
+                            
+                            <div class="info-detail-group">
+                                <p><strong>활동 지역:</strong> 서울 전역</p>
+                                <p><strong>난이도:</strong> 중급</p>
+                                <p><strong>활동 타입:</strong> 레귤러런</p>
+                            </div>
+
+                            <div class="info-detail-group" style="margin-bottom: 0;">
+                                <p><strong>마감일:</strong> 2025.12.31</p>
+                            </div>
+                        </div>
+                        
+                        <div class="apply-action-box" style="margin-bottom: 0;">
+                            <p>신청 완료 후 크루장에게 전달되며, 크루장이 개별적으로 연락드립니다.</p>
+                            <p class="extra-small">모집 인원(5/10명)이 모두 차거나 마감일이 지나면 신청이 자동으로 마감됩니다.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="post-body">
+                    <h2 style="font-size: 20px;">크루 소개 및 상세 활동 안내</h2>
+                    
+                    <p>저희 '밤도깨비 러너즈'는 매주 금요일 밤에 모여 서울의 숨겨진 야경 코스를 달리는 크루입니다. 단순한 러닝을 넘어, 활동적인 네트워킹과 도시 탐험을 즐기는 것을 목표로 합니다. 책임감 있게 참여해 주실 분들을 기다립니다.</p>
+                    
+                    <h3 style="margin-top: 30px;">주요 활동 계획 및 요구 사항</h3>
+                    <p>
+                        * **정기 모임:** 매주 금요일 저녁 8시 (장소는 매주 공지)<br>
+                        * **러닝 코스:** 7km ~ 10km 내외 (난이도 중급 기준)<br>
+                        * **모집 기간:** 2025년 12월 31일까지 (상시 지원 가능)<br>
+                        * **모집 대상:** 5km를 쉬지 않고 뛸 수 있는 중급 러너 환영!
+                    </p>
+                </div>
+                
+                
+                <section class="comments-section">
+                    <div class="comments-header">
+                        <h2>댓글 (3개)</h2>
+                    </div>
+                    <div class="comment-input-area">
+                        <input type="text" placeholder="크루 활동에 대한 문의를 남겨주세요." />
+                        <button class="submit-btn">등록</button>
+                    </div>
+                    <div class="comment-list">
+                        <div class="comment-item">
+                            <div class="comment-avatar">H</div>
+                            <div class="comment-content-area">
+                                <div class="comment-author-info">
+                                    <strong>황덕배</strong>
+                                    <span class="date">2025.12.01</span>
+                                </div>
+                                <p class="comment-text">활동 요일 변경 계획은 없으신가요? 금요일은 참여가 어려워서요 😭</p>
+                            </div>
+                        </div>
+                        <div class="comment-item">
+                            <div class="comment-avatar">C</div>
+                            <div class="comment-content-area">
+                                <div class="comment-author-info">
+                                    <strong>크루리더A</strong>
+                                    <span class="date">2025.12.02</span>
+                                </div>
+                                <p class="comment-text">현재는 금요일 고정입니다. 죄송해요! 다음에 더 많은 요일 옵션을 고려해볼게요.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <a href="#" class="back-to-list-btn">
+                    <i class="fas fa-list-ul" style="margin-right: 5px;"></i> 크루 모집 목록으로 돌아가기
+                </a>
+
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 coRunning. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

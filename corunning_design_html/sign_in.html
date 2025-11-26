@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>coRunning - My Page (통합 대시보드)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 기본/전체 스타일 (모든 페이지 동일 유지) */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding-top: 60px; 
+            color: #333333;
+            background-color: #F8F9FA; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 폰트 크기 조정 */
+        h1 { font-size: 32px; color: #333333; font-weight: 700; margin: 0; }
+        h2 { font-size: 24px; color: #1A2F4B; font-weight: 700; margin: 0; } 
+        h3 { font-size: 18px; color: #1A2F4B; font-weight: 700; margin: 0; } 
+        .body-base { font-size: 16px; } 
+        .caption-small { font-size: 14px; }
+        .extra-small { font-size: 12px; }
+
+        /* 컨텐츠 중앙 정렬 및 좌우 여백 */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px; 
+        }
+
+        /* ---------------------------------- */
+        /* 헤더 스타일 (모든 페이지 동일 유지) */
+        /* ---------------------------------- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+        }
+
+        .header-content {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 22px;
+            color: #333333;
+        }
+
+        .nav-menu a {
+            font-size: 14px;
+            color: #666666;
+            text-decoration: none;
+            margin: 0 18px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-menu a:hover {
+            color: #4A69BB;
+        }
+        
+        /* 스몰 버튼 (32px, 14px) - 로그인 버튼 규격 */
+        .login-btn {
+            display: inline-flex;
+            height: 32px;
+            padding: 0 16px;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 16px; 
+            transition: background 0.2s;
+            color: #FFFFFF;
+            border: none;
+            background: #415472;
+        }
+
+        /* ---------------------------------- */
+        /* My Page 통합 대시보드 레이아웃 */
+        /* ---------------------------------- */
+        .mypage-wrapper {
+            padding: 40px 0 80px;
+            display: flex;
+            gap: 30px;
+            max-width: 1120px; 
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+        
+        /* 좌측 메뉴 (Sidebar) */
+        .sidebar {
+            flex-shrink: 0;
+            width: 250px;
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 30px 0;
+            height: fit-content; 
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        
+        .profile-info h3 {
+            font-size: 24px; 
+            color: #1A2F4B;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .profile-info p {
+            font-size: 14px;
+            color: #666666;
+            margin: 0;
+        }
+        
+        .menu-list {
+            list-style: none;
+            padding: 0 20px;
+            margin: 0;
+        }
+        
+        .menu-list li {
+            margin-bottom: 5px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 10px;
+            text-decoration: none;
+            color: #444444;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        .menu-item i {
+            color: #4A69BB;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #EDF2FC;
+            color: #1A2F4B;
+            font-weight: 700;
+        }
+        
+        /* 로그아웃 버튼 스타일 */
+        .logout-link {
+            border-top: 1px solid #F0F0F0;
+            margin-top: 20px;
+            padding-top: 20px;
+            text-align: center;
+        }
+        .logout-link a {
+            color: #D9534F; 
+            font-weight: 500;
+            font-size: 15px;
+            text-decoration: none;
+        }
+        
+        /* 우측 메인 콘텐츠 */
+        .main-content {
+            flex-grow: 1;
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+        }
+
+        /* ---------------------------------- */
+        /* 대시보드 통계 카드 스타일 */
+        /* ---------------------------------- */
+        
+        :root { --achieve-color: #2ECC71; }
+        .dashboard-title-group h1 { font-size: 38px; color: #1A2F4B; margin-bottom: 10px; }
+        .dashboard-title-group h2 { font-size: 24px; color: #415472; margin-bottom: 10px; }
+        .stats-section-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 30px; padding-top: 10px; }
+        .stat-card { background-color: #FFFFFF; border: 1px solid #E6E9F2; border-radius: 8px; padding: 20px 10px; text-align: center; position: relative; overflow: hidden; transition: transform 0.2s; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--achieve-color); opacity: 0.05; z-index: 1; }
+        .stat-card h3 { font-size: 32px; color: var(--achieve-color); font-weight: 700; margin-bottom: 5px; position: relative; z-index: 2; }
+        .stat-card p { font-size: 14px; color: #415472; margin: 0; position: relative; z-index: 2; }
+        
+        /* ---------------------------------- */
+        /* 관리 목록 공통 스타일 */
+        /* ---------------------------------- */
+        .manage-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .action-buttons { display: flex; gap: 10px; }
+        .route-count { font-size: 16px; color: #666666; font-weight: 500; }
+        .standard-button { height: 40px; padding: 0 20px; align-items: center; justify-content: center; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; }
+        .btn-primary { background: #1A2F4B; color: #FFFFFF; border: none; }
+        .btn-secondary { background: #FFFFFF; color: #D9534F; border: 1px solid #D9534F; font-weight: 500; }
+        
+        /* ---------------------------------- */
+        /* 코스 관리 목록 (Run Routes - 가로형 카드, 이미지 없음) */
+        /* ---------------------------------- */
+        .route-list-single-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .route-manage-item {
+            display: flex;
+            background: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); 
+            border: 1px solid #EEEEEE;
+            transition: transform 0.2s, box-shadow 0.2s;
+            align-items: center;
+            padding: 20px; 
+            position: relative;
+        }
+        
+        .route-manage-item:hover {
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 카드 내부 체크박스 */
+        .card-checkbox {
+            flex-shrink: 0;
+            padding-right: 20px; 
+        }
+        
+        .card-checkbox input[type="checkbox"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #BBBBBB;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .card-checkbox input[type="checkbox"]:checked {
+            background-color: #4A69BB;
+            border-color: #4A69BB;
+        }
+        .card-checkbox input[type="checkbox"]:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            color: #FFFFFF;
+            font-size: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 정보 영역 */
+        .route-info-detail {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px; 
+        }
+        
+        .route-info-detail h3 {
+            font-size: 18px;
+            color: #1A2F4B;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .route-meta-group {
+            display: flex;
+            gap: 25px;
+            font-size: 14px;
+            color: #666666;
+            align-items: center;
+        }
+        
+        .route-meta-group span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .route-meta-group i {
+            color: #4A69BB;
+            font-size: 13px;
+        }
+        
+        /* Run Routes 목록의 타입 태그 디자인 재활용 */
+        .course-tag-manage {
+            background-color: #4A69BB;
+            color: #FFFFFF;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 4px;
+            flex-shrink: 0;
+            height: 22px;
+            display: flex;
+            align-items: center;
+        }
+        .course-tag-manage.regular {
+            background-color: #415472;
+        }
+
+        /* ---------------------------------- */
+        /* 크루 관리 목록 스타일 */
+        /* ---------------------------------- */
+        .crew-manage-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .crew-manage-card {
+            background: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); 
+            border: 1px solid #EEEEEE;
+            position: relative;
+            padding: 15px;
+        }
+        .crew-manage-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); }
+        .crew-manage-card h3 { font-size: 18px; color: #1A2F4B; margin-bottom: 5px; }
+        .crew-manage-card .crew-image-placeholder { height: 100px; background-color: #F0F3F9; margin-bottom: 15px; border-radius: 6px; display: flex; justify-content: center; align-items: center; font-size: 14px; color: #999; }
+        .crew-manage-card .recruitment-status { font-size: 14px; color: #666; margin-bottom: 10px; }
+        .crew-manage-card .status-highlight { color: #4A69BB; font-weight: 700; }
+        .crew-manage-card .status-closed { color: #AAAAAA; }
+        .crew-manage-card .action-buttons { display: flex; justify-content: space-between; margin-top: 15px; }
+        .crew-manage-card .btn-manage-app { background: #4A69BB; color: #FFFFFF; padding: 8px 12px; font-size: 13px; border: none; border-radius: 4px; }
+
+
+        /* ---------------------------------- */
+        /* 폼 요소 (프로필 수정 등에서 사용) */
+        /* ---------------------------------- */
+        .form-section-header { margin-top: 30px; margin-bottom: 25px; font-size: 20px; color: #1A2F4B; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-size: 16px; color: #333333; margin-bottom: 10px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #DDDDDD; border-radius: 6px; font-size: 15px; box-sizing: border-box; height: 48px; }
+        .form-group input:disabled { background-color: #F0F3F9; color: #AAAAAA; }
+        .meta-fields { display: flex; gap: 30px; }
+        .meta-fields .form-group { flex: 1; }
+        .address-group { display: flex; gap: 12px; align-items: flex-end; }
+        .address-group .form-group { flex-grow: 0; width: 140px; margin-bottom: 0; }
+        .address-search-btn { height: 48px; padding: 0 20px; background: #4A69BB; color: #FFFFFF; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; }
+        .action-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 40px; }
+
+
+        /* ---------------------------------- */
+        /* 푸터 스타일 (모든 페이지 동일 유지) */
+        /* ---------------------------------- */
+        footer {
+            padding: 40px 0; 
+            background: #FFFFFF; 
+            text-align: center; 
+            font-size: 16px; 
+            color: #AAAAAA;
+            margin-top: auto;
+        }
+
+    </style>
+</head>
+<body>
+
+    <script id="account-fragment-template" type="text/template">
+        <h1 style="margin-bottom: 30px;">프로필/계정 정보 수정</h1>
+        <div style="padding: 0; margin: 0; display: block; align-items: initial;">
+            <form action="#" method="post" style="width: 100%; box-shadow: none; padding: 0;">
+                
+                <h2 class="form-section-header" style="margin-top: 0;">필수 정보</h2>
+                
+                <div class="form-group">
+                    <label for="name">이름 <span>(수정 불가)</span></label>
+                    <input type="text" id="name" value="황덕배" disabled style="background-color: #F0F3F9;">
+                </div>
+                
+                <div class="form-group">
+                    <label for="birthdate">생년월일 <span>(수정 불가)</span></label>
+                    <input type="date" id="birthdate" value="1990-01-01" disabled style="background-color: #F0F3F9;">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">이메일 (ID)</label>
+                    <input type="email" id="email" value="dbhwang@example.com">
+                </div>
+
+                <h2 class="form-section-header">연락처 및 주소 수정</h2>
+
+                <div class="form-group">
+                    <label for="phone">연락처</label>
+                    <input type="text" id="phone" value="010-1234-5678">
+                </div>
+
+                <div class="form-group">
+                    <label for="post-code">주소</label>
+                    <div class="address-group" style="display: flex; gap: 12px; align-items: flex-end;">
+                        <div class="form-group" style="flex-grow: 0; width: 140px; margin-bottom: 0;">
+                             <input type="text" id="post-code" placeholder="우편번호" value="06000" disabled style="background-color: #F0F3F9;">
+                        </div>
+                        <button type="button" class="address-search-btn">주소 검색</button>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 10px; margin-bottom: 0;">
+                        <input type="text" id="address-main" placeholder="기본 주소" value="서울시 강남구 테헤란로 123" disabled style="background-color: #F0F3F9;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 10px; margin-bottom: 25px;">
+                        <input type="text" id="address-detail" placeholder="상세 주소 (예: 501호)" value="501호" style="background-color: #FFFFFF;">
+                    </div>
+                </div>
+
+                <h2 class="form-section-header">비밀번호 변경</h2>
+                <p class="body-base" style="color:#666666; margin-bottom: 20px;">보안 강화를 위해 주기적으로 비밀번호를 변경해주세요.</p>
+
+                <div class="form-group">
+                    <label for="current-password">현재 비밀번호 <span>*</span></label>
+                    <input type="password" id="current-password" required>
+                </div>
+
+                <div class="meta-fields">
+                    <div class="form-group">
+                        <label for="new-password">새 비밀번호 <span>*</span></label>
+                        <input type="password" id="new-password" placeholder="8자 이상 입력" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">새 비밀번호 확인 <span>*</span></label>
+                        <input type="password" id="confirm-password" required>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="register-btn" style="height: 40px; padding: 0 25px; border-radius: 6px; font-size: 15px; font-weight: 700; background-color: #1A2F4B; color: #FFFFFF; border: none;">수정 완료</button>
+                    <button type="button" class="cancel-btn" style="height: 40px; padding: 0 25px; border-radius: 6px; font-size: 15px; font-weight: 700; background-color: #FFFFFF; color: #415472; border: 1px solid #415472;">취소</button>
+                </div>
+            </form>
+        </div>
+    </script>
+
+    <script id="myroutes-fragment-template" type="text/template">
+        <h1 style="margin-bottom: 30px;">내가 등록한 코스 관리</h1>
+        <div style="padding: 0; margin: 0;">
+
+            <div class="manage-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <p class="route-count">총 4개의 코스 등록됨</p>
+                
+                <div class="action-buttons" style="display: flex; gap: 10px;">
+                    <button class="standard-button btn-secondary" style="background: #FFFFFF; color: #D9534F; border: 1px solid #D9534F; height: 40px; padding: 0 20px; border-radius: 6px; font-weight: 500;">
+                        <i class="fas fa-trash-alt" style="margin-right: 5px;"></i> 선택 삭제
+                    </button>
+                </div>
+            </div>
+
+            <section class="route-list-single-column">
+                
+                <div class="route-manage-item">
+                    <div class="card-checkbox">
+                        <input type="checkbox" id="manage-route-1">
+                    </div>
+                    
+                    <div class="route-info-detail">
+                        <h3 style="font-size: 18px; color: #1A2F4B; margin-bottom: 8px;">청계천 따라 달리기
+                             <span class="course-tag-manage">드로잉런</span>
+                        </h3>
+                        <div class="route-meta-group">
+                            <span style="display: inline-flex; align-items: center; margin-right: 15px;"><i class="fas fa-map-marker-alt" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 서울 종로구</span>
+                            <span style="display: inline-flex; align-items: center;"><i class="fas fa-route" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 6.5 KM</span>
+                            <span style="display: inline-flex; align-items: center;"><i class="fas fa-shoe-prints" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 초급</span>
+                            <span class="likes" style="display: inline-flex; align-items: center; margin-left: auto;"><i class="fas fa-heart" style="color: #D9534F; margin-right: 5px; font-size: 13px;"></i> 123</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="route-manage-item">
+                    <div class="card-checkbox"><input type="checkbox" id="manage-route-2"></div>
+                    
+                    <div class="route-info-detail">
+                        <h3 style="font-size: 18px; color: #1A2F4B; margin-bottom: 8px;">남산 팔각정 정복
+                             <span class="course-tag-manage regular">레귤러런</span>
+                        </h3>
+                        <div class="route-meta-group">
+                            <span style="display: inline-flex; align-items: center; margin-right: 15px;"><i class="fas fa-map-marker-alt" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 서울 용산구</span>
+                            <span style="display: inline-flex; align-items: center;"><i class="fas fa-route" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 8.8 KM</span>
+                            <span style="display: inline-flex; align-items: center;"><i class="fas fa-shoe-prints" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 고급</span>
+                            <span class="likes" style="display: inline-flex; align-items: center; margin-left: auto;"><i class="fas fa-heart" style="color: #D9534F; margin-right: 5px; font-size: 13px;"></i> 45</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="route-manage-item">
+                    <div class="card-checkbox"><input type="checkbox" id="manage-route-3"></div>
+                    
+                    <div class="route-info-detail">
+                        <h3 style="font-size: 18px; color: #1A2F4B; margin-bottom: 8px;">광안리 해변 힐링 런
+                             <span class="course-tag-manage">드로잉런</span>
+                        </h3>
+                        <div class="route-meta-group">
+                            <span style="display: inline-flex; align-items: center; margin-right: 15px;"><i class="fas fa-map-marker-alt" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 부산 수영구</span>
+                            <span style="display: inline-flex; align-items: center;"><i class="fas fa-route" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 5.0 KM</span>
+                            <span style="display: inline-flex; align-items: center;"><i class="fas fa-shoe-prints" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 초급</span>
+                            <span class="likes" style="display: inline-flex; align-items: center; margin-left: auto;"><i class="fas fa-heart" style="color: #D9534F; margin-right: 5px; font-size: 13px;"></i> 201</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="route-manage-item">
+                    <div class="card-checkbox"><input type="checkbox" id="manage-route-4"></div>
+                    
+                    <div class="route-info-detail">
+                        <h3 style="font-size: 18px; color: #1A2F4B; margin-bottom: 8px;">아주 긴 코스 제목 테스트를 위한 코스
+                             <span class="course-tag-manage regular">레귤러런</span>
+                        </h3>
+                        <div class="route-meta-group">
+                            <span style="display: inline-flex; align-items: center; margin-right: 15px;"><i class="fas fa-map-marker-alt" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 경기 수원</span>
+                            <span style="display: inline-flex; align-items: center;"><i class="fas fa-route" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 12.0 KM</span>
+                            <span style="display: inline-flex; align-items: center;"><i class="fas fa-shoe-prints" style="color: #4A69BB; margin-right: 5px; font-size: 13px;"></i> 중급</span>
+                            <span class="likes" style="display: inline-flex; align-items: center; margin-left: auto;"><i class="fas fa-heart" style="color: #D9534F; margin-right: 5px; font-size: 13px;"></i> 88</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+
+        </div>
+    </script>
+
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">coRunning</div>
+            <nav class="nav-menu">
+                <a href="#">Run Routes</a>
+                <a href="#">Crew Finder</a>
+                <a href="#">Run Log</a>
+                <a href="#">My Page</a>
+            </nav>
+            <a href="#" class="login-btn">로그인</a>
+        </div>
+    </header>
+
+    <main class="container mypage-wrapper">
+        
+        <div class="sidebar">
+            <div class="profile-section">
+                <div class="profile-info">
+                    <h3 style="font-size: 24px;">황덕배님</h3>
+                    <p>coRunning과 120일째</p>
+                </div>
+            </div>
+
+            <ul class="menu-list">
+                <li><a href="#dashboard" class="menu-item active" data-content-id="dashboard"><i class="fas fa-chart-line"></i> 러닝 통계 대시보드</a></li>
+                <li><a href="#account" class="menu-item" data-content-id="account"><i class="fas fa-user-cog"></i> 프로필/계정 정보 수정</a></li>
+                <li><a href="#myroutes" class="menu-item" data-content-id="myroutes"><i class="fas fa-route"></i> 내가 등록한 코스 관리</a></li>
+                <li><a href="#mycrew" class="menu-item" data-content-id="mycrew"><i class="fas fa-users"></i> 크루 모집 관리</a></li>
+            </ul>
+            
+            <div class="logout-link">
+                <a href="#"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+            </div>
+
+        </div>
+
+        <div class="main-content" id="main-content-area">
+            
+            <div id="dashboard" class="content-block active">
+                <div class="dashboard-title-group">
+                    <h1>My Page</h1>
+                    <h2>황덕배님의 러닝 통계 대시보드</h2>
+                </div>
+                
+                <h2 style="margin-bottom: 15px; margin-top: 30px;">누적 기록</h2>
+                <div class="stats-section-grid">
+                    <div class="stat-card"><h3>123.4 KM</h3><p>총 누적 거리</p></div>
+                    <div class="stat-card"><h3>45 회</h3><p>총 완주 횟수</p></div>
+                    <div class="stat-card"><h3>7.8 KM</h3><p>평균 러닝 거리</p></div>
+                    <div class="stat-card"><h3>45 분</h3><p>평균 완주 시간</p></div>
+                </div>
+            </div>
+            
+        </div>
+
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 coRunning. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainContentArea = document.getElementById('main-content-area');
+            const menuItems = document.querySelectorAll('.menu-item');
+
+            // 템플릿 콘텐츠 가져오기 (스크립트 태그 내부에서)
+            const accountFragment = document.getElementById('account-fragment-template').innerHTML;
+            const myRoutesFragment = document.getElementById('myroutes-fragment-template').innerHTML;
+            
+            // 대시보드 초기 내용 저장 (클릭 시 복원용)
+            const dashboardFragmentHTML = document.getElementById('dashboard').innerHTML;
+            
+            // 모든 콘텐츠 블록 숨김 함수
+            function hideAllContent() {
+                mainContentArea.innerHTML = '';
+            }
+            
+            // 콘텐츠 로드 및 전환 함수
+            function loadContent(targetId) {
+                hideAllContent();
+                let contentHTML = '';
+                const myCrewFragment = '<h1 style="margin-bottom: 30px;">크루 모집 관리</h1><p>크루 모집 관리 콘텐츠 준비 중...</p>'; // 임시 콘텐츠
+                
+                switch(targetId) {
+                    case 'dashboard':
+                        contentHTML = dashboardFragmentHTML;
+                        break;
+                    case 'account':
+                        contentHTML = accountFragment;
+                        break;
+                    case 'myroutes':
+                        contentHTML = myRoutesFragment;
+                        break;
+                    case 'mycrew':
+                        contentHTML = myCrewFragment;
+                        break;
+                    default:
+                        contentHTML = '<h1>페이지를 찾을 수 없습니다.</h1>';
+                }
+                
+                // 새로운 콘텐츠를 삽입
+                mainContentArea.innerHTML = contentHTML;
+            }
+
+            // 메뉴 클릭 이벤트 리스너
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-content-id');
+
+                    // 1. 모든 메뉴에서 active 클래스 제거 및 클릭한 메뉴 활성화
+                    menuItems.forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 2. 콘텐츠 로드 및 전환
+                    loadContent(targetId);
+                });
+            });
+            
+            // 페이지 초기화 (초기 대시보드를 제외한 다른 콘텐츠 블록 제거)
+            mainContentArea.innerHTML = `<div id="dashboard" class="content-block active">${dashboardFragmentHTML}</div>`;
+        });
+    </script>
+
+</body>
+</html>

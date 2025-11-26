@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>coRunning - Crew Finder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel-stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 기본/전체 스타일 (모든 페이지 동일 유지) */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding-top: 60px; 
+            color: #333333;
+            background-color: #F8F9FA; 
+        }
+
+        /* 폰트 크기 조정 */
+        h1 { font-size: 32px; color: #333333; font-weight: 700; margin: 0; }
+        h2 { font-size: 20px; color: #333333; font-weight: 700; margin: 0; } 
+        h3 { font-size: 18px; color: #1A2F4B; font-weight: 700; margin: 0; } 
+        .body-base { font-size: 16px; } 
+        .caption-small { font-size: 14px; }
+        .extra-small { font-size: 12px; }
+
+        /* 컨텐츠 중앙 정렬 및 좌우 여백 */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px; 
+        }
+
+        /* ---------------------------------- */
+        /* 헤더 스타일 (모든 페이지 동일 유지) */
+        /* ---------------------------------- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+        }
+
+        .header-content {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 22px;
+            color: #333333;
+        }
+
+        .nav-menu a {
+            font-size: 14px;
+            color: #666666;
+            text-decoration: none;
+            margin: 0 18px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-menu a:hover {
+            color: #4A69BB;
+        }
+
+        /* ---------------------------------- */
+        /* 버튼 규격 (V6 통일) */
+        /* ---------------------------------- */
+        
+        /* 스몰 버튼 (32px, 14px) - 로그인, 조회 */
+        .login-btn, .search-button {
+            display: inline-flex;
+            height: 32px; 
+            padding: 0 16px; 
+            justify-content: center;
+            align-items: center;
+            font-size: 14px; 
+            font-weight: 500;
+            border-radius: 16px; 
+            transition: background 0.2s;
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .login-btn {
+            background: #415472;
+            border-radius: 16px;
+        }
+        .login-btn:hover {
+            background: #1A2F4B;
+        }
+        
+        .search-button {
+            background: #415472;
+            border-radius: 4px; 
+            margin-left: 15px;
+            font-weight: 500;
+            padding: 0 15px;
+        }
+        .search-button:hover {
+            background: #354560;
+        }
+
+        /* 스탠다드 버튼 (40px, 15px) - 크루 모집 등록 (Run Routes와 통일) */
+        .register-crew-btn {
+            display: inline-flex; 
+            height: 40px; 
+            padding: 0 20px; 
+            align-items: center; 
+            justify-content: center;
+            background: #1A2F4B;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px; 
+            font-size: 15px; 
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .register-crew-btn:hover {
+            background: #112035;
+        }
+
+        /* ---------------------------------- */
+        /* 타이틀 및 등록 안내 (Run Routes 스타일 통일) */
+        /* ---------------------------------- */
+        .page-header-area {
+            padding: 40px 0 20px; 
+        }
+        
+        .registration-notice {
+            margin-bottom: 30px;
+            background: #FFFFFF; 
+            border-left: 6px solid #4A69BB; /* Run Routes와 동일한 포인트 라인 */
+            border-radius: 8px; 
+            padding: 25px 35px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .registration-notice p {
+            font-size: 16px; 
+            color: #4A69BB;
+            font-weight: 700; /* Run Routes와 동일하게 강조 */
+        }
+        
+        /* ---------------------------------- */
+        /* 필터 영역 */
+        /* ---------------------------------- */
+        .filter-controls-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eeeeee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .filter-group-wrapper {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #666666;
+        }
+
+        /* Select Box Custom Design (Run Routes와 통일) */
+        .custom-select {
+            position: relative;
+            display: inline-block;
+            transition: box-shadow 0.2s;
+            border-radius: 4px;
+        }
+        
+        .custom-select:hover {
+            box-shadow: 0 0 0 2px rgba(74, 105, 187, 0.2);
+        }
+        
+        .custom-select select {
+            padding: 7px 28px 7px 10px; 
+            border: 1px solid #DDDDDD;
+            border-radius: 4px; 
+            font-size: 14px; 
+            color: #333333;
+            appearance: none; 
+            background-color: #FFFFFF;
+            cursor: pointer;
+            min-width: 100px; 
+            height: 32px; 
+            box-shadow: none;
+            transition: border-color 0.2s;
+        }
+        
+        .custom-select select:focus {
+            outline: none;
+        }
+
+        .custom-select::after {
+            content: '\f0d7';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            right: 10px; 
+            margin-top: -5px;
+            font-size: 10px; 
+            color: #415472; 
+            pointer-events: none; 
+        }
+
+        .crew-count {
+            font-size: 16px;
+            color: #666666;
+            font-weight: 500;
+        }
+
+        /* ---------------------------------- */
+        /* 크루 목록 카드 (4열 그리드) */
+        /* ---------------------------------- */
+        
+        .crew-section-title {
+            font-size: 24px;
+            color: #1A2F4B;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-top: 20px;
+        }
+
+        .crew-list-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .crew-card {
+            background: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); 
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s; 
+            cursor: pointer;
+            position: relative;
+        }
+
+        .crew-card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-image-wrapper {
+            height: 120px;
+            background-color: #E6E9F2;
+            position: relative;
+        }
+        
+        /* 모집 상태 태그 */
+        .recruitment-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #FFFFFF;
+            z-index: 10;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .tag-recruiting { background-color: #4A69BB; }
+        .tag-closed { background-color: #AAAAAA; }
+        .tag-urgent { background-color: #E74C3C; }
+        
+        .crew-content {
+            padding: 15px;
+            position: relative;
+        }
+        
+        /* 크루 타입/지역/난이도 태그 */
+        .crew-info-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .crew-info-tags span {
+            font-size: 11px;
+            font-weight: 500;
+            color: #415472;
+            background-color: #F0F3F9;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .crew-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1A2F4B;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        /* 한 줄 소개 제거 -> 공백 CSS 삭제 */
+        
+        /* 모집 인원 정보 스타일 추가 */
+        .crew-recruitment-status {
+            font-size: 14px;
+            font-weight: 700;
+            color: #4A69BB;
+            margin-bottom: 8px; /* 다른 메타 정보와의 간격 */
+        }
+        .crew-recruitment-status span {
+            font-weight: 500;
+            color: #666666;
+        }
+
+        /* 작성자 및 기간 */
+        .crew-meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #666666;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .crew-meta-item strong {
+            font-weight: 700;
+            color: #333333;
+            margin-right: 5px;
+        }
+
+        /* 좋아요/댓글 수 (Run Routes와 유사한 간결한 디자인) */
+        .crew-interaction {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            margin-top: 15px;
+            border-top: 1px solid #F0F0F0;
+            padding-top: 10px;
+        }
+
+        .crew-interaction .count-item {
+            font-size: 13px;
+            color: #AAAAAA; 
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        .crew-interaction .count-item i {
+            color: #CCCCCC; 
+            transition: color 0.2s;
+        }
+        
+        .more-button-wrapper {
+            text-align: center;
+            margin: 40px 0 80px;
+        }
+
+        .more-button {
+            display: inline-flex; 
+            height: 40px; 
+            padding: 0 30px; 
+            align-items: center; 
+            justify-content: center;
+            background: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            border-radius: 6px; 
+            font-size: 15px; 
+            font-weight: 500;
+            color: #415472;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        
+        .more-button:hover {
+            background: #F0F3F9;
+            border-color: #C9D8EB;
+        }
+
+
+        /* ---------------------------------- */
+        /* 푸터 스타일 (모든 페이지 동일 유지) */
+        /* ---------------------------------- */
+        footer {
+            padding: 40px 0; 
+            background: #FFFFFF; 
+            text-align: center; 
+            font-size: 16px; 
+            color: #AAAAAA;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">coRunning</div>
+            <nav class="nav-menu">
+                <a href="#">Run Routes</a>
+                <a href="#">Crew Finder</a>
+                <a href="#">Run Log</a>
+                <a href="#">My Page</a>
+            </nav>
+            <a href="#" class="login-btn">로그인</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="page-header-area">
+            <h1 style="font-size: 32px;">Crew Finder</h1>
+        </section>
+        
+        <div class="registration-notice">
+            <p>함께 달릴 크루를 모집하고 싶으신가요?</p>
+            <button class="register-crew-btn">
+                <i class="fas fa-user-plus" style="margin-right: 5px;"></i> 크루 모집 등록
+            </button>
+        </div>
+        
+        <section class="filter-controls-area">
+            <div class="filter-group-wrapper">
+                <div class="filter-group">
+                    <label for="filter-region">지역</label>
+                    <div class="custom-select">
+                        <select id="filter-region">
+                            <option>전체</option>
+                            <option>서울</option>
+                            <option>경기</option>
+                            <option>부산</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="filter-difficulty">난이도</label>
+                    <div class="custom-select">
+                        <select id="filter-difficulty">
+                            <option>전체</option>
+                            <option>초급</option>
+                            <option>중급</option>
+                            <option>고급</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-type">종류</label>
+                    <div class="custom-select">
+                        <select id="filter-type">
+                            <option>전체</option>
+                            <option>레귤러런</option>
+                            <option>드로잉런</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-status">상태</label>
+                    <div class="custom-select">
+                        <select id="filter-status">
+                            <option>전체</option>
+                            <option>모집 중</option>
+                            <option>모집 마감</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="search-button">
+                    <i class="fas fa-search" style="margin-right: 5px;"></i> 조회
+                </button>
+            </div>
+
+            <p class="crew-count">총 12개의 크루</p>
+        </section>
+
+        <h2 class="crew-section-title">정기 러닝 크루</h2>
+        <section class="crew-list-grid">
+            
+            <div class="crew-card">
+                <div class="card-image-wrapper">
+                    <div class="recruitment-tag tag-recruiting">모집 중</div>
+                    </div>
+                <div class="crew-content">
+                    <div class="crew-info-tags">
+                        <span>서울</span><span>초급</span><span>드로잉런</span>
+                    </div>
+                    <h3>관악 야간 드로잉런 모집</h3>
+                    <div class="crew-recruitment-status">
+                        모집 인원: <span style="color:#4A69BB;">5명</span> / <span>10명</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>작성자</strong><span>크루리더A</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>모집 기간</strong><span>25.12.01 ~ 25.12.31</span>
+                    </div>
+                    <div class="crew-interaction">
+                        <span class="count-item">4 <i class="fas fa-heart"></i></span>
+                        <span class="count-item">6 <i class="fas fa-comment-dots"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="crew-card">
+                <div class="card-image-wrapper" style="background-color: #415472;">
+                    <div class="recruitment-tag tag-closed">모집 마감</div>
+                    </div>
+                <div class="crew-content">
+                    <div class="crew-info-tags">
+                        <span>경기</span><span>고급</span><span>레귤러런</span>
+                    </div>
+                    <h3>분당 10K 페이서 모집</h3>
+                    <div class="crew-recruitment-status">
+                        모집 인원: <span style="color:#AAAAAA;">10명</span> / <span>10명</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>작성자</strong><span>베테랑B</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>모집 기간</strong><span>25.11.01 ~ 25.11.30</span>
+                    </div>
+                    <div class="crew-interaction">
+                        <span class="count-item">12 <i class="fas fa-heart"></i></span>
+                        <span class="count-item">10 <i class="fas fa-comment-dots"></i></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="crew-card">
+                <div class="card-image-wrapper">
+                    <div class="recruitment-tag tag-recruiting">모집 중</div>
+                    </div>
+                <div class="crew-content">
+                    <div class="crew-info-tags">
+                        <span>서울</span><span>초급</span><span>레귤러런</span>
+                    </div>
+                    <h3>여의도 한강 런치런</h3>
+                    <div class="crew-recruitment-status">
+                        모집 인원: <span style="color:#4A69BB;">8명</span> / <span>12명</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>작성자</strong><span>런치러너</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>모집 기간</strong><span>상시 모집</span>
+                    </div>
+                    <div class="crew-interaction">
+                        <span class="count-item">7 <i class="fas fa-heart"></i></span>
+                        <span class="count-item">4 <i class="fas fa-comment-dots"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="crew-card">
+                <div class="card-image-wrapper" style="background-color: #C9D8EB;">
+                    <div class="recruitment-tag tag-recruiting">모집 중</div>
+                    </div>
+                <div class="crew-content">
+                    <div class="crew-info-tags">
+                        <span>부산</span><span>중급</span><span>레귤러런</span>
+                    </div>
+                    <h3>광안리 일몰 마라톤</h3>
+                    <div class="crew-recruitment-status">
+                        모집 인원: <span style="color:#4A69BB;">7명</span> / <span>8명</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>작성자</strong><span>해운대주민</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>모집 기간</strong><span>25.12.10 ~ 25.12.25</span>
+                    </div>
+                    <div class="crew-interaction">
+                        <span class="count-item">9 <i class="fas fa-heart"></i></span>
+                        <span class="count-item">8 <i class="fas fa-comment-dots"></i></span>
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+        
+        <div class="more-button-wrapper">
+            <button class="more-button">더보기</button>
+        </div>
+
+
+        <h2 class="crew-section-title">번개런</h2>
+        <section class="crew-list-grid">
+            
+            <div class="crew-card">
+                <div class="card-image-wrapper" style="background-color: #4A69BB; color: #FFFFFF;">
+                    <div class="recruitment-tag tag-urgent">오늘 20시!</div>
+                    </div>
+                <div class="crew-content">
+                    <div class="crew-info-tags">
+                        <span>서울</span><span>초급</span><span>레귤러런</span>
+                    </div>
+                    <h3>뚝섬유원지 즉석 5K</h3>
+                    <div class="crew-recruitment-status">
+                        모집 인원: <span style="color:#4A69BB;">3명</span> / <span>5명</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>작성자</strong><span>뚝섬러너</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>모집 기간</strong><span>오늘 마감</span>
+                    </div>
+                    <div class="crew-interaction">
+                        <span class="count-item">2 <i class="fas fa-heart"></i></span>
+                        <span class="count-item">3 <i class="fas fa-comment-dots"></i></span>
+                    </div>
+                </div>
+            </div>
+            
+             <div class="crew-card">
+                <div class="card-image-wrapper">
+                    <div class="recruitment-tag tag-closed">모집 마감</div>
+                    </div>
+                <div class="crew-content">
+                    <div class="crew-info-tags">
+                        <span>경기</span><span>고급</span><span>드로잉런</span>
+                    </div>
+                    <h3>광교호수공원 하트런</h3>
+                    <div class="crew-recruitment-status">
+                        모집 인원: <span style="color:#AAAAAA;">1명</span> / <span>1명</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>작성자</strong><span>드로잉마스터</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>모집 기간</strong><span>마감</span>
+                    </div>
+                    <div class="crew-interaction">
+                        <span class="count-item">8 <i class="fas fa-heart"></i></span>
+                        <span class="count-item">12 <i class="fas fa-comment-dots"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="crew-card">
+                <div class="card-image-wrapper">
+                    <div class="recruitment-tag tag-urgent">오늘 19시!</div>
+                    </div>
+                <div class="crew-content">
+                    <div class="crew-info-tags">
+                        <span>서울</span><span>초급</span><span>드로잉런</span>
+                    </div>
+                    <h3>강남역 주변 드로잉런</h3>
+                    <div class="crew-recruitment-status">
+                        모집 인원: <span style="color:#4A69BB;">6명</span> / <span>7명</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>작성자</strong><span>강남러너</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>모집 기간</strong><span>오늘 마감</span>
+                    </div>
+                    <div class="crew-interaction">
+                        <span class="count-item">5 <i class="fas fa-heart"></i></span>
+                        <span class="count-item">7 <i class="fas fa-comment-dots"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="crew-card">
+                <div class="card-image-wrapper">
+                    <div class="recruitment-tag tag-closed">모집 마감</div>
+                    </div>
+                <div class="crew-content">
+                    <div class="crew-info-tags">
+                        <span>서울</span><span>중급</span><span>레귤러런</span>
+                    </div>
+                    <h3>잠실 호수공원 야간런</h3>
+                    <div class="crew-recruitment-status">
+                        모집 인원: <span style="color:#AAAAAA;">15명</span> / <span>15명</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>작성자</strong><span>잠실야간러너</span>
+                    </div>
+                    <div class="crew-meta-item">
+                        <strong>모집 기간</strong><span>마감</span>
+                    </div>
+                    <div class="crew-interaction">
+                        <span class="count-item">10 <i class="fas fa-heart"></i></span>
+                        <span class="count-item">9 <i class="fas fa-comment-dots"></i></span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        
+        <div class="more-button-wrapper">
+            <button class="more-button">더보기</button>
+        </div>
+
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 coRunning. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

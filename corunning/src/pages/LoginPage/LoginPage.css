@@ -1,0 +1,83 @@
+/* Layout */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 0;
+    background-color: #F8F9FA;
+    min-height: 100vh;
+}
+
+.login-box {
+    width: 560px;
+    background: #fff;
+    padding: 40px 50px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.login-box h2 {
+    font-size: 32px;
+    text-align: center;
+    color: #1A2F4B;
+    margin-bottom: 25px;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #444;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    height: 48px;
+    padding: 0 12px;
+    border: 1px solid #CCCCCC;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    border-color: #4A69BB;
+}
+
+/* Login Button */
+.login-submit-btn {
+    width: 100%;
+    height: 48px;
+    background: #4A69BB;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+    margin-top: 25px;
+    cursor: pointer;
+}
+
+.login-submit-btn:hover {
+    opacity: 0.9;
+}
+
+/* Sign Up 안내 */
+.signup-guide {
+    margin-top: 20px;
+    text-align: center;
+    color: #666;
+}
+
+.signup-guide .link-text {
+    color: #4A69BB;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 5px;
+}
