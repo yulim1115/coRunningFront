@@ -4,6 +4,9 @@
 @import "./variables.css";
 
 /* Reset */
+.page-container {
+  padding-top: 60px;
+}
 
 * {
     margin: 0;

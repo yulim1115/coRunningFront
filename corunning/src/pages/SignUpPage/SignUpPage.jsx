@@ -98,7 +98,7 @@ function SignUpPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <p className="hint-text">영문, 숫자, 특수문자 포함 8자 이상</p>
+            {/* <p className="hint-text">영문, 숫자, 특수문자 포함 8자 이상</p> */}
           </div>
 
           {/* 비밀번호 확인 */}
