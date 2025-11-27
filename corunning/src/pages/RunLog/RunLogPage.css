@@ -1,0 +1,236 @@
+/* ===========================
+   Run Log 전체 레이아웃
+=========================== */
+.runlog-wrapper {
+    width: 100%;
+    padding: 40px 0 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.runlog-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+/* ===========================
+   섹션 박스
+=========================== */
+.section-box {
+    background: #fff;
+    padding: 30px 30px 40px;
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.section-header h3 {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.section-header span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #4a67ff;
+}
+
+/* 새 기록 추가 버튼 */
+.btn-add {
+    background: #436CFF;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ===========================
+   코스·기록 카드 공통 스타일
+=========================== */
+.course-item {
+    background: #f8faff;
+    padding: 20px 24px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+}
+
+.course-row-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.course-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.course-title {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.meta {
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    gap: 14px;
+}
+
+/* 오른쪽 버튼·정보 영역 */
+.course-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.photo-btn {
+    display: inline-block;
+    background: #fff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #555;
+    font-size: 14px;
+}
+
+.date {
+    font-size: 14px;
+    color: #444;
+}
+
+.time {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+}
+
+/* ===========================
+   버튼 스타일
+=========================== */
+.btn-input,
+.btn-edit {
+    background: #436CFF;
+    color: white;
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-input.active {
+    background: #e53e3e;
+}
+
+.btn-delete {
+    background: #ff5e5e15;
+    border: 1px solid #ff5656;
+    color: #ff3131;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-submit {
+    background: #436CFF;
+    color: white;
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+/* ===========================
+   입력 / 수정 폼
+=========================== */
+.input-form,
+.input-form-large,
+.edit-form {
+    margin-top: 16px;
+    background: #f8faff;
+    padding: 22px 26px;
+    border-radius: 12px;
+    border: 1px dashed #b4c7ff;
+}
+
+.form-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 18px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-row label {
+    color: #555;
+    font-size: 14px;
+}
+
+.form-row input[type="text"],
+.form-row input[type="date"] {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+/* 인증 사진 업로드 박스 */
+.upload-box {
+    padding: 12px;
+    border: 1px dashed #7e9eff;
+    border-radius: 8px;
+    text-align: center;
+    background: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ===========================
+   그리드 (사진과 동일한 배치)
+=========================== */
+.two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 15px;
+}
+
+.three-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 15px;
+}
+
+/* ===========================
+   Empty Text
+=========================== */
+.empty {
+    text-align: center;
+    color: #777;
+    margin-top: 24px;
+}
