@@ -55,9 +55,9 @@ function App() {
                     {/* <Route path="/routes/:id" element={<RunRoutesDetailPage />} /> */}
     
                     {/* Crew Finder */}
-                    {/* <Route path="/crews" element={<CrewListPage />} /> */}
-                    {/* <Route path="/crews/:id" element={<CrewDetailPage />} /> */}
-                    {/* <Route path="/crews/create" element={<CrewCreatePage />} /> */}
+                    <Route path="/crews" element={<CrewListPage />} />
+                    <Route path="/crews/:id" element={<CrewDetailPage />} />
+                    <Route path="/crews/create" element={<CrewCreatePage />} />
     
                     {/* Run Log */}
                     <Route path="/runlog" element={<RunLogPage />} />
