@@ -24,7 +24,7 @@ body {
     color: var(--color-text-dark);
     background-color: var(--color-bg);
     line-height: 1.6;
-    padding-top: var(--header-height);
+    padding-top: 0 !important; 
 }
 
 a {

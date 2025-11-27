@@ -1,523 +1,141 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>coRunning - Run Route Detail</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* 기본/전체 스타일 (모든 페이지 동일 유지) */
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            margin: 0;
-            padding-top: 60px;
-            color: #333333;
-            background-color: #F8F9FA;
-        }
+// src/pages/RunRoutes/RunRoutesDetailPage.jsx
 
-        /* 폰트 크기 조정 */
-        h1 { font-size: 32px; color: #333333; font-weight: 700; margin: 0; } 
-        h2 { font-size: 20px; color: #333333; font-weight: 700; margin: 0; } 
-        h3 { font-size: 16px; color: #1A2F4B; font-weight: 700; margin: 0; } 
-        .body-base { font-size: 16px; } 
-        .caption-small { font-size: 14px; }
-        .extra-small { font-size: 12px; }
+import React from "react";
+import "./RunRoutesDetailPage.css";
 
-        /* 컨텐츠 중앙 정렬 및 좌우 여백 */
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 40px; 
-        }
+import {
+  FaArrowLeft,
+  FaMapMarkerAlt,
+  FaRunning,
+  FaRulerHorizontal,
+  FaUser,
+  FaThumbsUp,
+  FaBookmark,
+} from "react-icons/fa";
 
-        /* ---------------------------------- */
-        /* 헤더 스타일 (모든 페이지 동일 유지) */
-        /* ---------------------------------- */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: #FFFFFF;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            z-index: 1000;
-        }
+function RunRoutesDetailPage() {
+  return (
+    <main className="detail-page">
 
-        .header-content {
-            height: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+      {/* 🔙 목록 돌아가기 */}
+      <div className="back-link-wrapper">
+        <a href="/routes" className="back-link">
+          <FaArrowLeft /> 목록으로 돌아가기
+        </a>
+      </div>
 
-        .logo {
-            font-weight: 700;
-            font-size: 22px;
-            color: #333333;
-        }
+      {/* 제목 영역 */}
+      <section className="title-section">
+        <h1 className="route-title">
+          청계천 따라 달리기 <span className="route-type">(드로잉런)</span>
+        </h1>
 
-        .nav-menu a {
-            font-size: 14px;
-            color: #666666;
-            text-decoration: none;
-            margin: 0 18px;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .nav-menu a:hover {
-            color: #4A69BB;
-        }
-
-        /* ---------------------------------- */
-        /* 버튼 규격 */
-        /* ---------------------------------- */
-        
-        .login-btn {
-            display: inline-flex;
-            height: 32px;
-            padding: 0 16px;
-            justify-content: center;
-            align-items: center;
-            background: #415472;
-            color: #FFFFFF;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 16px; 
-            transition: background 0.2s;
-        }
-
-        .login-btn:hover {
-            background: #1A2F4B;
-        }
-        
-        .action-button {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 40px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            gap: 10px;
-        }
-
-        /* 추천/저장 버튼 */
-        .action-button.secondary {
-            background-color: #FFFFFF;
-            color: #4A69BB;
-            border: 1px solid #4A69BB;
-            font-weight: 500;
-        }
-        
-        .action-button.secondary:hover {
-            background-color: #F8F9FA;
-        }
-
-        /* 댓글 등록 버튼 */
-        .comment-input-area .submit-btn {
-            padding: 0 15px;
-            background: #4A69BB; 
-            color: #FFFFFF;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 15px;
-            height: 40px;
-            flex-shrink: 0;
-            font-weight: 700;
-        }
-        
-        .comment-input-area .submit-btn:hover {
-            background: #1A2F4B;
-        }
-        
-        .comment-input-area input {
-            flex-grow: 1;
-            padding: 8px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            height: 40px; 
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        /* 목록 돌아가기 버튼 (페이지 하단) */
-        .back-to-list-btn {
-            display: block;
-            width: 240px;
-            margin: 40px auto 0; 
-            height: 45px;
-            background: #415472;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 22.5px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s;
-            text-decoration: none;
-            line-height: 45px;
-            text-align: center;
-        }
-
-        .back-to-list-btn:hover {
-            background: #1A2F4B;
-        }
-
-        /* ---------------------------------- */
-        /* 상세 페이지 레이아웃 */
-        /* ---------------------------------- */
-        .detail-page-wrapper {
-            padding: 50px 0 80px;
-        }
-
-        /* 목록 돌아가기 화살표 링크 (상단) */
-        .back-link-top {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            color: #666666;
-            font-size: 15px;
-            font-weight: 500;
-            margin-bottom: 20px;
-            transition: color 0.2s;
-        }
-        .back-link-top:hover {
-            color: #4A69BB;
-        }
-        .back-link-top i {
-            font-size: 16px;
-        }
-
-
-        .route-title-area {
-            margin-bottom: 30px;
-            border-bottom: 1px solid #AAAAAA;
-            padding-bottom: 15px;
-        }
-
-        .route-title-area h1 {
-            color: #1A2F4B;
-            font-weight: 700;
-            margin-bottom: 8px;
-            font-size: 32px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .route-title-area .course-type {
-            font-size: 20px; 
-            color: #666666; 
-            font-weight: 500;
-            margin-left: 15px;
-            flex-shrink: 0;
-        }
-        
-        .route-meta {
-            display: flex;
-            gap: 30px;
-            font-size: 15px;
-            color: #666666;
-            font-weight: 400;
-        }
-        
-        .route-meta span {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .route-meta i {
-            color: #4A69BB;
-        }
-
-        .route-content {
-            display: flex;
-            gap: 40px;
-            margin-bottom: 50px;
-        }
-        
-        .image-section {
-            flex: 2;
-            background-color: #FFFFFF; 
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            min-height: 450px;
-            position: relative;
-            display: flex;
-            flex-direction: column; /* 이미지/데이터를 수직으로 배치 */
-        }
-
-        .map-visual-area {
-            flex-grow: 1;
-        }
-
-        .map-visual-area img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px 10px 0 0; /* 상단만 둥글게 */
-        }
-        
-        /* 코스 경로 데이터 표시 영역 (하단) */
-        .route-data-display {
-            padding: 15px;
-            background-color: #F8F8F8;
-            border-top: 1px solid #EEEEEE;
-            border-radius: 0 0 10px 10px; /* 하단만 둥글게 */
-        }
-        
-        .route-data-display textarea {
-            width: 100%;
-            height: 100px;
-            border: 1px solid #DDDDDD;
-            padding: 10px;
-            font-size: 12px;
-            font-family: monospace;
-            background: #FFFFFF;
-            resize: none;
-            box-sizing: border-box;
-        }
-
-        .actions-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* 코스 상세 설명 박스 */
-        .route-description-box {
-            background-color: #FFFFFF; 
-            border: 1px solid #eeeeee;
-            border-radius: 8px;
-            padding: 25px;
-            line-height: 1.8;
-            font-size: 15px;
-            color: #333333;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-            flex-grow: 1; 
-        }
-        
-        .route-description-box h2 {
-            font-weight: 700;
-            color: #1A2F4B;
-            margin-bottom: 15px;
-        }
-        
-        .route-description-box p {
-            margin-bottom: 10px;
-            color: #666666;
-        }
-
-        /* 댓글 섹션 */
-        .comments-section {
-            padding-top: 30px;
-            border-top: 1px solid #eeeeee;
-        }
-
-        .comments-header h2 {
-            font-weight: 700;
-            color: #1A2F4B;
-            margin-bottom: 20px;
-        }
-
-        .comment-input-area {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            align-items: flex-end;
-        }
-
-        .comment-list {
-            margin-top: 20px;
-        }
-
-        .comment-item {
-            border-bottom: 1px solid #f0f0f0;
-            padding: 15px 0;
-            display: flex;
-            gap: 15px;
-        }
-
-        .comment-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #E6E9F2; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #4A69BB;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .comment-author-info strong {
-            font-size: 14px;
-            color: #1A2F4B;
-            font-weight: 700;
-        }
-
-        .comment-author-info .date {
-            font-size: 12px;
-            color: #AAAAAA;
-        }
-
-        .comment-text {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #666666;
-            margin-bottom: 10px;
-        }
-        
-        /* ---------------------------------- */
-        /* 푸터 스타일 (모든 페이지 동일 유지) */
-        /* ---------------------------------- */
-        footer {
-            padding: 40px 0; 
-            background: #FFFFFF; 
-            text-align: center; 
-            font-size: 16px; 
-            color: #AAAAAA;
-        }
-
-    </style>
-</head>
-<body>
-
-    <header class="header">
-        <div class="container header-content">
-            <div class="logo">coRunning</div>
-            <nav class="nav-menu">
-                <a href="#">Run Routes</a>
-                <a href="#">Crew Finder</a>
-                <a href="#">Run Log</a>
-                <a href="#">My Page</a>
-            </nav>
-            <a href="#" class="login-btn">로그인</a>
+        <div className="meta-row">
+          <span><FaMapMarkerAlt /> 서울 종로구</span>
+          <span><FaRunning /> 초급</span>
+          <span><FaRulerHorizontal /> 6.5 KM</span>
+          <span><FaUser /> 작성자: 황떡배 님</span>
         </div>
-    </header>
+      </section>
 
-    <main class="container">
-        <div class="detail-page-wrapper">
-            
-            <a href="#" class="back-link-top">
-                <i class="fas fa-arrow-left"></i> 목록으로 돌아가기
-            </a>
+      {/* 메인 2단 레이아웃 */}
+      <section className="main-layout">
 
-            <div class="route-title-area">
-                <h1>
-                    청계천 따라 달리기 
-                    <span class="course-type">(드로잉런)</span>
-                </h1>
-                <div class="route-meta">
-                    <span><i class="fas fa-map-marker-alt"></i> 서울 종로구</span>
-                    <span><i class="fas fa-shoe-prints"></i> 난이도: 초급</span>
-                    <span><i class="fas fa-route"></i> 6.5 KM</span>
-                    <span><i class="fas fa-user"></i> 작성자: 황덕배 님</span> 
-                </div>
-            </div>
+        {/* 왼쪽: 지도 + 데이터 */}
+        <div className="left-area">
+          <div className="map-box">Running Route Map Image</div>
 
-            <div class="route-content">
-                <div class="image-section">
-                    <div class="map-visual-area">
-                         <img src="https://via.placeholder.com/800x350?text=Running+Route+Map+Visualization" alt="Running Route Map Image">
-                    </div>
-                    
-                    <div class="route-data-display">
-                        <p class="extra-small" style="color: #666; margin-bottom: 5px;">[코스 경로 데이터]</p>
-                        <textarea readonly>
-[{lat: 37.5665, lng: 126.9780},
- {lat: 37.5670, lng: 126.9790},
- {lat: 37.5675, lng: 126.9800},
- ...]
-                        </textarea>
-                    </div>
-                </div>
-                
-                <div class="actions-section">
-                    <div class="action-buttons">
-                        <button class="action-button secondary"><i class="fas fa-thumbs-up"></i> 추천 (123)</button>
-                        <button class="action-button secondary"><i class="fas fa-bookmark"></i> 저장 (45)</button>
-                    </div>
-                    <div class="route-description-box">
-                        <h2>코스 소개</h2>
-                        <p>맑은 청계천을 따라 쭉 달리는 코스입니다. 시원한 물소리를 들으며 도심 속 힐링을 경험할 수 있습니다.</p>
-                        <p>초보자도 부담 없이 즐길 수 있는 평탄한 코스로, 가볍게 몸을 풀거나 상쾌한 기분 전환이 필요할 때 추천합니다.</p>
-                        <p>
-                            **팁:** 저녁 시간에 방문하면 청계천의 야경을 배경으로 더욱 로맨틱한 러닝을 즐길 수 있습니다. 중간중간 쉴 수 있는 벤치와 편의점도 있어 편리합니다.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <section class="comments-section">
-                <div class="comments-header">
-                    <h2>댓글 (3개)</h2>
-                </div>
-                <div class="comment-input-area">
-                    <input type="text" placeholder="이 코스에 대한 답글을 남겨주세요." />
-                    <button class="submit-btn">등록</button>
-                </div>
-                <div class="comment-list">
-                    <div class="comment-item">
-                        <div class="comment-avatar">H</div>
-                        <div class="comment-content-area">
-                            <div class="comment-author-info">
-                                <strong>황덕배</strong>
-                                <span class="date">2025.11.24</span>
-                            </div>
-                            <p class="comment-text">깔끔하고 달리기도 편했어요! 좋아요. 다음에도 또 이용할게요.</p>
-                        </div>
-                    </div>
-                    <div class="comment-item">
-                        <div class="comment-avatar">R</div>
-                        <div class="comment-content-area">
-                            <div class="comment-author-info">
-                                <strong>러너123</strong>
-                                <span class="date">2025.11.24</span>
-                            </div>
-                            <p class="comment-text">코스 등록 감사합니다. 밤에 뛰기 정말 좋네요!</p>
-                        </div>
-                    </div>
-                    <div class="comment-item">
-                        <div class="comment-avatar">C</div>
-                        <div class="comment-content-area">
-                            <div class="comment-author-info">
-                                <strong>coRunning운영진</strong>
-                                <span class="date">2025.11.25</span>
-                            </div>
-                            <p class="comment-text">칭찬해주셔서 감사합니다! 더욱 다양한 코스를 제공할 수 있도록 노력하겠습니다. 😊</p>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="#" class="back-to-list-btn">
-                    <i class="fas fa-list-ul" style="margin-right: 5px;"></i> 코스 목록으로 돌아가기
-                </a>
-            </section>
+          <div className="route-data-box">
+{`[{ lat: 37.5665, lng: 126.9780 },
+ { lat: 37.5650, lng: 126.9770 },
+ { lat: 37.5640, lng: 126.9800 },
+ ... ]`}
+          </div>
         </div>
+
+        {/* 오른쪽: 추천/저장/소개 */}
+        <div className="right-area">
+
+          <div className="recommend-row">
+            <button className="action-btn"><FaThumbsUp /> 추천 (123)</button>
+            <button className="action-btn"><FaBookmark /> 저장 (45)</button>
+          </div>
+
+          <div className="course-summary-box">
+            <h2>코스 소개</h2>
+            <p>
+              맑은 청계천 따라 뚝뚝 달리는 코스입니다. 시원한 물소리를 들으며 도심 속 힐링을 경험할 수 있습니다.
+            </p>
+            <p>
+              초보자도 부담 없이 즐길 수 있는 평탄한 코스로, 가볍게 몸을 풀거나 상쾌한 기분 전환이 필요할 때 추천합니다.
+            </p>
+            <p>
+              **Tip:** 저녁 시간에 방문하면 청계천의 야경을 배경으로 더욱 로맨틱한 러닝을 즐길 수 있습니다.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 댓글 영역 */}
+      <section className="comment-section">
+
+        <h2 className="comment-title">댓글 (3개)</h2>
+
+        <div className="comment-input-row">
+          <input type="text" placeholder="이 코스에 대한 답글을 남겨주세요.." />
+          <button className="comment-submit-btn">등록</button>
+        </div>
+
+        <div className="comment-list">
+
+          <div className="comment-item">
+            <div className="avatar">정</div>
+            <div>
+              <div className="comment-meta">
+                <strong>정떡덕</strong>
+                <span className="date">2025.11.26</span>
+              </div>
+              <p className="comment-text">
+                깔끔하고 달리기도 편했어요! 좋아요. 다음에도 또 이용할게요.
+              </p>
+            </div>
+          </div>
+
+          <div className="comment-item">
+            <div className="avatar">R</div>
+            <div>
+              <div className="comment-meta">
+                <strong>러너123</strong>
+                <span className="date">2025.11.24</span>
+              </div>
+              <p className="comment-text">코스 등록 감사합니다. 맵이 너무 잘 되어있어요!</p>
+            </div>
+          </div>
+
+          <div className="comment-item">
+            <div className="avatar">C</div>
+            <div>
+              <div className="comment-meta">
+                <strong>coRunning운영진</strong>
+                <span className="date">2025.11.25</span>
+              </div>
+              <p className="comment-text">
+                청계천코스 감사합니다! 더 다양한 코스를 제공할 수 있도록 노력하겠습니다 😄
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* 목록으로 돌아가기 */}
+      <div className="bottom-btn-wrapper">
+        <a href="/routes" className="back-list-btn">코스 목록으로 돌아가기</a>
+      </div>
+
     </main>
-    
-    <footer>
-        <p>&copy; 2025 coRunning. All rights reserved.</p>
-    </footer>
+  );
+}
 
-</body>
-</html>
+export default RunRoutesDetailPage;

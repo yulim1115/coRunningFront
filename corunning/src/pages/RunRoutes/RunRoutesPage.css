@@ -2,7 +2,7 @@
 .routes-container {
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 40px auto;
     padding: 0 40px;
     font-family: 'Noto Sans KR', sans-serif;
     color: #333;
@@ -196,7 +196,7 @@ h1 {
 }
 
 .likes svg {
-    color:#D9534F;
+    color:#415472;
 }
 
 /* 텍스트 정렬 */

@@ -17,7 +17,7 @@ import SignUpPage from "./pages/SignUpPage/SignUpPage";
 
 // Feature Pages
 import RunRoutesListPage from "./pages/RunRoutes/RunRoutesListPage";
-// import RunRoutesDetailPage from "./pages/RunRoutes/RunRoutesDetailPage";
+import RunRoutesDetailPage from "./pages/RunRoutes/RunRoutesDetailPage";
 
 // import CrewListPage from "./pages/CrewFinder/CrewListPage";
 // import CrewDetailPage from "./pages/CrewFinder/CrewDetailPage";
@@ -44,7 +44,7 @@ function App() {
     
                     {/* Run Routes */}
                     <Route path="/routes" element={<RunRoutesListPage />} />
-                    {/* <Route path="/routes/:id" element={<RunRoutesDetailPage />} /> */}
+                    <Route path="/routes/:id" element={<RunRoutesDetailPage />} />
     
                     {/* Crew Finder */}
                     {/* <Route path="/crews" element={<CrewListPage />} /> */}

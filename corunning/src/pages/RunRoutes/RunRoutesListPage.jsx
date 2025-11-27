@@ -6,7 +6,7 @@ import {
   FaSearch,
   FaMapMarkerAlt,
   FaRunning,
-  FaHeart,
+  FaThumbsUp,
   FaChevronDown,
 } from "react-icons/fa";
 
@@ -166,7 +166,7 @@ function RunRoutesListPage() {
               </div>
 
               <span className="likes">
-                <FaHeart /> {route.likes}
+                <FaThumbsUp /> {route.likes}
               </span>
             </div>
           </div>

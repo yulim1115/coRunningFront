@@ -1,0 +1,248 @@
+/* 전체 */
+.detail-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    font-family: "Noto Sans KR", sans-serif;
+    color: #333;
+}
+
+/*  목록으로 돌아가기 */
+/* .back-link-wrapper {
+    margin-bottom: 15px;
+}
+
+.back-link {
+    font-size: 14px;
+    color: #666;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.back-link:hover {
+    color: #4A69BB;
+} */
+
+/* 제목 + 타입 태그 */
+.title-section {
+    margin-bottom: 25px;
+}
+
+.title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.route-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* 리스트 페이지와 동일한 태그 */
+.course-tag {
+    padding: 3px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.course-tag.drawing {
+    background-color: #4A69BB;
+}
+.course-tag.regular {
+    background-color: #1A2F4B;
+}
+
+/* 메타 정보 */
+.meta-row {
+    margin-top: 10px;
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+    color: #777;
+}
+.meta-row span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1;
+}
+.meta-row svg {
+    color: #4A69BB;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* 2단 레이아웃 */
+.main-layout {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+/* 왼쪽 영역 */
+.left-area {
+    flex: 2;
+}
+
+.map-box {
+    background: #dfe7f5;
+    border-radius: 10px;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #415472;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+/* 오른쪽 영역 */
+.right-area {
+    flex: 1;
+}
+
+/* 추천 · 저장 버튼 */
+.recommend-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px 0;
+    border: 1px solid #d0d6e2;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    color: #415472;
+    font-weight: 600;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+.action-btn:hover {
+    background: #e8eef9;
+}
+
+/* 코스 소개 박스 */
+.course-summary-box {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #eee;
+}
+.course-summary-box h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #1A2F4B;
+}
+.course-summary-box p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+}
+
+/* 댓글 영역 */
+.comment-section {
+    border-top: 1px solid #eee;
+    padding-top: 25px;
+}
+
+.comment-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    color: #1A2F4B;
+}
+
+/* 댓글 입력 */
+.comment-input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+.comment-input-row input {
+    flex: 1;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0 10px;
+    font-size: 14px;
+}
+.comment-submit-btn {
+    width: 70px;
+    background: #4A69BB;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.comment-submit-btn:hover {
+    background: #1A2F4B;
+}
+
+/* 댓글 목록 */
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.comment-item {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 15px;
+}
+
+.comment-meta {
+    font-size: 14px;
+    color: #1A2F4B;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.comment-meta .date {
+    margin-left: 10px;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.comment-text {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* 하단 버튼 - 회색, 작게 */
+.bottom-btn-wrapper {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.back-list-btn {
+    display: inline-block;
+    width: 100px;
+    height: 36px;
+    line-height: 36px;
+    background: #c3c3c3;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 18px;
+    font-weight: 600;
+    font-size: 14px;
+}
+.back-list-btn:hover {
+    background: #cfcfcf;
+}
