@@ -25,6 +25,11 @@ import RunRoutesCreatePage from "./pages/RunRoutes/RunRoutesCreatePage";
 // import CrewDetailPage from "./pages/CrewFinder/CrewDetailPage";
 // import CrewCreatePage from "./pages/CrewFinder/CrewCreatePage";
 
+import RunLogPage from "./pages/RunLog/RunLogPage";
+import CrewListPage from "./pages/CrewFinder/CrewListPage";
+import CrewDetailPage from "./pages/CrewFinder/CrewDetailPage";
+import CrewCreatePage from "./pages/CrewFinder/CrewCreatePage";
+
 // import RunLogPage from "./pages/RunLog/RunLogPage";
 // import MyPage from "./pages/MyPage/MyPage";
 
@@ -53,6 +58,12 @@ function App() {
                     {/* <Route path="/crews" element={<CrewListPage />} /> */}
                     {/* <Route path="/crews/:id" element={<CrewDetailPage />} /> */}
                     {/* <Route path="/crews/create" element={<CrewCreatePage />} /> */}
+    
+                    {/* Run Log */}
+                    <Route path="/runlog" element={<RunLogPage />} />
+                    <Route path="/crews" element={<CrewListPage />} />
+                    <Route path="/crews/:id" element={<CrewDetailPage />} />
+                    <Route path="/crews/create" element={<CrewCreatePage />} />
     
                     {/* Run Log */}
                     {/* <Route path="/runlog" element={<RunLogPage />} /> */}
