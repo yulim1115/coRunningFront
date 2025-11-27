@@ -1,0 +1,212 @@
+/* 기본 */
+.routes-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    /* padding-top: 0px; */
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
+}
+
+/* ---------------- 헤더 구역 ---------------- */
+.page-header-area {
+    padding: 20px 0 10px;
+}
+
+h1 {
+    font-size: 32px;
+    margin: 0;
+    font-weight: 700;
+}
+
+/* ---------------- 등록 안내 ---------------- */
+.registration-notice {
+    margin-bottom: 30px;
+    background: #fff;
+    border-left: 6px solid #4A69BB;
+    border-radius: 8px;
+    padding: 25px 35px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.register-course-btn {
+    display: inline-flex;
+    height: 40px;
+    padding: 0 20px;
+    align-items: center;
+    background: #1A2F4B;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.register-course-btn:hover {
+    background: #112035;
+}
+
+/* ---------------- 필터 구역 ---------------- */
+.filter-controls-area {
+    padding-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 30px;
+}
+
+.filter-group-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.filter-group label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 6px;
+}
+
+/* Select 디자인 */
+.custom-select {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-select select {
+    padding: 7px 28px 7px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    appearance: none;
+    cursor: pointer;
+    background: #fff;
+    height: 32px;
+}
+
+.custom-select::after {
+    content: '\f0d7';
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 10px;
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform: translateY(-50%);
+    color:#415472;
+}
+
+.search-button {
+    height: 32px;
+    padding: 0 15px;
+    background: #415472;
+    color: #fff;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+/* ---------------- 리스트 ---------------- */
+.route-item {
+    background: #fff;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.25s;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+
+.route-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+/* 카드 본문 */
+.route-card-content {
+    padding: 16px 25px 10px 25px;
+}
+
+.card-title-group {
+    display: flex;
+    align-items: center; 
+    gap: 12px;
+    min-height: 32px;
+}
+
+.card-title-group h3 {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+}
+
+
+/* 태그 */
+.course-tag {
+    padding: 3px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.course-tag.drawing {
+    background-color: #4A69BB;
+}
+
+.course-tag.regular {
+    background-color: #1A2F4B;
+}
+
+/* ---------------- 카드 메타 ---------------- */
+.card-meta-details-wrapper {
+    background: #FBFBFB;
+    padding: 15px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.card-meta-details {
+    display: flex;
+    gap: 25px;
+    font-size: 14px;
+    color:#666;
+}
+
+.card-meta-details i {
+    font-size: 13px;
+    color: #4A69BB;
+}
+
+/* 난이도 색상 */
+.difficulty-low { color:#5CB85C; font-weight:700; }
+.difficulty-mid { color:#F0AD4E; font-weight:700; }
+.difficulty-high { color:#D9534F; font-weight:700; }
+
+.likes {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.likes i {
+    color:#D9534F;
+}
+
+/* 아이콘 배치 */
+.card-meta-details span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.card-meta-details i {
+    font-size: 13px;
+    color: #4A69BB;
+    margin-right: 2px;
+}

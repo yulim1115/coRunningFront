@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Global Styles
 import "./styles/Global.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 // Layout
 import Header from "./components/layout/Header";
@@ -16,7 +17,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 
 // Feature Pages
-// import RunRoutesListPage from "./pages/RunRoutes/RunRoutesListPage";
+import RunRoutesListPage from "./pages/RunRoutes/RunRoutesListPage";
 // import RunRoutesDetailPage from "./pages/RunRoutes/RunRoutesDetailPage";
 
 // import CrewListPage from "./pages/CrewFinder/CrewListPage";
@@ -43,7 +44,7 @@ function App() {
                     <Route path="/signup" element={<SignUpPage />} />
     
                     {/* Run Routes */}
-                    {/* <Route path="/routes" element={<RunRoutesListPage />} /> */}
+                    <Route path="/routes" element={<RunRoutesListPage />} />
                     {/* <Route path="/routes/:id" element={<RunRoutesDetailPage />} /> */}
     
                     {/* Crew Finder */}
