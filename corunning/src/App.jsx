@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Global Styles
 import "./styles/Global.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 
 // Layout
 import Header from "./components/layout/Header";

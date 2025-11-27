@@ -1,6 +1,15 @@
 import React from "react";
 import "./RunRoutesPage.css";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faRoute,
+  faMagnifyingGlass,
+  faMapMarkerAlt,
+  faPersonRunning,
+  faHeart,
+} from "@fortawesome/free-solid-svg-icons";
+
 const sampleRoutes = [
   {
     id: 1,
@@ -41,7 +50,7 @@ function RunRoutesListPage() {
       <div className="registration-notice">
         <p>나만의 특별한 러닝 코스를 공유하고 싶으신가요?</p>
         <button className="register-course-btn">
-          <i className="fas fa-route"></i>&nbsp; 코스 등록하기
+          <FontAwesomeIcon icon={faRoute} /> &nbsp; 코스 등록하기
         </button>
       </div>
 
@@ -93,7 +102,7 @@ function RunRoutesListPage() {
           </div>
 
           <button className="search-button">
-            <i className="fas fa-search"></i>&nbsp; 조회
+            <FontAwesomeIcon icon={faMagnifyingGlass} /> &nbsp; 조회
           </button>
         </div>
 
@@ -123,10 +132,11 @@ function RunRoutesListPage() {
             <div className="card-meta-details-wrapper">
               <div className="card-meta-details">
                 <span>
-                  <i className="fas fa-map-marker-alt"></i> {route.region}
+                  <FontAwesomeIcon icon={faMapMarkerAlt} /> {route.region}
                 </span>
+
                 <span>
-                  <i className="fas fa-shoe-prints"></i>
+                  <FontAwesomeIcon icon={faPersonRunning} />
                   <span
                     className={`difficulty-text ${
                       route.difficulty === "초급"
@@ -139,13 +149,14 @@ function RunRoutesListPage() {
                     {route.difficulty}
                   </span>
                 </span>
+
                 <span>
-                  <i className="fas fa-route"></i> {route.distance}
+                  <FontAwesomeIcon icon={faRoute} /> {route.distance}
                 </span>
               </div>
 
               <span className="likes">
-                <i className="fas fa-heart"></i> {route.likes}
+                <FontAwesomeIcon icon={faHeart} /> {route.likes}
               </span>
             </div>
           </div>
