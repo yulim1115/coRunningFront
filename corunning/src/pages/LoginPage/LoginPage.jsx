@@ -1,3 +1,5 @@
+// src/pages/LoginPage/LoginPage.jsx
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Global.css";
@@ -21,11 +23,11 @@ function LoginPage() {
     try {
       const res = await loginAPI(data);
 
-      // 자동 로그아웃
+      // 로그인 상태 저장
       sessionStorage.setItem("isLogin", "true");
       sessionStorage.setItem("userEmail", email);
 
-      // 헤더 즉시 업데이트
+      // 헤더 강제 업데이트
       window.dispatchEvent(new Event("storage"));
 
       alert("로그인 성공!");
@@ -43,6 +45,8 @@ function LoginPage() {
         <h2>로그인</h2>
 
         <form onSubmit={handleLogin}>
+        
+          {/* 이메일 */}
           <div className="form-group">
             <label>이메일 (ID)</label>
             <input
@@ -54,6 +58,7 @@ function LoginPage() {
             />
           </div>
 
+          {/* 비밀번호 */}
           <div className="form-group">
             <label>비밀번호</label>
             <input
@@ -75,6 +80,7 @@ function LoginPage() {
               회원가입
             </span>
           </p>
+
         </form>
       </div>
     </div>

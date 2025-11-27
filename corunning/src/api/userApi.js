@@ -11,6 +11,6 @@ export const signUpAPI = (data) => {
 // 로그인
 export const loginAPI = (data) => {
   return axios.post(`${API_BASE}/login`, data, {
-    withCredentials: true, // JSESSIONID 쿠키 포함
+    withCredentials: true, // JSESSIONID 쿠키 포함 (백엔드 세션 사용시)
   });
 };
