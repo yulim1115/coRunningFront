@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>coRunning - Run Log</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel-stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 기본/전체 스타일 (모든 페이지 동일 유지) */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding-top: 60px; 
+            color: #333333;
+            background-color: #F8F9FA; 
+        }
+
+        /* 폰트 크기 조정 */
+        h1 { font-size: 32px; color: #333333; font-weight: 700; margin: 0; }
+        h2 { font-size: 24px; color: #1A2F4B; font-weight: 700; margin: 0; } 
+        h3 { font-size: 18px; color: #1A2F4B; font-weight: 700; margin: 0; } 
+        .body-base { font-size: 16px; } 
+        .caption-small { font-size: 14px; }
+        .extra-small { font-size: 12px; }
+
+        /* 컨텐츠 중앙 정렬 및 좌우 여백 */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px; 
+        }
+
+        /* ---------------------------------- */
+        /* 헤더 스타일 (모든 페이지 동일 유지) */
+        /* ---------------------------------- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+        }
+
+        .header-content {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 22px;
+            color: #333333;
+        }
+
+        .nav-menu a {
+            font-size: 14px;
+            color: #666666;
+            text-decoration: none;
+            margin: 0 18px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-menu a:hover {
+            color: #4A69BB;
+        }
+
+        /* ---------------------------------- */
+        /* 버튼 규격 (V6 통일) */
+        /* ---------------------------------- */
+        
+        /* 스몰 버튼 (32px, 14px) - 로그인 */
+        .login-btn {
+            display: inline-flex;
+            height: 32px;
+            padding: 0 16px;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 16px; 
+            transition: background 0.2s;
+            color: #FFFFFF;
+            border: none;
+            background: #415472;
+        }
+
+        .login-btn:hover {
+            background: #1A2F4B;
+        }
+        
+        /* 스탠다드 버튼 (40px, 15px) */
+        .standard-button {
+            height: 40px; 
+            padding: 0 20px; 
+            align-items: center; 
+            justify-content: center;
+            border-radius: 6px; 
+            font-size: 15px; 
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+        }
+
+        .btn-primary-ghost {
+            background: #FFFFFF;
+            color: #4A69BB;
+            border: 1px solid #4A69BB;
+            font-weight: 500;
+        }
+        .btn-primary-ghost:hover {
+            background: #F0F3F9;
+        }
+
+        .btn-confirm {
+            background: #4A69BB;
+            color: #FFFFFF;
+            border: none;
+        }
+        .btn-confirm:hover {
+            background: #3B57A5;
+        }
+        
+        /* 인라인 액션 버튼 (수정/삭제) */
+        .btn-inline-action {
+            height: 32px;
+            padding: 0 10px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 4px;
+            background: none;
+            border: 1px solid #DDDDDD;
+            color: #666666;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .btn-inline-action:hover {
+            background: #F0F0F0;
+        }
+        /* 저장 취소/삭제 버튼 강조 */
+        .btn-delete-record {
+            color: #D9534F; /* 빨간색 텍스트로 위험성 표시 */
+            border-color: #D9534F;
+        }
+
+
+        /* ---------------------------------- */
+        /* Run Log 레이아웃 및 카드 스타일 (클린함 강조) */
+        /* ---------------------------------- */
+        .runlog-wrapper {
+            padding: 40px 0 80px;
+            max-width: 900px; 
+            margin: 0 auto;
+        }
+
+        .log-section {
+            margin-bottom: 50px;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+        }
+        
+        .log-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: none; 
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .log-section h2 {
+            font-size: 24px;
+            color: #1A2F4B;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* 섹션 개수 표시 */
+        .log-count {
+            font-size: 18px; /* H2와 어울리게 폰트 크기 조정 */
+            color: #4A69BB;
+            font-weight: 500;
+        }
+
+        /* 리스트 컨테이너 */
+        .log-list-container {
+            border: 1px solid #EEEEEE;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .completed-list-container {
+             border: 1px solid #E6E9F2;
+             background-image: none;
+        }
+        
+        /* 리스트 아이템 */
+        .log-item {
+            background-color: #FFFFFF;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #EEEEEE;
+            cursor: default; 
+        }
+        
+        .log-item:last-child {
+            border-bottom: none;
+        }
+        
+        .log-item:hover {
+            background-color: #F7F9FC;
+        }
+        
+        .item-info-wrapper {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+        
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex-grow: 1;
+        }
+
+        .item-info h3 {
+            font-size: 17px;
+            color: #1A2F4B;
+            font-weight: 700;
+            margin: 0;
+            flex-shrink: 0;
+            min-width: 150px;
+            max-width: 200px; 
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        
+        .item-meta {
+            display: flex;
+            gap: 30px;
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .item-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+        
+        .item-meta i {
+            color: #4A69BB;
+        }
+        
+        /* 완주 기록 전용 스타일 */
+        .record-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+        
+        .item-record {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2ECC71; 
+            flex-shrink: 0;
+            text-align: right;
+        }
+        
+        /* 완주 시간 폰트 크기 조정 */
+        .item-record .time {
+            font-size: 18px; 
+            color: #1A2F4B;
+            font-weight: 700;
+            display: block; 
+        }
+        
+        .item-record .date {
+            font-weight: 500;
+            color: #AAAAAA;
+            font-size: 13px;
+        }
+
+        /* 인라인 액션 버튼 그룹 (완주 기록에 추가) */
+        .record-actions {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+        
+        /* 저장 코스 액션 버튼 그룹 */
+        .saved-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        /* 저장 코스 '기록 입력' 버튼은 Saved Runs 목록에서만 사용되므로 스타일 유지 */
+        .toggle-input-saved {
+            height: 32px; 
+            font-size: 13px;
+            padding: 0 10px;
+        }
+
+
+        /* ---------------------------------- */
+        /* 인라인 폼 스타일 (재활용) */
+        /* ---------------------------------- */
+        .input-form-area {
+            background-color: #F8F9FA;
+            padding: 20px;
+            border-top: 1px solid #DDDDDD;
+            border-bottom: 1px solid #DDDDDD; 
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            align-items: flex-end;
+        }
+        
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            color: #415472;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: 1px solid #DDDDDD;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            height: 40px; 
+        }
+        
+        /* 파일 업로드 커스텀 스타일 */
+        .file-upload-label {
+            display: block;
+            background-color: #FFFFFF;
+            border: 1px dashed #4A69BB;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #4A69BB;
+            cursor: pointer;
+            height: 40px;
+            line-height: 1.5;
+            box-sizing: border-box;
+        }
+        
+        .file-upload-label i {
+            margin-right: 5px;
+        }
+
+
+        /* ---------------------------------- */
+        /* 푸터 스타일 (모든 페이지 동일 유지) */
+        /* ---------------------------------- */
+        footer {
+            padding: 40px 0; 
+            background: #FFFFFF; 
+            text-align: center; 
+            font-size: 16px; 
+            color: #AAAAAA;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">coRunning</div>
+            <nav class="nav-menu">
+                <a href="#">Run Routes</a>
+                <a href="#">Crew Finder</a>
+                <a href="#">Run Log</a>
+                <a href="#">My Page</a>
+            </nav>
+            <a href="#" class="login-btn">로그인</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="runlog-wrapper">
+            <h1 style="margin-bottom: 30px; font-size: 32px;">Run Log</h1>
+
+            <section class="log-section">
+                <div class="log-section-header">
+                    <h2 style="font-size: 24px;">저장한 코스 <span class="log-count">(총 2개)</span></h2>
+                </div>
+                
+                <div class="log-list-container saved-list-container">
+                    
+                    <div class="log-item saved-item" data-target="#saved-record-form-1">
+                        <div class="item-info-wrapper">
+                            <div class="item-info">
+                                <h3>남산 순환 드로잉 (제목이 아주 길 경우 확인)</h3>
+                                <div class="item-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> 서울 용산구</span>
+                                    <span><i class="fas fa-shoe-prints"></i> 고급</span>
+                                    <span><i class="fas fa-route"></i> 7.2 KM</span>
+                                </div>
+                            </div>
+                            <div class="saved-actions">
+                                <button class="standard-button btn-primary-ghost toggle-input-saved" data-action="record">
+                                    <i class="fas fa-edit" style="margin-right: 5px;"></i> 기록 입력
+                                </button>
+                                <button class="btn-inline-action btn-delete-record" data-action="delete-saved">
+                                    <i class="fas fa-trash-alt"></i> 삭제
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-form-area" id="saved-record-form-1" style="display: none;"> 
+                        <form>
+                             <h3 style="font-size: 16px; color: #4A69BB; margin-bottom: 10px;">기록 입력: 남산 순환 드로잉</h3>
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1.5;">
+                                    <label for="wanju-date-1">필수 입력 1: 완주 날짜</label>
+                                    <input type="date" id="wanju-date-1" required>
+                                </div>
+                                <div class="form-group" style="flex: 1.5;">
+                                    <label for="wanju-time-1">필수 입력 2: 완주 시간</label>
+                                    <input type="text" id="wanju-time-1" placeholder="예: 01:30:05 (시:분:초)" required>
+                                </div>
+                                <div class="form-group" style="flex: 2;">
+                                    <label for="auth-photo-1">필수 입력 3: 인증 사진</label>
+                                    <label for="auth-photo-1" class="file-upload-label">
+                                        <i class="fas fa-camera"></i> 인증 사진 업로드 (클릭)
+                                    </label>
+                                    <input type="file" id="auth-photo-1" accept="image/*" style="display: none;" required>
+                                </div>
+                                <button type="submit" class="standard-button btn-confirm" style="margin-bottom: 15px;">
+                                    완주 완료 버튼
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    
+                    <div class="log-item saved-item" data-target="#saved-record-form-2">
+                        <div class="item-info-wrapper">
+                            <div class="item-info">
+                                <h3>광안리 해변 힐링 런</h3>
+                                <div class="item-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> 부산 수영구</span>
+                                    <span><i class="fas fa-shoe-prints"></i> 초급</span>
+                                    <span><i class="fas fa-route"></i> 5.0 KM</span>
+                                </div>
+                            </div>
+                            <div class="saved-actions">
+                                <button class="standard-button btn-primary-ghost toggle-input-saved" data-action="record">
+                                    <i class="fas fa-edit" style="margin-right: 5px;"></i> 기록 입력
+                                </button>
+                                <button class="btn-inline-action btn-delete-record" data-action="delete-saved">
+                                    <i class="fas fa-trash-alt"></i> 삭제
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-form-area" id="saved-record-form-2" style="display: none;"> 
+                        </div>
+
+
+                </div>
+                
+                <p style="text-align: center; color: #AAAAAA; margin-top: 15px; font-size: 14px;">저장한 코스가 없습니다.</p>
+
+            </section>
+
+            <section class="log-section">
+                <div class="log-section-header">
+                    <h2 style="font-size: 24px;">코스 완주 기록 <span class="log-count">(총 2개)</span></h2>
+                    <button class="standard-button btn-confirm" id="add-new-run-btn">
+                        <i class="fas fa-plus" style="margin-right: 5px;"></i> 새 완주 기록 추가
+                    </button>
+                </div>
+                
+                <div class="input-form-area" id="new-run-form-area" style="display: none; margin-bottom: 20px;"> 
+                    <form>
+                        <h3 style="font-size: 16px; color: #4A69BB; margin-bottom: 10px;">자율 완주 기록 (코스명 직접 입력)</h3>
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 2.5;">
+                                <label for="new-run-name">코스 이름 (필수)</label>
+                                <input type="text" id="new-run-name" placeholder="예: 우리 동네 한 바퀴" required>
+                            </div>
+                            <div class="form-group" style="flex: 1.5;">
+                                <label for="new-run-distance">러닝 거리 (KM)</label>
+                                <input type="text" id="new-run-distance" placeholder="예: 5.5" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 1.5;">
+                                <label for="new-run-date">필수 입력 1: 완주 날짜</label>
+                                <input type="date" id="new-run-date" required>
+                            </div>
+                            <div class="form-group" style="flex: 1.5;">
+                                <label for="new-run-time">필수 입력 2: 완주 시간</label>
+                                <input type="text" id="new-run-time" placeholder="예: 01:30:05 (시:분:초)" required>
+                            </div>
+                            <div class="form-group" style="flex: 2;">
+                                <label for="new-auth-photo">필수 입력 3: 인증 사진</label>
+                                <label for="new-auth-photo" class="file-upload-label">
+                                    <i class="fas fa-camera"></i> 인증 사진 업로드 (클릭)
+                                </label>
+                                <input type="file" id="new-auth-photo" accept="image/*" style="display: none;" required>
+                            </div>
+                            <button type="submit" class="standard-button btn-confirm" style="margin-bottom: 15px;">
+                                기록 저장
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="log-list-container completed-list-container">
+                    
+                    <div class="log-item completed-item" data-target="#edit-form-1">
+                        <div class="item-info-wrapper">
+                            <div class="item-info">
+                                <h3>청계천 따라 달리기</h3>
+                                <div class="item-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> 서울 종로구</span>
+                                    <span><i class="fas fa-route"></i> 6.5 KM</span>
+                                </div>
+                            </div>
+                            <div class="record-group">
+                                <button class="btn-view-photo">
+                                    <i class="fas fa-camera"></i> 사진
+                                </button>
+                                <div class="item-record">
+                                    <span class="date">2025.11.20 완주</span>
+                                    <span class="time">00:45:30</span>
+                                </div>
+                                <div class="record-actions">
+                                    <button class="btn-inline-action toggle-edit-form"><i class="fas fa-edit"></i> 수정</button>
+                                    <button class="btn-inline-action btn-delete-record"><i class="fas fa-trash-alt"></i> 삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-form-area" id="edit-form-1" style="display: none;"> 
+                         <form>
+                            <h3 style="font-size: 16px; color: #4A69BB; margin-bottom: 10px;">기록 수정: 청계천 따라 달리기</h3>
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1.5;">
+                                    <label for="edit-date-1">완주 날짜</label>
+                                    <input type="date" id="edit-date-1" value="2025-11-20" required>
+                                </div>
+                                <div class="form-group" style="flex: 1.5;">
+                                    <label for="edit-time-1">완주 시간</label>
+                                    <input type="text" id="edit-time-1" value="00:45:30" required>
+                                </div>
+                                <div class="form-group" style="flex: 2;">
+                                    <label for="edit-photo-1">인증 사진 (현재 파일: photo.jpg)</label>
+                                    <label for="edit-photo-1" class="file-upload-label">
+                                        <i class="fas fa-redo"></i> 사진 변경 (클릭)
+                                    </label>
+                                    <input type="file" id="edit-photo-1" accept="image/*" style="display: none;">
+                                </div>
+                                <button type="submit" class="standard-button btn-confirm" style="margin-bottom: 15px;">
+                                    수정 완료
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="log-item completed-item" data-target="#edit-form-2">
+                        <div class="item-info-wrapper">
+                            <div class="item-info">
+                                <h3>한강공원 10K 코스 (자율 기록이 아주아주 길 경우 확인)</h3>
+                                <div class="item-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> 지역 미정</span>
+                                    <span><i class="fas fa-route"></i> 10.0 KM</span>
+                                </div>
+                            </div>
+                            <div class="record-group">
+                                <button class="btn-view-photo">
+                                    <i class="fas fa-camera"></i> 사진
+                                </button>
+                                <div class="item-record">
+                                    <span class="date">2025.11.15 완주</span>
+                                    <span class="time">01:05:12</span>
+                                </div>
+                                <div class="record-actions">
+                                    <button class="btn-inline-action toggle-edit-form"><i class="fas fa-edit"></i> 수정</button>
+                                    <button class="btn-inline-action btn-delete-record"><i class="fas fa-trash-alt"></i> 삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-form-area" id="edit-form-2" style="display: none;"> 
+                         </div>
+                    
+                </div>
+            </section>
+
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 coRunning. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        // 저장 코스 기록 입력 토글 (Saved Runs)
+        document.querySelectorAll('.toggle-input-saved[data-action="record"]').forEach(button => {
+            button.addEventListener('click', function() {
+                const item = this.closest('.log-item');
+                // 저장 코스는 폼 ID가 'saved-record-form-X' 형태로 가정
+                const formId = item.getAttribute('data-target');
+                const formArea = document.querySelector(formId);
+                
+                if (formArea) {
+                    const isVisible = formArea.style.display === 'block';
+                    // 다른 폼이 열려있다면 닫기
+                    document.querySelectorAll('.input-form-area').forEach(f => f.style.display = 'none');
+
+                    formArea.style.display = isVisible ? 'none' : 'block';
+                    
+                    // 버튼 텍스트 및 스타일 업데이트
+                    this.textContent = isVisible ? '❌ 입력 닫기' : '📝 기록 입력';
+                    this.classList.toggle('btn-confirm');
+                    this.classList.toggle('btn-primary-ghost');
+                }
+            });
+        });
+        
+        // 새 완주 기록 추가 버튼 토글
+        document.getElementById('add-new-run-btn').addEventListener('click', function() {
+            const newRunForm = document.getElementById('new-run-form-area');
+            const isVisible = newRunForm.style.display === 'block';
+            newRunForm.style.display = isVisible ? 'none' : 'block';
+            this.textContent = isVisible ? '❌ 기록 입력 닫기' : '➕ 새 완주 기록 추가';
+        });
+
+        // 완주 기록 수정 폼 토글 (Completed Runs)
+        document.querySelectorAll('.toggle-edit-form').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation(); 
+                
+                const logItem = this.closest('.log-item');
+                const targetId = logItem.getAttribute('data-target');
+                const formArea = document.querySelector(targetId);
+                
+                if (formArea) {
+                    const isVisible = formArea.style.display === 'block';
+                    // 다른 폼이 열려있다면 닫기
+                    document.querySelectorAll('.input-form-area').forEach(f => f.style.display = 'none');
+
+                    formArea.style.display = isVisible ? 'none' : 'block';
+                    
+                    this.textContent = isVisible ? '✏️ 수정' : '❌ 닫기';
+                }
+            });
+        });
+        
+        // 기록 삭제 기능 (시뮬레이션)
+        document.querySelectorAll('.btn-delete-record').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation(); 
+                
+                let message;
+                const action = this.getAttribute('data-action');
+                
+                if (action === 'delete-saved') {
+                    message = '정말로 이 저장된 코스를 삭제하시겠습니까?';
+                } else {
+                    message = '정말로 이 완주 기록을 삭제하시겠습니까?';
+                }
+
+                const confirmed = confirm(message);
+                if (confirmed) {
+                    alert('항목이 삭제되었습니다.');
+                    
+                    // UI에서 항목 제거 및 연결된 폼 숨기기
+                    const itemToRemove = this.closest('.log-item');
+                    const formId = itemToRemove.getAttribute('data-target');
+                    const formArea = document.querySelector(formId);
+                    
+                    if (formArea) formArea.style.display = 'none'; // 연결된 폼 숨기기
+                    
+                    itemToRemove.style.display = 'none';
+                }
+            });
+        });
+        
+        // 인증 사진 보기 버튼 (모달 팝업 시뮬레이션)
+        document.querySelectorAll('.btn-view-photo').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation(); 
+                alert('인증 사진 보기 기능이 실행됩니다. (실제 구현 시 모달 팝업)');
+            });
+        });
+    </script>
+
+</body>
+</html>

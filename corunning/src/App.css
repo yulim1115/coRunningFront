@@ -1,38 +1,35 @@
+/* src/App.css */
+
+/* 전체 기본 리셋은 Global.css에서 하고,
+App.css는 페이지 전체 레이아웃 정도만 유지 */
+
 .App {
-  text-align: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto;
+  font-family: "Pretendard", sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* 메인 콘텐츠가 헤더에 가려지지 않게 */
+.main-container {
+  padding-top: 80px; /* header 높이 고려 */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* 기본 링크 스타일 */
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* 버튼 공통 스타일 (필요 시 각 CSS에서 override 가능) */
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 전체 배경 */
+body {
+  background: #ffffff;
 }

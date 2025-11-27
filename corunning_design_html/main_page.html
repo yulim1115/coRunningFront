@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>coRunning - 나만의 러닝 코스를 만들고 공유해보세요!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 기본 색상 정의 */
+        /* 메인 블루: #4A69BB, 진한 네이비: #1A2F4B, 배경: #F8F9FA, 좋아요: #D9534F */
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding-top: 60px; 
+            color: #333333;
+            background-color: #FFFFFF; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            line-height: 1.6; 
+        }
+
+        /* 폰트 크기 조정 및 색상 통일 */
+        h1 { font-size: 44px; color: #1A2F4B; font-weight: 900; margin: 0; } 
+        h2 { font-size: 34px; color: #1A2F4B; font-weight: 700; margin: 0; } 
+        h3 { font-size: 20px; color: #1A2F4B; font-weight: 700; margin: 0; } 
+        
+        /* 컨텐츠 중앙 정렬 및 좌우 여백 */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px; 
+        }
+
+        /* ---------------------------------- */
+        /* 헤더 스타일 */
+        /* ---------------------------------- */
+        .header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            background-color: #FFFFFF; 
+            border-bottom: 1px solid #E0E0E0; 
+            z-index: 1000;
+        }
+        .header-content {
+            height: 100%; display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-weight: 900; font-size: 24px; color: #1A2F4B; text-decoration: none; }
+        .nav-menu a { font-size: 15px; color: #666666; text-decoration: none; margin: 0 25px; font-weight: 500; transition: color 0.2s; }
+        .nav-menu a:hover { color: #4A69BB; }
+        
+        /* 로그인 버튼 */
+        .login-btn {
+            display: inline-flex; height: 32px; padding: 0 16px; justify-content: center; align-items: center;
+            font-size: 14px; font-weight: 500; border-radius: 16px; 
+            transition: background 0.2s;
+            color: #FFFFFF; border: none; background: #415472;
+            text-decoration: none;
+        }
+        .login-btn:hover { background: #1A2F4B; }
+
+
+        /* ---------------------------------- */
+        /* 메인 배너 */
+        /* ---------------------------------- */
+        .hero-banner {
+            background: linear-gradient(135deg, #4A69BB 0%, #1A2F4B 100%);
+            color: #FFFFFF; 
+            padding: 100px 0; 
+            text-align: center; 
+            margin-bottom: 80px; 
+        }
+        .hero-banner h1 { font-size: 56px; color: #FFFFFF; margin-bottom: 20px; }
+        .hero-banner p { font-size: 20px; font-weight: 300; max-width: 900px; margin: 0 auto; line-height: 1.5; }
+
+        /* ---------------------------------- */
+        /* 메인 컨텐츠 분할 섹션 */
+        /* ---------------------------------- */
+        .main-content-split-section {
+            padding-bottom: 80px;
+        }
+        .main-content-split {
+            display: flex; 
+            gap: 40px;
+            align-items: flex-start; 
+        }
+
+        /* 지도 섹션 (왼쪽 2/3) */
+        .map-section { 
+            width: 66.666%; 
+            scroll-margin-top: 80px; 
+        }
+        .map-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            height: 36px; 
+        }
+        .map-header h2 { font-size: 30px; }
+        .map-controls { display: flex; gap: 10px; }
+        
+        .map-control-btn {
+            display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; 
+            border-radius: 6px; font-size: 14px; font-weight: 500; transition: all 0.2s;
+            border: 1px solid #DDDDDD; background-color: #FFFFFF; color: #333333; text-decoration: none;
+        }
+        .map-control-btn:hover { background-color: #F8F9FA; border-color: #4A69BB; }
+        .map-control-btn.create-course { 
+            background-color: #1A2F4B; 
+            color: #FFFFFF; 
+            border-color: #1A2F4B; 
+            font-weight: 700; 
+        }
+        .map-control-btn.create-course:hover { background-color: #4A69BB; border-color: #4A69BB; }
+
+        .map-placeholder {
+            width: 100%; height: 600px; 
+            background-color: #F8F9FA; 
+            border-radius: 10px; 
+            box-shadow: 0 0 0 1px #E0E0E0; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: #AAAAAA;
+        }
+
+        /* 인기 코스 목록 섹션 (오른쪽 1/3) - 사이드바 스타일 */
+        .popular-courses-list-section {
+            width: 33.333%; 
+            display: flex;
+            flex-direction: column;
+            background-color: #F8F9FA; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 0; 
+            padding-top: 25px; 
+            position: relative; 
+        }
+        
+        .popular-courses-list-section h2 { 
+            font-size: 24px; 
+            color: #1A2F4B;
+            margin-bottom: 25px; 
+            padding-bottom: 5px;
+            margin-top: 0; 
+            line-height: 1.2; 
+        }
+        
+        /* TOP RUN 뱃지 (사이드바 상단) */
+        .top-badge-sidebar { 
+            position: absolute;
+            top: 25px; 
+            right: 20px; 
+            background-color: #D9534F; 
+            color: #FFFFFF;
+            padding: 4px 10px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Simple List Card */
+        .simple-course-list { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+        } 
+        .simple-list-item {
+            display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; 
+            background-color: #FFFFFF; 
+            border: 1px solid #EEEEEE; 
+            border-radius: 8px;
+            transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s, background-color 0.2s; /* 배경색 전환 추가 */
+            text-decoration: none; color: #333333;
+            position: relative; 
+            overflow: hidden; 
+        }
+        .simple-list-item:hover { 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
+            border-color: #4A69BB;
+            transform: translateY(-2px); 
+        }
+        
+        /* 🚀 [디자인 재수정] 첫 번째 코스 (TOP1) 색상 기반의 은은한 강조 */
+        .simple-course-list .simple-list-item:first-child {
+            background-color: #FDFDFD; /* 아주 미묘하게 밝은 배경색 */
+            border: 1px solid #4A69BB; /* 메인 블루 테두리 */
+            box-shadow: 0 4px 12px rgba(74, 105, 187, 0.15); /* 메인 블루 계열의 은은한 그림자 */
+        }
+
+        /* TOP1 아이템 내부 텍스트 및 아이콘 색상은 일반 아이템과 동일하게 유지 */
+        .simple-course-list .simple-list-item:first-child h4 {
+            color: #1A2F4B; 
+            font-weight: 700; /* 폰트 두께 변경 없음 */
+        }
+        .simple-course-list .simple-list-item:first-child .list-item-meta span i {
+            color: #4A69BB; 
+        }
+        .simple-course-list .simple-list-item:first-child .list-item-likes {
+            color: #D9534F; 
+        }
+        .simple-course-list .simple-list-item:first-child .list-item-tag {
+            background-color: #E9ECEF; 
+            color: #1A2F4B; 
+        }
+
+
+        /* 일반 아이템 스타일 (유지) */
+        .list-item-info { flex-grow: 1; padding-right: 10px; }
+        .list-item-header { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; } 
+        .list-item-info h4 { font-size: 15px; font-weight: 700; color: #1A2F4B; margin: 0; } 
+        .list-item-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; color: #666666; margin-top: 5px; } 
+        .list-item-meta span i { color: #4A69BB; font-size: 11px; margin-right: 4px;}
+        
+        .list-item-tag { background-color: #E9ECEF; color: #1A2F4B; padding: 3px 8px; font-size: 10px; font-weight: 500; border-radius: 4px; }
+        
+        .list-item-likes { 
+            flex-shrink: 0; 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #D9534F; 
+            display: flex;
+            align-items: center;
+        } 
+        .list-item-likes i { margin-right: 4px; }
+
+        /* 더 보기 버튼 스타일 */
+        .more-routes-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; width: 100%; 
+            border-radius: 8px; font-size: 15px; font-weight: 700; transition: background-color 0.2s, color 0.2s;
+            border: 1px solid #4A69BB; background-color: #FFFFFF; color: #4A69BB; text-decoration: none; margin-top: 20px; 
+        }
+        .more-routes-btn:hover { background-color: #4A69BB; color: #FFFFFF; }
+
+
+        /* ---------------------------------- */
+        /* Value Proposition Section (유지) */
+        /* ---------------------------------- */
+        .value-proposition-section {
+            padding: 100px 0;
+            background-color: #F8F9FA; 
+        }
+        .section-header { 
+            text-align: center; 
+            margin-bottom: 50px; 
+        } 
+        .section-header h2 { font-size: 38px; margin-bottom: 10px; }
+        .value-grid {
+            display: flex; 
+            justify-content: center; 
+            gap: 40px; 
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .value-card {
+            width: 300px; 
+            flex-shrink: 0;
+            background-color: #FFFFFF; 
+            border-radius: 12px;
+            padding: 40px 30px; 
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .value-icon {
+            font-size: 52px; 
+            color: #4A69BB;
+            margin-bottom: 25px;
+            display: block;
+        }
+        .value-card h3 {
+            font-size: 22px;
+            color: #1A2F4B;
+            margin-bottom: 10px;
+        }
+        .value-card p {
+            font-size: 15px;
+            color: #666666;
+            margin-bottom: 20px;
+        }
+        .value-card .cta-btn {
+            display: inline-block;
+            padding: 10px 20px; 
+            background-color: #1A2F4B;
+            color: #FFFFFF;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .value-card .cta-btn:hover {
+            background-color: #4A69BB;
+        }
+
+
+        /* ---------------------------------- */
+        /* 푸터 스타일 */
+        /* ---------------------------------- */
+        footer {
+            padding: 50px 0; 
+            background: #1A2F4B; 
+            text-align: center; 
+            font-size: 15px; 
+            color: #CCD1D8; 
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container header-content">
+            <a href="#" class="logo">coRunning</a>
+            <nav class="nav-menu">
+                <a href="#">Run Routes</a>
+                <a href="#">Crew Finder</a>
+                <a href="#">Run Log</a>
+                <a href="#">My Page</a>
+            </nav>
+            <a href="#" class="login-btn">로그인</a>
+        </div>
+    </header>
+
+    <main>
+        
+        <section class="hero-banner">
+            <div class="container">
+                <h1>나만의 러닝 코스를 만들고 공유해보세요!</h1>
+                <p>클릭 몇 번으로 새로운 러닝 루트를 설계하고, 친구들과 공유하며, 새로운 러닝의 재미를 발견하세요.</p>
+            </div>
+        </section>
+        
+        <section class="main-content-split-section">
+            <div class="container main-content-split">
+                
+                <div class="map-section" id="map-section">
+                    <div class="map-header">
+                        <h2>러닝 코스 생성</h2> 
+                        <div class="map-controls">
+                            <a href="#map-section" class="map-control-btn create-course"><i class="fas fa-plus-circle"></i> 코스 생성</a>
+                            <button class="map-control-btn"><i class="fas fa-undo"></i> 되돌리기</button>
+                            <button class="map-control-btn"><i class="fas fa-image"></i> 이미지 다운로드</button>
+                            <button class="map-control-btn"><i class="fas fa-copy"></i> 경로 복사</button>
+                        </div>
+                    </div>
+                    <div class="map-placeholder">
+                        여기에 지도가 표시됩니다 (카카오맵 API 연동 예정)
+                    </div>
+                </div>
+
+                <div class="popular-courses-list-section">
+                    <h2>추천 인기 코스</h2>
+                    <span class="top-badge-sidebar">TOP RUN</span>
+                    <div class="simple-course-list">
+                        
+                        <a href="#" class="simple-list-item">
+                            <div class="list-item-info">
+                                <div class="list-item-header">
+                                    <h4>여의도 한강 공원 힐링 런</h4>
+                                    <span class="list-item-tag">드로잉런</span>
+                                </div>
+                                <div class="list-item-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> 영등포구</span>
+                                    <span><i class="fas fa-route"></i> 7.2 KM</span>
+                                    <span><i class="fas fa-shoe-prints"></i> 초급</span>
+                                </div>
+                            </div>
+                            <div class="list-item-likes"><i class="fas fa-heart"></i> 345</div>
+                        </a>
+
+                        <a href="#" class="simple-list-item">
+                            <div class="list-item-info">
+                                <div class="list-item-header">
+                                    <h4>남산 팔각정 정복 챌린지</h4>
+                                    <span class="list-item-tag regular">레귤러런</span>
+                                </div>
+                                <div class="list-item-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> 서울 용산구</span>
+                                    <span><i class="fas fa-route"></i> 8.8 KM</span>
+                                    <span><i class="fas fa-shoe-prints"></i> 고급</span>
+                                </div>
+                            </div>
+                            <div class="list-item-likes"><i class="fas fa-heart"></i> 288</div>
+                        </a>
+
+                        <a href="#" class="simple-list-item">
+                            <div class="list-item-info">
+                                <div class="list-item-header">
+                                    <h4>부산 광안리 야경 로맨틱 런</h4>
+                                    <span class="list-item-tag">야간런</span>
+                                </div>
+                                <div class="list-item-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> 부산 수영구</span>
+                                    <span><i class="fas fa-route"></i> 5.0 KM</span>
+                                    <span><i class="fas fa-shoe-prints"></i> 중급</span>
+                                </div>
+                            </div>
+                            <div class="list-item-likes"><i class="fas fa-heart"></i> 251</div>
+                        </a>
+                        
+                        <a href="#" class="simple-list-item">
+                            <div class="list-item-info">
+                                <div class="list-item-header">
+                                    <h4>석촌호수 벚꽃 런 랩</h4>
+                                    <span class="list-item-tag">레귤러런</span>
+                                </div>
+                                <div class="list-item-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> 서울 송파구</span>
+                                    <span><i class="fas fa-route"></i> 2.5 KM</span>
+                                    <span><i class="fas fa-shoe-prints"></i> 초급</span>
+                                </div>
+                            </div>
+                            <div class="list-item-likes"><i class="fas fa-heart"></i> 210</div>
+                        </a>
+
+                    </div>
+                    
+                    <a href="#" class="more-routes-btn">
+                        <i class="fas fa-list-alt"></i> 더 많은 코스 보러가기
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <section class="value-proposition-section">
+            <div class="section-header container">
+                <h2>왜 coRunning을 선택해야 할까요?</h2>
+                <p>단순한 경로 서비스가 아닌, 러닝 경험의 모든 것을 연결합니다.</p>
+            </div>
+
+            <div class="value-grid">
+                
+                <div class="value-card">
+                    <i class="fas fa-pen-nib value-icon"></i>
+                    <h3>1. CREATE: 창의적인 경로</h3>
+                    <p>클릭과 드로잉으로 나만의 러닝 코스를 손쉽게 만들고, 지도 이미지를 저장하여 공유하세요.</p>
+                    <a href="#map-section" class="cta-btn">코스 생성 시작하기</a>
+                </div>
+                
+                <div class="value-card">
+                    <i class="fas fa-users value-icon"></i>
+                    <h3>2. CONNECT: 크루와 함께</h3>
+                    <p>지역별, 난이도별 러닝 크루를 찾고 참여하세요. 함께 달릴 때 동기 부여는 배가 됩니다.</p>
+                    <a href="#" class="cta-btn">크루 찾아보기</a>
+                </div>
+                
+                <div class="value-card">
+                    <i class="fas fa-trophy value-icon"></i>
+                    <h3>3. ACHIEVE: 기록 관리</h3>
+                    <p>완주 기록을 체계적으로 관리하고, 누적 통계를 확인하여 목표 달성의 즐거움을 경험하세요.</p>
+                    <a href="#" class="cta-btn">내 기록 확인하기</a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 coRunning. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
