@@ -19,6 +19,11 @@ import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import RunRoutesListPage from "./pages/RunRoutes/RunRoutesListPage";
 import RunRoutesDetailPage from "./pages/RunRoutes/RunRoutesDetailPage";
 
+// import CrewListPage from "./pages/CrewFinder/CrewListPage";
+// import CrewDetailPage from "./pages/CrewFinder/CrewDetailPage";
+// import CrewCreatePage from "./pages/CrewFinder/CrewCreatePage";
+
+import RunLogPage from "./pages/RunLog/RunLogPage";
 import CrewListPage from "./pages/CrewFinder/CrewListPage";
 import CrewDetailPage from "./pages/CrewFinder/CrewDetailPage";
 import CrewCreatePage from "./pages/CrewFinder/CrewCreatePage";
@@ -47,6 +52,12 @@ function App() {
                     <Route path="/routes/:id" element={<RunRoutesDetailPage />} />
     
                     {/* Crew Finder */}
+                    {/* <Route path="/crews" element={<CrewListPage />} /> */}
+                    {/* <Route path="/crews/:id" element={<CrewDetailPage />} /> */}
+                    {/* <Route path="/crews/create" element={<CrewCreatePage />} /> */}
+    
+                    {/* Run Log */}
+                    <Route path="/runlog" element={<RunLogPage />} />
                     <Route path="/crews" element={<CrewListPage />} />
                     <Route path="/crews/:id" element={<CrewDetailPage />} />
                     <Route path="/crews/create" element={<CrewCreatePage />} />
