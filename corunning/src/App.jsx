@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Global Styles
 import "./styles/Global.css";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 // Layout
 import Header from "./components/layout/Header";
@@ -17,6 +18,7 @@ import SignUpPage from "./pages/SignUpPage/SignUpPage";
 
 // Feature Pages
 import RunRoutesListPage from "./pages/RunRoutes/RunRoutesListPage";
+import RunRoutesCreatePage from "./pages/RunRoutes/RunRoutesCreatePage";
 // import RunRoutesDetailPage from "./pages/RunRoutes/RunRoutesDetailPage";
 
 // import CrewListPage from "./pages/CrewFinder/CrewListPage";
@@ -44,6 +46,7 @@ function App() {
     
                     {/* Run Routes */}
                     <Route path="/routes" element={<RunRoutesListPage />} />
+                    <Route path="/routes/create" element={<RunRoutesCreatePage />} />
                     {/* <Route path="/routes/:id" element={<RunRoutesDetailPage />} /> */}
     
                     {/* Crew Finder */}
