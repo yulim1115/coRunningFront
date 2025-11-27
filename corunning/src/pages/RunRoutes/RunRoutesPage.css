@@ -83,13 +83,21 @@ h1 {
     border-radius: 4px;
     font-size: 14px;
     appearance: none;
-    cursor: pointer;
     background: #fff;
     height: 32px;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: none;
 }
 
-/* ▼ 아이콘 (React SVG 기반) */
-.custom-select svg {
+.custom-select select::-ms-expand {
+    display: none;
+}
+
+/* ▼ 아이콘 */
+.select-arrow {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -176,7 +184,7 @@ h1 {
     color:#666;
 }
 
-/* SVG 아이콘 스타일 */
+/* 아이콘 */
 .card-meta-details svg {
     font-size: 14px;
     color: #4A69BB;
@@ -187,12 +195,11 @@ h1 {
     font-weight: 500;
 }
 
-/* 좋아요 아이콘 */
 .likes svg {
     color:#D9534F;
 }
 
-/* 아이콘 + 텍스트 정렬 */
+/* 텍스트 정렬 */
 .card-meta-details span {
     display: flex;
     align-items: center;

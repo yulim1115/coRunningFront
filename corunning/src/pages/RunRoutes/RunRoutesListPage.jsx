@@ -1,14 +1,14 @@
 import React from "react";
 import "./RunRoutesPage.css";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faRoute,
-  faMagnifyingGlass,
-  faMapMarkerAlt,
-  faPersonRunning,
-  faHeart,
-} from "@fortawesome/free-solid-svg-icons";
+  FaRoute,
+  FaSearch,
+  FaMapMarkerAlt,
+  FaRunning,
+  FaHeart,
+  FaChevronDown,
+} from "react-icons/fa";
 
 const sampleRoutes = [
   {
@@ -50,13 +50,15 @@ function RunRoutesListPage() {
       <div className="registration-notice">
         <p>나만의 특별한 러닝 코스를 공유하고 싶으신가요?</p>
         <button className="register-course-btn">
-          <FontAwesomeIcon icon={faRoute} /> &nbsp; 코스 등록하기
+          <FaRoute /> &nbsp; 코스 등록하기
         </button>
       </div>
 
       {/* 필터 */}
       <section className="filter-controls-area">
         <div className="filter-group-wrapper">
+
+          {/* 정렬 */}
           <div className="filter-group">
             <label>정렬</label>
             <div className="custom-select">
@@ -64,9 +66,11 @@ function RunRoutesListPage() {
                 <option>최신순</option>
                 <option>인기순</option>
               </select>
+              <FaChevronDown className="select-arrow" />
             </div>
           </div>
 
+          {/* 지역 */}
           <div className="filter-group">
             <label>지역</label>
             <div className="custom-select">
@@ -75,9 +79,11 @@ function RunRoutesListPage() {
                 <option>서울</option>
                 <option>경기</option>
               </select>
+              <FaChevronDown className="select-arrow" />
             </div>
           </div>
 
+          {/* 난이도 */}
           <div className="filter-group">
             <label>난이도</label>
             <div className="custom-select">
@@ -87,9 +93,11 @@ function RunRoutesListPage() {
                 <option>중급</option>
                 <option>고급</option>
               </select>
+              <FaChevronDown className="select-arrow" />
             </div>
           </div>
 
+          {/* 타입 */}
           <div className="filter-group">
             <label>타입</label>
             <div className="custom-select">
@@ -98,11 +106,13 @@ function RunRoutesListPage() {
                 <option>드로잉런</option>
                 <option>레귤러런</option>
               </select>
+              <FaChevronDown className="select-arrow" />
             </div>
           </div>
 
+          {/* 조회 버튼 */}
           <button className="search-button">
-            <FontAwesomeIcon icon={faMagnifyingGlass} /> &nbsp; 조회
+            <FaSearch /> &nbsp; 조회
           </button>
         </div>
 
@@ -132,11 +142,11 @@ function RunRoutesListPage() {
             <div className="card-meta-details-wrapper">
               <div className="card-meta-details">
                 <span>
-                  <FontAwesomeIcon icon={faMapMarkerAlt} /> {route.region}
+                  <FaMapMarkerAlt /> {route.region}
                 </span>
 
                 <span>
-                  <FontAwesomeIcon icon={faPersonRunning} />
+                  <FaRunning />
                   <span
                     className={`difficulty-text ${
                       route.difficulty === "초급"
@@ -151,12 +161,12 @@ function RunRoutesListPage() {
                 </span>
 
                 <span>
-                  <FontAwesomeIcon icon={faRoute} /> {route.distance}
+                  <FaRoute /> {route.distance}
                 </span>
               </div>
 
               <span className="likes">
-                <FontAwesomeIcon icon={faHeart} /> {route.likes}
+                <FaHeart /> {route.likes}
               </span>
             </div>
           </div>
