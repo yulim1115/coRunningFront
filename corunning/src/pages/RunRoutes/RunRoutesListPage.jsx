@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./RunRoutesPage.css";
 
 import {
@@ -6,7 +7,7 @@ import {
   FaSearch,
   FaMapMarkerAlt,
   FaRunning,
-  FaHeart,
+  FaThumbsUp,
   FaChevronDown,
 } from "react-icons/fa";
 
@@ -41,6 +42,8 @@ const sampleRoutes = [
 ];
 
 function RunRoutesListPage() {
+  const navigate = useNavigate();
+
   return (
     <main className="routes-container">
       <section className="page-header-area">
@@ -49,7 +52,10 @@ function RunRoutesListPage() {
 
       <div className="registration-notice">
         <p>나만의 특별한 러닝 코스를 공유하고 싶으신가요?</p>
-        <button className="register-course-btn">
+        <button 
+          className="register-course-btn"
+          onClick={() => navigate('/routes/create')}
+        >
           <FaRoute /> &nbsp; 코스 등록하기
         </button>
       </div>
@@ -166,7 +172,7 @@ function RunRoutesListPage() {
               </div>
 
               <span className="likes">
-                <FaHeart /> {route.likes}
+                <FaThumbsUp /> {route.likes}
               </span>
             </div>
           </div>
