@@ -1,62 +1,44 @@
 // src/components/cards/LogCard.jsx
 import React from "react";
 
-/**
- * props:
- * - type: "saved" | "record"
- * - item: { title, location, distance, level?, date?, time? }
- * - isOpen: boolean  (아래 폼 열림 여부)
- * - onMainButton: () => void
- * - onDelete: () => void
- */
-export default function LogCard({ type, item, isOpen, onMainButton, onDelete }) {
-  const { title, location, distance, level, date, time } = item;
-
-  const distanceLabel =
-    distance !== undefined && distance !== null ? `${distance} km` : "-";
-
-  const isSaved = type === "saved";
-
+export default function LogCard({
+  type,       // 'saved' | 'record'
+  item,
+  isOpen,
+  onMainButton,
+  onDelete
+}) {
   return (
-    <div className="logcard-wrapper">
-      <div className="logcard-main">
-        <div className="logcard-info">
-          <div className="logcard-title">{title}</div>
+    <div className="logcard">
+      <div className="logcard-left">
+        <div className="logcard-title">
+          {item.title}
+        </div>
 
-          <div className="logcard-meta">
-            {location && <span className="logcard-chip">📍 {location}</span>}
-            {distance && (
-              <span className="logcard-chip">🏃 {distanceLabel}</span>
-            )}
-            {isSaved && level && (
-              <span className="logcard-chip level">난이도: {level}</span>
-            )}
-            {!isSaved && date && (
-              <span className="logcard-chip">📅 {date}</span>
-            )}
-            {!isSaved && time && (
-              <span className="logcard-chip">⏱ {time}</span>
-            )}
+        <div className="logcard-meta">
+          {item.location && <span>📍 {item.location}</span>}
+          {item.distance && <span>🏃 {item.distance} km</span>}
+          {item.level && type === "saved" && <span>🔥 {item.level}</span>}
+        </div>
+
+        {type === "record" && (
+          <div className="logcard-run-info">
+            <span className="run-date">{item.date}</span>
+            <span className="run-time">{item.time}</span>
           </div>
-        </div>
+        )}
+      </div>
 
-        <div className="logcard-actions">
-          <button className="logcard-btn main" onClick={onMainButton}>
-            {isSaved
-              ? isOpen
-                ? "입력 닫기"
-                : "완주 기록 입력"
-              : isOpen
-              ? "수정 닫기"
-              : "상세 / 수정"}
+      <div className="logcard-right">
+        <button className="btn-main" onClick={onMainButton}>
+          {isOpen ? "닫기" : type === "saved" ? "기록 입력" : "수정"}
+        </button>
+
+        {type === "record" && (
+          <button className="btn-danger" onClick={onDelete}>
+            삭제
           </button>
-
-          {!isSaved && (
-            <button className="logcard-btn danger" onClick={onDelete}>
-              삭제
-            </button>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );
