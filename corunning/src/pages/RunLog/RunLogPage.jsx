@@ -2,6 +2,17 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import LogCard from "../../components/cards/LogCard";
 import "./RunLogPage.css";
+import { distance } from "@turf/turf";
+
+import {
+  getSavedCourses,
+  getRecords,
+  finishCourse,
+  createRecord,
+  updateRecord,
+  deleteRecord,
+  uploadImage
+} from "../../api/logApi";
 
 export default function RunLogPage() {
 
@@ -13,24 +24,38 @@ export default function RunLogPage() {
     const [editingRecordId, setEditingRecordId] = useState(null);
 
     useEffect(() => {
-        axios.get("/api/runlog/saved")
-            .then(res => setSavedCourses(res.data))
-            .catch(() => {
-                setSavedCourses([
-                    { id: 1, title: "남산 순환 드로잉 (제목이 …)", location: "서울 용산구", level: "고급", distance: "7.2 KM" },
-                    { id: 2, title: "광안리 해변 힐링 런", location: "부산 수영구", level: "초급", distance: "5.0 KM" }
-                ]);
-            });
-
-        axios.get("/api/runlog/records")
-            .then(res => setRecords(res.data))
-            .catch(() => {
-                setRecords([
-                    { id: 101, title: "청계천 따라 달리기", location: "서울 종로구", distance: "6.5 KM", date: "2025.11.20", rawDate: "2025-11-20", time: "00:45:30" },
-                    { id: 102, title: "한강공원 10K 코스 (자율)", location: "지역 미정", distance: "10.0 KM", date: "2025.11.15", rawDate: "2025-11-15", time: "01:05:12" }
-                ]);
-            });
+        loadSavedCourses();
+        loadRecords();
     }, []);
+
+    const loadSavedCourses = async () => {
+        const data = await getSavedCourses();
+        setSavedCourses(
+            data.map(d => ({
+                id: d.routeId,
+                title: d.route,
+                location: d.location,
+                distance: d.distance + " KM",
+                level: d.level ?? "기본"
+            }))
+        );
+    };
+
+    const loadRecords = async () => {
+        const data = await getRecords();
+        setRecords(
+            data.map(r => ({
+                id: r.recordId,
+                title: r.courseName,
+                location: r.location,
+                distance: r.distance + " KM",
+                rawDate: r.runDate,
+                date: r.runDate.replace(/-/g, "."),
+                time: r.runTime,
+                imageUrl: r.imageUrl
+            }))
+        );
+    };
 
     return (
         <div className="runlog-wrapper">
