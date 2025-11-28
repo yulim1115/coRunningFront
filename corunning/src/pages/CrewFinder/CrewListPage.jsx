@@ -75,7 +75,15 @@ function CrewListPage() {
 
         <h2 className="crew-section-title">정기 러닝 크루</h2>
         <section className="crew-list-grid">
-          {/* 크루 카드 컴포넌트들이 여기에 들어갑니다. */}
+          {/* axios.get()
+                   .then(result => {
+                      let copy = [...clothes, ...result.data]
+                      setClothes(copy)
+                      setClickCount(clickCount+1);
+                    })
+                    .catch(() => {
+                      alert('더이상 없습니다');
+                    }); */}
         </section>
         <h2 className="crew-section-title">번개 러닝 크루</h2>
         <section className="crew-list-grid">
