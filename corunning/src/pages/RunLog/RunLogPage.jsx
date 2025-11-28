@@ -98,7 +98,7 @@ export default function RunLogPage() {
 
                                     <div className="form-row">
                                         <label>필수 입력 3: 인증 사진</label>
-                                        <div className="upload-box">📷 인증 사진 업로드 (클릭)</div>
+                                        <div className="upload-box" >📷 인증 사진 업로드 (클릭)</div>
                                     </div>
                                 </div>
 
