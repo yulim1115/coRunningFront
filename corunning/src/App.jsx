@@ -21,10 +21,6 @@ import RunRoutesListPage from "./pages/RunRoutes/RunRoutesListPage";
 import RunRoutesCreatePage from "./pages/RunRoutes/RunRoutesCreatePage";
 // import RunRoutesDetailPage from "./pages/RunRoutes/RunRoutesDetailPage";
 
-// import CrewListPage from "./pages/CrewFinder/CrewListPage";
-// import CrewDetailPage from "./pages/CrewFinder/CrewDetailPage";
-// import CrewCreatePage from "./pages/CrewFinder/CrewCreatePage";
-
 import RunLogPage from "./pages/RunLog/RunLogPage";
 import CrewListPage from "./pages/CrewFinder/CrewListPage";
 import CrewDetailPage from "./pages/CrewFinder/CrewDetailPage";

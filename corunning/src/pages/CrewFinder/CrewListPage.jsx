@@ -17,7 +17,7 @@ function CrewListPage() {
       </section>
       <div className="registration-notice">
         <p>함께 달릴 크루를 모집하고 싶으신가요?</p>
-        <button className="register-crew-btn" onClick={() => navigate("/CrewCreatePage")}>
+        <button className="register-crew-btn" onClick={() => navigate("/crews/create")}>
           <FaUserPlus />&nbsp;크루 모집 등록
         </button>
       </div>
@@ -27,13 +27,11 @@ function CrewListPage() {
                 <div class="filter-group">
                     <label for="filter-region">지역</label>
                     <div class="custom-select">
-                      <RegionSelector onChange={(selected) => {
-                      setRegion(selected);
-                      }} />
+                        <RegionSelector onChange={(selected) => {
+                          setRegion(selected);}} />
                     </div>
                 </div>
-            </div>
-            <div class="filter-group">
+                <div class="filter-group">
                     <label for="filter-difficulty">난이도</label>
                     <div class="custom-select">
                         <select id="filter-difficulty">
@@ -70,6 +68,22 @@ function CrewListPage() {
                 <button class="search-button">
                    조회
                 </button>
+            </div>
+
+            <p className="crew-count">총 12개의 크루</p>
+        </section>
+
+        <h2 className="crew-section-title">정기 러닝 크루</h2>
+        <section className="crew-list-grid">
+          {/* 크루 카드 컴포넌트들이 여기에 들어갑니다. */}
+        </section>
+        <h2 className="crew-section-title">번개 러닝 크루</h2>
+        <section className="crew-list-grid">
+          {/* 크루 카드 컴포넌트들이 여기에 들어갑니다. */}
+        </section>
+        <h2 className="crew-section-title">드로잉 러닝 크루</h2>
+        <section className="crew-list-grid">
+          {/* 크루 카드 컴포넌트들이 여기에 들어갑니다. */}
         </section>
       </div>
   );
