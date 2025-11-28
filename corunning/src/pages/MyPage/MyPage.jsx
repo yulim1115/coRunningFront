@@ -1,20 +1,30 @@
 import React, { useEffect, useState } from "react";
 import "./MyPage.css";
+import DaumPostcode from "react-daum-postcode";
 import { getMyInfo, updateUserInfo, updatePassword } from "../../api/userApi";
+import { useNavigate } from "react-router-dom";
 
 function MyPage() {
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
 
-    // 수정 가능 필드
     const [phone, setPhone] = useState("");
-    const [zipCode, setZipCode] = useState("");
+    const [zipcode, setZipcode] = useState("");
     const [address, setAddress] = useState("");
     const [detailAddress, setDetailAddress] = useState("");
 
-    // 비밀번호 변경
     const [currentPw, setCurrentPw] = useState("");
     const [newPw, setNewPw] = useState("");
     const [newPwCheck, setNewPwCheck] = useState("");
+
+    const [showPostcode, setShowPostcode] = useState(false);
+
+    // 주소 검색 완료 콜백
+    const onCompleteAddress = (data) => {
+        setZipcode(data.zonecode);
+        setAddress(data.address);
+        setShowPostcode(false);
+    };
 
     useEffect(() => {
         getMyInfo()
@@ -23,7 +33,7 @@ function MyPage() {
                 setUser(data);
 
                 setPhone(data.phone || "");
-                setZipCode(data.zipCode || "");
+                setZipcode(data.zonecode || "");
                 setAddress(data.address || "");
                 setDetailAddress(data.detailAddress || "");
             })
@@ -34,7 +44,7 @@ function MyPage() {
         try {
             await updateUserInfo({
                 phone,
-                zipCode,
+                zipcode,
                 address,
                 detailAddress,
             });
@@ -73,13 +83,13 @@ function MyPage() {
                 <h3 className="mypage-subtitle">필수 정보</h3>
 
                 <label>이름 (수정 불가)</label>
-                <input className="input" value={user.name} disabled />
+                <input className="input" value={user.userName} disabled />
 
                 <label>생년월일 (수정 불가)</label>
                 <input className="input" value={user.birthDate} disabled />
 
                 <label>이메일 (ID)</label>
-                <input className="input" value={user.email} disabled />
+                <input className="input" value={user.userId} disabled />
 
                 {/* 연락처 및 주소 */}
                 <h3 className="mypage-subtitle">연락처 및 주소 수정</h3>
@@ -95,16 +105,19 @@ function MyPage() {
                 <div className="zip-row">
                     <input
                         className="zip-input"
-                        value={zipCode}
-                        onChange={(e) => setZipCode(e.target.value)}
+                        value={zipcode}     // ★ user.zipCode → zipCode 로 변경됨
+                        onChange={(e) => setZipcode(e.target.value)}
+                        disabled
                     />
-                    <button className="btn-search">주소 검색</button>
+
+                    <button className="btn-search" onClick={() => setShowPostcode(true)}>주소 검색</button>
                 </div>
 
                 <input
                     className="input"
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={(e) => setZipcode(e.target.value)}
+                    disabled
                 />
 
                 <input
@@ -156,6 +169,24 @@ function MyPage() {
                 </div>
 
             </div>
+
+            {/* 우편번호 모달 */}
+            {showPostcode && (
+                <DaumPostcode
+                    onComplete={onCompleteAddress}
+                    autoClose
+                    style={{
+                        position: "fixed",
+                        top: "50%",
+                        left: "50%",
+                        width: "400px",
+                        height: "500px",
+                        transform: "translate(-50%, -50%)",
+                        boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
+                        zIndex: 2000,
+                    }}
+                />
+            )}
         </div>
     );
 }

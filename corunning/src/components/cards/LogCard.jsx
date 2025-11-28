@@ -1,58 +1,63 @@
 // src/components/cards/LogCard.jsx
 import React from "react";
 
-export default function LogCard({
-    type,          // "saved" | "record"
-    item,
-    isOpen,
-    onMainButton,
-    onDelete
-}) {
+/**
+ * props:
+ * - type: "saved" | "record"
+ * - item: { title, location, distance, level?, date?, time? }
+ * - isOpen: boolean  (아래 폼 열림 여부)
+ * - onMainButton: () => void
+ * - onDelete: () => void
+ */
+export default function LogCard({ type, item, isOpen, onMainButton, onDelete }) {
+  const { title, location, distance, level, date, time } = item;
 
-    return (
-        <div className="course-item">
-            <div className="course-row-flex">
-                {/* 왼쪽: 제목 + 메타 */}
-                <div className="course-left">
-                    <strong className="course-title">{item.title}</strong>
+  const distanceLabel =
+    distance !== undefined && distance !== null ? `${distance} km` : "-";
 
-                    <div className="meta">
-                        <span>📍 {item.location}</span>
-                        {type === "saved" && <span>🏃 {item.level}</span>}
-                        <span>📏 {item.distance}</span>
-                    </div>
-                </div>
+  const isSaved = type === "saved";
 
-                {/* 오른쪽: 버튼 / 사진 / 날짜시간 */}
-                <div className="course-right">
-                    {type === "record" && (
-                        <>
-                            <span className="photo-btn">📷 사진</span>
-                            <span className="date">{item.date} 완주</span>
-                            <span className="time">{item.time}</span>
-                        </>
-                    )}
+  return (
+    <div className="logcard-wrapper">
+      <div className="logcard-main">
+        <div className="logcard-info">
+          <div className="logcard-title">{title}</div>
 
-                    {type === "saved" && (
-                        <button
-                            className={`btn-input ${isOpen ? "active" : ""}`}
-                            onClick={onMainButton}
-                        >
-                            {isOpen ? "입력 닫기" : "기록 입력"}
-                        </button>
-                    )}
-
-                    {type === "record" && (
-                        <button className="btn-edit" onClick={onMainButton}>
-                            {isOpen ? "닫기" : "수정"}
-                        </button>
-                    )}
-
-                    <button className="btn-delete" onClick={onDelete}>
-                        삭제
-                    </button>
-                </div>
-            </div>
+          <div className="logcard-meta">
+            {location && <span className="logcard-chip">📍 {location}</span>}
+            {distance && (
+              <span className="logcard-chip">🏃 {distanceLabel}</span>
+            )}
+            {isSaved && level && (
+              <span className="logcard-chip level">난이도: {level}</span>
+            )}
+            {!isSaved && date && (
+              <span className="logcard-chip">📅 {date}</span>
+            )}
+            {!isSaved && time && (
+              <span className="logcard-chip">⏱ {time}</span>
+            )}
+          </div>
         </div>
-    );
+
+        <div className="logcard-actions">
+          <button className="logcard-btn main" onClick={onMainButton}>
+            {isSaved
+              ? isOpen
+                ? "입력 닫기"
+                : "완주 기록 입력"
+              : isOpen
+              ? "수정 닫기"
+              : "상세 / 수정"}
+          </button>
+
+          {!isSaved && (
+            <button className="logcard-btn danger" onClick={onDelete}>
+              삭제
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
