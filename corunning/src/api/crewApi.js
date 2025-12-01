@@ -35,7 +35,7 @@ export const getCrewDetailAPI = async(id) => {
 export const applyCrewAPI = async (id) => {
     try {   
         const response = await axios.post(`${API_BASE}/${id}/apply`, {}, {withCredentials: true});
-        console.log("크루신청 API 응답:", response.data);
+        console.log("크루신 API 응답:", response.data);
         return response.data;
     } catch (error) {
         console.error("크루 신청 실패:", error);
@@ -60,9 +60,13 @@ export const postCrewCommentAPI = async (crewId, commentData) => {
         return response.data;
     } catch (error) {
         console.error("크루 댓글 등록 실패:", error);
+        if (error.response) {
+          console.error("서버 응답:", error.response.data);
+  }
         throw error;
     } 
 }
+
 
 //댓글 목록 조회
 export const getCrewCommentsAPI = async (crewId) => {

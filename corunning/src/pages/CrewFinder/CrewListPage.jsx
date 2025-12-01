@@ -49,55 +49,7 @@ function CrewListPage() {
       </div>
 
       <section className="filter-controls-area">
-        <div className="filter-group-wrapper">
-          <div className="filter-group">
-            <label htmlFor="filter-region">지역</label>
-            <div className="custom-select">
-              <RegionSelector
-                onChange={(selected) => {
-                  setRegion(selected);
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="filter-group">
-            <label htmlFor="filter-difficulty">난이도</label>
-            <div className="custom-select">
-              <select id="filter-difficulty">
-                <option>전체</option>
-                <option>초급</option>
-                <option>중급</option>
-                <option>고급</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="filter-group">
-            <label htmlFor="filter-type">종류</label>
-            <div className="custom-select">
-              <select id="filter-type">
-                <option>전체</option>
-                <option>레귤러런</option>
-                <option>드로잉런</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="filter-group">
-            <label htmlFor="filter-status">상태</label>
-            <div className="custom-select">
-              <select id="filter-status">
-                <option>전체</option>
-                <option>모집 중</option>
-                <option>모집 마감</option>
-              </select>
-            </div>
-          </div>
-
-          <button className="search-button">조회</button>
-        </div>
-
+          <button className="search-button">모집중인 크루만 보기</button>
         <p className="crew-count">총 {crewList.length}개의 크루</p>
       </section>
 
