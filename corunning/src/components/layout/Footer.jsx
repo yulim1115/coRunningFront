@@ -22,9 +22,9 @@ function Footer() {
 
           {/* 정책 관련 */}
           <div className="footer-policy">
-            <a href="/terms">이용약관</a>
-            <a href="/privacy">개인정보처리방침</a>
-            <a href="/support">고객센터</a>
+            <a href="#">이용약관</a>
+            <a href="#">개인정보처리방침</a>
+            <a href="#">고객센터</a>
           </div>
 
         </div>

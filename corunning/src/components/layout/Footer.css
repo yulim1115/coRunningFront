@@ -1,15 +1,11 @@
-/* src/components/Footer/Footer.css */
-
 .footer {
   width: 100%;
-  background: #f8f9fa;
+  background: var(--color-bg-gray);
   padding: 40px 0 25px;
-  border-top: 1px solid #e3e6ea;
-  margin-top: 80px;
 }
 
 .footer-inner {
-  max-width: 1200px;
+  max-width: var(--layout-max-width);
   margin: 0 auto;
   padding: 0 40px;
 }
@@ -22,7 +18,7 @@
 .footer-logo {
   font-size: 22px;
   font-weight: 700;
-  color: #4A69BB;
+  color: var(--color-accent);
   margin-bottom: 16px;
 }
 
@@ -34,19 +30,19 @@
 .footer-links a,
 .footer-policy a {
   margin: 0 12px;
-  font-size: 14px;
-  color: #555;
+  font-size: var(--font-caption);
+  color: var(--color-text-light);
   text-decoration: none;
 }
 
 .footer-links a:hover,
 .footer-policy a:hover {
-  color: #4A69BB;
+  color: var(--color-accent);
 }
 
 .footer-bottom {
   text-align: center;
   font-size: 13px;
-  color: #999;
+  color: var(--color-text-light);
   margin-top: 20px;
 }
