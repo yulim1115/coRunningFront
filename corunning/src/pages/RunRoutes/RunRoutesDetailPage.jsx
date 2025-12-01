@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./RunRoutesDetailPage.css";
 
 import {
@@ -42,21 +42,25 @@ function RunRoutesDetailPage() {
 
   const loginUserId = sessionStorage.getItem("userEmail");
 
-  /* 난이도 라벨 */
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+
   const getDifficultyLabel = (d) =>
     d === "easy" ? "초급" : d === "medium" ? "중급" : d === "hard" ? "고급" : d;
 
-  /* 날짜 */
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}.${String(date.getDate()).padStart(2, "0")}`;
   };
 
   const getDescriptionLines = (txt) =>
     txt ? txt.split(/\r?\n/).filter((v) => v.trim() !== "") : [];
 
-  /* 상세 정보 + 저장/추천 상태 로드 */
+  // 상세 정보 + 상태 로드
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -86,7 +90,6 @@ function RunRoutesDetailPage() {
             getDipList(loginUserId),
             checkLiked(id),
           ]);
-
           setIsBookmarked(dips.some((v) => Number(v.routeId) === Number(id)));
           setIsLiked(liked);
         } else {
@@ -94,6 +97,7 @@ function RunRoutesDetailPage() {
           setIsLiked(false);
         }
       } catch (err) {
+        console.error(err);
         setError("코스 정보를 불러오는 중 오류가 발생했습니다.");
       } finally {
         setLoading(false);
@@ -103,66 +107,71 @@ function RunRoutesDetailPage() {
     loadData();
   }, [id, loginUserId]);
 
-  /* 지도 렌더링 */
+  // 지도 렌더링
   useEffect(() => {
-    if (!route) return;
-    if (!route.route) return;
+    if (!route?.route || loading) return; // 로딩 중이면 실행하지 않음
 
-    const mapContainer = document.getElementById("map");
-    if (!mapContainer) return;
-
-    let coords = [];
+    let coords;
     try {
       coords = JSON.parse(route.route);
-    } catch {
+    } catch (e) {
+      console.error("좌표 파싱 오류:", e);
       return;
     }
 
-    if (!coords.length) return;
+    if (!Array.isArray(coords) || coords.length < 2) return;
+    if (!mapContainerRef.current) return;
+
+    if (mapRef.current) {
+      mapRef.current.remove();
+      mapRef.current = null;
+    }
 
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: coords[0],
+      zoom: 14,
+      language: "ko",
+      attributionControl: false,
+    });
 
-    const timer = setTimeout(() => {
-      const map = new mapboxgl.Map({
-        container: "map",
-        style: "mapbox://styles/mapbox/streets-v11",
-        center: coords[0],
-        zoom: 14,
+    mapRef.current = map;
+
+    map.on("load", () => {
+      map.addSource("routeLine", {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          geometry: { type: "LineString", coordinates: coords },
+        },
       });
 
-      map.on("load", () => {
-        map.resize();
-
-        map.addSource("routeLine", {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            geometry: { type: "LineString", coordinates: coords },
-          },
-        });
-
-        map.addLayer({
-          id: "routeLineLayer",
-          type: "line",
-          source: "routeLine",
-          paint: { "line-width": 5, "line-color": "#e5634f" },
-        });
-
-        const bounds = new mapboxgl.LngLatBounds();
-        coords.forEach((c) => bounds.extend(c));
-        map.fitBounds(bounds, { padding: 40 });
+      map.addLayer({
+        id: "routeLineLayer",
+        type: "line",
+        source: "routeLine",
+        paint: { "line-width": 5, "line-color": "#e5634f" },
       });
 
-      return () => map.remove();
-    }, 150);
+      const bounds = coords.reduce(
+        (b, c) => b.extend(c),
+        new mapboxgl.LngLatBounds()
+      );
+      map.fitBounds(bounds, { padding: 40 });
+      map.resize();
+    });
 
-    return () => clearTimeout(timer);
-  }, [route?.route]);
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
+  }, [route?.route, loading]);
 
-  /* 추천 토글 */
+
   const handleLike = async () => {
     if (!loginUserId) return alert("로그인 후 추천이 가능합니다.");
-
     try {
       if (!isLiked) {
         await addLike(route.id);
@@ -178,10 +187,8 @@ function RunRoutesDetailPage() {
     }
   };
 
-  /* 저장 토글 */
   const handleToggleBookmark = async () => {
     if (!loginUserId) return alert("로그인 후 저장이 가능합니다.");
-
     try {
       if (!isBookmarked) {
         await addDip(route.id, loginUserId);
@@ -195,7 +202,6 @@ function RunRoutesDetailPage() {
     }
   };
 
-  /* 댓글 등록 */
   const handleAddComment = async () => {
     if (!loginUserId) return alert("로그인 후 댓글 작성 가능");
     if (!commentInput.trim()) return;
@@ -209,9 +215,9 @@ function RunRoutesDetailPage() {
     }
   };
 
-  /* 댓글 삭제 */
   const handleDeleteComment = async (commentId, writerId) => {
-    if (loginUserId !== writerId) return alert("본인 댓글만 삭제할 수 있습니다.");
+    if (loginUserId !== writerId)
+      return alert("본인 댓글만 삭제할 수 있습니다.");
     if (!window.confirm("삭제하시겠습니까?")) return;
 
     try {
@@ -222,14 +228,56 @@ function RunRoutesDetailPage() {
     }
   };
 
+  // --- 로딩 스켈레톤 ---
   if (loading) {
     return (
       <main className="detail-page">
-        <p>코스 정보를 불러오는 중입니다...</p>
+        <div className="skeleton-title-section">
+          <div className="skeleton skeleton-title"></div>
+          <div className="skeleton skeleton-tag"></div>
+          <div className="skeleton-meta-row">
+            <div className="skeleton skeleton-meta"></div>
+            <div className="skeleton skeleton-meta"></div>
+            <div className="skeleton skeleton-meta"></div>
+            <div className="skeleton skeleton-meta"></div>
+          </div>
+        </div>
+
+        <section className="main-layout">
+          <div className="left-area">
+            <div className="skeleton skeleton-map"></div>
+          </div>
+
+          <div className="right-area">
+            <div className="recommend-row">
+              <div className="skeleton skeleton-btn"></div>
+              <div className="skeleton skeleton-btn"></div>
+            </div>
+
+            <div className="course-summary-box">
+              <div className="skeleton skeleton-subtitle"></div>
+              <div className="skeleton skeleton-text"></div>
+              <div className="skeleton skeleton-text"></div>
+              <div className="skeleton skeleton-text short"></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="comment-section">
+          <div className="skeleton skeleton-subtitle"></div>
+          <div className="skeleton skeleton-input"></div>
+
+          <div className="comment-list">
+            {[1, 2, 3].map((v) => (
+              <div key={v} className="skeleton skeleton-comment-item"></div>
+            ))}
+          </div>
+        </section>
       </main>
     );
   }
 
+  // --- 오류 처리 ---
   if (error || !route) {
     return (
       <main className="detail-page">
@@ -246,6 +294,7 @@ function RunRoutesDetailPage() {
   const descriptionLines = getDescriptionLines(route.description);
   const difficultyLabel = getDifficultyLabel(route.difficulty);
 
+  // --- 정상 화면 ---
   return (
     <main className="detail-page">
       <section className="title-section">
@@ -257,21 +306,36 @@ function RunRoutesDetailPage() {
         </div>
 
         <div className="meta-row">
-          <span><FaMapMarkerAlt /> {route.region}</span>
-          <span><FaRunning /> {difficultyLabel}</span>
-          <span><FaRoute /> {route.distance} km</span>
-          <span><FaUser /> 작성자 {route.writer}</span>
+          <span>
+            <FaMapMarkerAlt /> {route.region}
+          </span>
+          <span>
+            <FaRunning /> {difficultyLabel}
+          </span>
+          <span>
+            <FaRoute /> {route.distance} km
+          </span>
+          <span>
+            <FaUser /> 작성자 {route.writer}
+          </span>
         </div>
       </section>
 
       <section className="main-layout">
         <div className="left-area">
-          <div id="map" className="map-box"></div>
+          <div
+            ref={mapContainerRef}
+            className={`map-box ${loading ? "skeleton-map" : ""}`}
+          ></div>
         </div>
+
 
         <div className="right-area">
           <div className="recommend-row">
-            <button className={`action-btn ${isLiked ? "liked" : ""}`} onClick={handleLike}>
+            <button
+              className={`action-btn ${isLiked ? "liked" : ""}`}
+              onClick={handleLike}
+            >
               <FaThumbsUp /> 추천 ({route.liked})
             </button>
 
@@ -282,9 +346,11 @@ function RunRoutesDetailPage() {
 
           <div className="course-summary-box">
             <h2>코스 소개</h2>
-            {descriptionLines.length
-              ? descriptionLines.map((line, idx) => <p key={idx}>{line}</p>)
-              : <p>등록된 코스 설명이 없습니다.</p>}
+            {descriptionLines.length ? (
+              descriptionLines.map((line, idx) => <p key={idx}>{line}</p>)
+            ) : (
+              <p>등록된 코스 설명이 없습니다.</p>
+            )}
           </div>
         </div>
       </section>
@@ -299,7 +365,9 @@ function RunRoutesDetailPage() {
             value={commentInput}
             onChange={(e) => setCommentInput(e.target.value)}
           />
-          <button className="comment-submit-btn" onClick={handleAddComment}>등록</button>
+          <button className="comment-submit-btn" onClick={handleAddComment}>
+            등록
+          </button>
         </div>
 
         <div className="comment-list">
@@ -312,7 +380,9 @@ function RunRoutesDetailPage() {
                 {loginUserId === item.writerId && (
                   <button
                     className="comment-delete-btn"
-                    onClick={() => handleDeleteComment(item.id, item.writerId)}
+                    onClick={() =>
+                      handleDeleteComment(item.id, item.writerId)
+                    }
                   >
                     삭제
                   </button>
