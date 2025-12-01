@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CrewListPage";
 import RegionSelector from "../../components/common/RegionSelector";
-import { crewCreateAPI } from "../../api/crewCreateApi.js";
+import { crewCreateAPI } from "../../api/crewApi.js";
 
 function CrewCreatePage() {
     const Navigate = useNavigate();
