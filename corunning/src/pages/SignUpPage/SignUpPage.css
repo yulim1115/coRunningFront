@@ -1,134 +1,159 @@
-/* src/pages/SignUpPage/SignUpPage.css */
-
-/* Signup Page Layout */
+/* 회원가입 페이지 전체 레이아웃 */
 .signup-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 60px 0;
-    background-color: #F8F9FA;
-    min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 0;
+  background-color: var(--color-bg-light);
 }
 
+/* 회원가입 박스 카드 */
 .signup-box {
-    width: 560px;
-    background: #ffffff;
-    padding: 40px 50px;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  margin: 40px auto;
+  width: 540px;
+  background: var(--color-bg);
+  padding: 40px 80px;
+  border-radius: 8px;
+  box-shadow: var(--shadow-card);
 }
 
+/* 내부 요소 기본 그림자 제거 */
+.signup-box * {
+  box-shadow: none !important;
+}
+
+/* 제목 */
 .signup-box h2 {
-    font-size: 32px;
-    text-align: center;
-    margin-bottom: 25px;
-    color: #1A2F4B;
+  font-size: var(--font-h1);
+  text-align: center;
+  color: var(--color-text-dark);
+  margin-bottom: 20px;
+  font-weight: var(--fw-bold);
 }
 
-/* Form Layout */
+/* 기본 form-group */
 .form-group {
-    margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
+/* 주소 그룹은 간격을 더 좁게 */
+.address-group .form-group {
+  margin-bottom: 8px;
+}
+
+/* label */
 .form-group label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 14px;
-    color: #444;
-    font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--font-caption);
+  color: var(--color-text-light);
+  font-weight: var(--fw-medium);
 }
 
+/* input */
 .form-group input {
-    width: 100%;
-    height: 48px;
-    padding: 0 12px;
-    border: 1px solid #CCCCCC;
-    border-radius: 8px;
-    font-size: 15px;
-    box-sizing: border-box;
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--color-bg);
+  box-sizing: border-box;
+  outline: none;
 }
 
-/* 비밀번호 힌트*/
-/* .hint-text {
-    font-size: 12px;
-    color: #999;
-    margin-top: 5px;
-} */
+.form-group input:focus {
+  border-color: var(--color-accent);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(74,105,187,0.15);
+}
 
-/* 주소 입력 (우편번호 + 주소 검색 버튼) */
+/* 주소 입력 행 */
 .address-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  width: 100%;
 }
 
+/* 우편번호 input 크기 */
 .address-row input {
-    width: 140px;
-    flex-shrink: 0;
+  width: 70%;
+  min-width: 120px;
 }
 
+/* 주소 검색 버튼 */
 .address-search-btn {
-    width: 110px;
-    height: 48px;
-    background: #4A69BB;
-    color: white;
-    border-radius: 8px;
-    border: none;
-    font-size: 14px;
-    cursor: pointer;
+  flex: 1;
+  height: var(--btn-large-height);
+  background: var(--color-sub);
+  color: var(--color-white);
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  transition: 0.2s;
 }
 
 .address-search-btn:hover {
-    background: #3B57A5;
+  background: var(--color-sub-hover);
 }
 
 /* 회원가입 버튼 */
 .signup-submit-btn {
-    width: 100%;
-    height: 48px;
-    background: #4A69BB;
-    color: white;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 8px;
-    border: none;
-    margin-top: 30px;
-    cursor: pointer;
+  width: 100%;
+  height: var(--btn-large-height);
+  background: var(--color-main);
+  color: var(--color-white);
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+  border-radius: 6px;
+  border: none;
+  margin-top: 30px;
 }
 
 .signup-submit-btn:disabled {
-    background: #A8B4D6;
-    cursor: not-allowed;
+  background: #A8B4D6;
+  cursor: not-allowed;
 }
 
 .signup-submit-btn:hover:not(:disabled) {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
-/* 로그인 안내 (가운데 정렬) */
+/* 로그인 안내 */
 .login-guide {
-    margin-top: 20px;
-    text-align: center;
-    color: #666;
+  margin-top: 12px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: var(--fw-regular);
+  color: var(--color-text-light);
 }
 
+/* 로그인 링크 */
 .link-text {
-    color: #4A69BB;
-    font-weight: 700;
-    cursor: pointer;
-    margin-left: 6px;
+  color: var(--color-accent);
+  font-size: 14px;
+  font-weight: var(--fw-medium);
+  margin-left: 6px;
 }
 
-/* 비밀번호 일치 / 에러 메시지 공통 */
+.link-text:hover {
+  color: var(--color-accent-hover);
+  cursor: pointer;
+}
+
+/* 비밀번호 메시지 */
 .valid-msg {
-    font-size: 12px;
-    margin-top: 6px;
+  font-size: 12px;
+  margin-top: 6px;
 }
 
 .valid-msg.error {
-    color: #d9534f;
+  color: var(--color-red);
 }
 
 .valid-msg.success {
-    color: #28a745;
+  color: var(--color-green);
 }

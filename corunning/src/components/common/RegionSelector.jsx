@@ -8,6 +8,7 @@ export default function RegionSelector({ onChange }) {
   const [guCode, setGuCode] = useState("");
   const [guName, setGuName] = useState("");
 
+  // 시도 선택
   const handleSidoChange = (e) => {
     const code = e.target.value;
     setSidoCode(code);
@@ -22,8 +23,11 @@ export default function RegionSelector({ onChange }) {
     }
   };
 
+  // 구 선택
   const handleGuChange = (e) => {
     const code = e.target.value;
+    setGuCode(code);
+
     const guObj = guList.find((g) => g.code === code);
     if (guObj) {
       setGuCode(code);

@@ -1,4 +1,3 @@
-// src/api/userApi.js
 import axios from "axios";
 
 const API_BASE = "/api/users";

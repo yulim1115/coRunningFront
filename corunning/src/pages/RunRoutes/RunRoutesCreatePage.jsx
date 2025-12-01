@@ -1,4 +1,3 @@
-import "./RunRoutesPage.css";
 import React, { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import * as turf from "@turf/turf";
@@ -161,11 +160,38 @@ function RunRoutesCreatePage() {
         markersRef.current = [];
     };
 
-    const finishRoute = async () => {
-        if (routeCoords.length < 2) {
-            alert("경로가 너무 짧습니다.");
-            return;
-        }
+            <div ref={mapContainer} className="mapbox-container" />
+
+            <p className="map-desc">지도를 클릭하여 경로를 그릴 수 있습니다.</p>
+
+            {distance > 0 && (
+              <p className="distance-text">
+                예상 거리: {(distance / 1000).toFixed(1)} km
+              </p>
+            )}
+          </div>
+
+          {/* 제목 */}
+          <div className="form-group">
+            <label className="form-label">
+              코스 제목 <span className="required">*</span>
+            </label>
+            <input
+              type="text"
+              className="input-field"
+              placeholder="예: 청계천 드로잉런 코스"
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+
+          {/* 지역 / 난이도 / 유형 */}
+          <div className="meta-fields">
+            <div className="form-group">
+              <label className="form-label">
+                지역 <span className="required">*</span>
+              </label>
+              <RegionSelector onChange={(v) => setRegion(v)} />
+            </div>
 
         const coordsString = routeCoords.map((c) => `${c[0]},${c[1]}`).join(";");
         const url = `https://api.mapbox.com/matching/v5/mapbox/walking/${coordsString}?geometries=geojson&overview=full&access_token=${mapboxgl.accessToken}`;
@@ -361,8 +387,32 @@ function RunRoutesCreatePage() {
                     </div>
                 </form>
             </div>
-        </main>
-    );
+          </div>
+
+          {/* 설명 */}
+          <div className="form-group">
+            <label className="form-label">상세 설명</label>
+            <textarea
+              className="textarea-field"
+              placeholder="코스 특징, 유의사항 등을 작성해주세요."
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
+
+          {/* 등록/취소 버튼 */}
+          <div className="create-btn-row">
+            <button type="submit" className="btn-medium main" disabled={!snappedCoords.length}>
+              등록하기
+            </button>
+
+            <button type="button" className="btn-medium" onClick={resetRoute}>
+              취소
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  );
 }
 
 export default RunRoutesCreatePage;

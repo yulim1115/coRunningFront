@@ -1,0 +1,57 @@
+/* 지역 선택 전체 정렬 */
+.region-selector {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* 선택박스 공통 스타일 */
+.region-selector select {
+  width: 150px;
+  height: 40px; /* 셀렉트 높이 통일 */
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--color-white);
+  appearance: none;
+  position: relative;
+  cursor: pointer;
+}
+
+/* 비활성화 select */
+.region-selector select:disabled {
+  background: #f1f3f5;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* 커스텀 화살표 */
+.region-selector {
+  position: relative;
+}
+
+/* 화살표 추가 */
+.region-selector select {
+  background-image: none;
+}
+
+/* 화살표 공통 스타일 */
+.region-selector select::-ms-expand {
+  display: none;
+}
+
+/* 화살표 표시 */
+.region-selector select {
+  background: var(--color-white)
+    url("data:image/svg+xml;utf8,<svg fill='%23415472' height='12' width='12' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><polygon points='0,0 20,0 10,12'/></svg>")
+    no-repeat right 10px center;
+  background-size: 12px;
+}
+
+/* 포커스 시 강조 */
+.region-selector select:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(74, 105, 187, 0.15);
+  outline: none;
+}

@@ -1,5 +1,4 @@
 // src/pages/SignUpPage/SignUpPage.jsx
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
@@ -10,51 +9,46 @@ import { signUpAPI } from "../../api/userApi";
 function SignUpPage() {
   const navigate = useNavigate();
 
-  // ---------------- 기본 입력값 state ----------------
-  const [email, setEmail] = useState("");            // 이메일(ID)
-  const [password, setPassword] = useState("");      // 비밀번호
-  const [passwordCheck, setPasswordCheck] = useState(""); // 비번 확인
-  const [isPwMatch, setIsPwMatch] = useState(null);  // 비번 일치 여부
+  /* 입력값 상태 */
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [isPwMatch, setIsPwMatch] = useState(null);
 
-  const [name, setName] = useState("");              // 이름
-  const [birthDate, setBirthDate] = useState("");    // 생년월일
-  const [phone, setPhone] = useState("");            // 연락처
+  const [name, setName] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [phone, setPhone] = useState("");
 
-  // ---------------- 주소 관련 state ----------------
-  const [zipcode, setZipcode] = useState("");        // 우편번호
-  const [address, setAddress] = useState("");        // 기본 주소
-  const [detailAddress, setDetailAddress] = useState(""); // 상세 주소
+  /* 주소 상태 */
+  const [zipcode, setZipcode] = useState("");
+  const [address, setAddress] = useState("");
+  const [detailAddress, setDetailAddress] = useState("");
+  const [showPostcode, setShowPostcode] = useState(false);
 
-  const [showPostcode, setShowPostcode] = useState(false); // 주소검색창 ON/OFF
-
-  // ---------------- 에러 메시지 ----------------
+  /* 에러 메시지 */
   const [errorMsg, setErrorMsg] = useState("");
 
-  // ---------------- 비밀번호 체크 useEffect ----------------
+  /* 비밀번호 일치 체크 */
   useEffect(() => {
-    // 비밀번호 확인 칸에 뭔가 입력된 상태에서만 검사
     if (passwordCheck.length > 0) {
       setIsPwMatch(password === passwordCheck);
     } else {
-      // 비밀번호 확인 칸이 비어 있을 때
       setIsPwMatch(null);
     }
   }, [password, passwordCheck]);
 
-  // ---------------- 주소 검색 완료 콜백 ----------------
+  /* 주소 검색 완료 */
   const onCompleteAddress = (data) => {
-    // data.zonecode : 우편번호, data.address : 기본주소
     setZipcode(data.zonecode);
     setAddress(data.address);
-    setShowPostcode(false); // 검색창 닫기
+    setShowPostcode(false);
   };
 
-  // ---------------- 회원가입 요청 ----------------
+  /* 회원가입 요청 */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg("");
 
-    // 백엔드에 보낼 데이터 형식 (백엔드와 약속된 필드명 그대로)
     const data = {
       userId: email,
       userPw: password,
@@ -62,15 +56,14 @@ function SignUpPage() {
       birthDate: birthDate,
       phone: phone,
       userAddress: address + " " + detailAddress,
-      hireDate: new Date().toISOString().slice(0, 10), // 오늘 날짜 (예: 2025-11-27)
+      hireDate: new Date().toISOString().slice(0, 10),
     };
 
     try {
-      await signUpAPI(data);      // POST /api/users 로 요청
+      await signUpAPI(data);
       alert("회원가입 성공!");
-      navigate("/login");        // 가입 후 로그인 페이지로 이동
+      navigate("/login");
     } catch (err) {
-      console.error(err);
       setErrorMsg(
         err.response?.data?.message ||
           "회원가입 실패! 이미 존재하는 정보일 수 있습니다."
@@ -78,12 +71,18 @@ function SignUpPage() {
     }
   };
 
+  // 화면 진입 시 스크롤 맨 위
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   return (
     <div className="signup-wrapper">
       <div className="signup-box">
         <h2>회원 가입</h2>
 
         <form onSubmit={handleSubmit}>
+
           {/* 이메일 */}
           <div className="form-group">
             <label>이메일 (ID) *</label>
@@ -106,7 +105,6 @@ function SignUpPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            {/* 👉 여기 있던 '비밀번호 조건 안내 문구'는 제거함 */}
           </div>
 
           {/* 비밀번호 확인 */}
@@ -161,54 +159,42 @@ function SignUpPage() {
             />
           </div>
 
-          {/* 주소 - 우편번호 + 검색 버튼 */}
-          <div className="form-group">
-            <label>주소 *</label>
-            <div className="address-row">
+          {/* 우편번호 + 검색 */}
+          <div className="address-group">
+            <div className="form-group">
+              <label>주소 *</label>
+              <div className="address-row">
+                <input type="text" placeholder="우편번호" value={zipcode} disabled />
+                <button
+                  type="button"
+                  className="address-search-btn"
+                  onClick={() => setShowPostcode(true)}
+                >
+                  주소 검색
+                </button>
+              </div>
+            </div>
+  
+            {/* 기본 주소 */}
+            <div className="form-group">
+              <input type="text" placeholder="기본 주소" value={address} disabled />
+            </div>
+  
+            {/* 상세 주소 */}
+            <div className="form-group">
               <input
                 type="text"
-                placeholder="우편번호"
-                value={zipcode}
-                disabled
+                placeholder="상세 주소 (선택)"
+                value={detailAddress}
+                onChange={(e) => setDetailAddress(e.target.value)}
               />
-              <button
-                type="button"
-                className="address-search-btn"
-                onClick={() => setShowPostcode(true)}
-              >
-                주소 검색
-              </button>
             </div>
-          </div>
-
-          {/* 기본 주소 */}
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="기본 주소"
-              value={address}
-              disabled
-            />
-          </div>
-
-          {/* 상세 주소 */}
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="상세 주소 (선택)"
-              value={detailAddress}
-              onChange={(e) => setDetailAddress(e.target.value)}
-            />
           </div>
 
           {/* 에러 메시지 */}
           {errorMsg && <p className="valid-msg error">{errorMsg}</p>}
 
-          {/* 가입 버튼 
-              - 비밀번호가 불일치(isPwMatch === false) 이거나
-              - 우편번호(주소검색)를 아직 안 했을 때(!zipcode)
-              → 비활성화(disabled)
-          */}
+          {/* 제출 버튼 */}
           <button
             type="submit"
             className="signup-submit-btn"
@@ -227,7 +213,7 @@ function SignUpPage() {
         </p>
       </div>
 
-      {/* 주소 검색 모달 (Daum/Kakao 우편번호 API) */}
+      {/* 주소 검색 모달 */}
       {showPostcode && (
         <DaumPostcode
           onComplete={onCompleteAddress}
