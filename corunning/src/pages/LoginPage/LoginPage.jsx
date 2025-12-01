@@ -1,6 +1,5 @@
 // src/pages/LoginPage/LoginPage.jsx
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Global.css";
 import "./LoginPage.css";
@@ -9,9 +8,11 @@ import { loginAPI } from "../../api/userApi";
 function LoginPage() {
   const navigate = useNavigate();
 
+  /* 입력값 상태 */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  /* 로그인 요청 */
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -21,13 +22,13 @@ function LoginPage() {
     };
 
     try {
-      const res = await loginAPI(data);
+      await loginAPI(data);
 
-      // 로그인 상태 저장
+      /* 로그인 상태 저장 */
       sessionStorage.setItem("isLogin", "true");
       sessionStorage.setItem("userEmail", email);
 
-      // 헤더 강제 업데이트
+      /* 헤더 강제 업데이트 */
       window.dispatchEvent(new Event("storage"));
 
       alert("로그인 성공!");
@@ -39,13 +40,18 @@ function LoginPage() {
     }
   };
 
+  // 화면 진입 시 스크롤 맨 위
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="login-wrapper">
       <div className="login-box">
         <h2>로그인</h2>
 
         <form onSubmit={handleLogin}>
-        
+
           {/* 이메일 */}
           <div className="form-group">
             <label>이메일 (ID)</label>
@@ -70,18 +76,20 @@ function LoginPage() {
             />
           </div>
 
+          {/* 로그인 버튼 */}
           <button type="submit" className="login-submit-btn">
             로그인
           </button>
 
-          <p className="signup-guide">
-            아직 회원이 아니신가요?
-            <span className="link-text" onClick={() => navigate("/signup")}>
-              회원가입
-            </span>
-          </p>
-
         </form>
+
+        {/* 회원가입 안내 */}
+        <p className="signup-guide">
+          아직 회원이 아니신가요?
+          <span className="link-text" onClick={() => navigate("/signup")}>
+            회원가입
+          </span>
+        </p>
       </div>
     </div>
   );

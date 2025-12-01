@@ -1,10 +1,7 @@
-// src/pages/RunRoutes/RunRoutesDetailPage.jsx
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./RunRoutesDetailPage.css";
 
 import {
-  FaArrowLeft,
   FaMapMarkerAlt,
   FaRunning,
   FaRoute,
@@ -13,116 +10,326 @@ import {
   FaBookmark,
 } from "react-icons/fa";
 
+import { useParams, useNavigate } from "react-router-dom";
+
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+
+import {
+  getRouteById,
+  getRouteComments,
+  addRouteComment,
+  deleteRouteComment,
+  getDipList,
+  addDip,
+  removeDip,
+  addLike,
+  removeLike,
+  checkLiked,
+} from "../../api/routesApi";
+
 function RunRoutesDetailPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [route, setRoute] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [commentInput, setCommentInput] = useState("");
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const loginUserId = sessionStorage.getItem("userEmail");
+
+  /* 난이도 라벨 */
+  const getDifficultyLabel = (d) =>
+    d === "easy" ? "초급" : d === "medium" ? "중급" : d === "hard" ? "고급" : d;
+
+  /* 날짜 */
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
+  };
+
+  const getDescriptionLines = (txt) =>
+    txt ? txt.split(/\r?\n/).filter((v) => v.trim() !== "") : [];
+
+  /* 상세 정보 + 저장/추천 상태 로드 */
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [routeData, commentData] = await Promise.all([
+          getRouteById(id),
+          getRouteComments(id),
+        ]);
+
+        setRoute({
+          id: routeData.route_id,
+          title: routeData.title,
+          type: routeData.type,
+          region: routeData.location,
+          difficulty: routeData.difficulty,
+          distance: routeData.distance,
+          writer: routeData.writer,
+          liked: routeData.liked ?? 0,
+          description: routeData.description,
+          route: routeData.route,
+        });
+
+        setComments(commentData || []);
+
+        if (loginUserId) {
+          const [dips, liked] = await Promise.all([
+            getDipList(loginUserId),
+            checkLiked(id),
+          ]);
+
+          setIsBookmarked(dips.some((v) => Number(v.routeId) === Number(id)));
+          setIsLiked(liked);
+        } else {
+          setIsBookmarked(false);
+          setIsLiked(false);
+        }
+      } catch (err) {
+        setError("코스 정보를 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [id, loginUserId]);
+
+  /* 지도 렌더링 */
+  useEffect(() => {
+    if (!route) return;
+    if (!route.route) return;
+
+    const mapContainer = document.getElementById("map");
+    if (!mapContainer) return;
+
+    let coords = [];
+    try {
+      coords = JSON.parse(route.route);
+    } catch {
+      return;
+    }
+
+    if (!coords.length) return;
+
+    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+
+    const timer = setTimeout(() => {
+      const map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v11",
+        center: coords[0],
+        zoom: 14,
+      });
+
+      map.on("load", () => {
+        map.resize();
+
+        map.addSource("routeLine", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            geometry: { type: "LineString", coordinates: coords },
+          },
+        });
+
+        map.addLayer({
+          id: "routeLineLayer",
+          type: "line",
+          source: "routeLine",
+          paint: { "line-width": 5, "line-color": "#e5634f" },
+        });
+
+        const bounds = new mapboxgl.LngLatBounds();
+        coords.forEach((c) => bounds.extend(c));
+        map.fitBounds(bounds, { padding: 40 });
+      });
+
+      return () => map.remove();
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [route?.route]);
+
+  /* 추천 토글 */
+  const handleLike = async () => {
+    if (!loginUserId) return alert("로그인 후 추천이 가능합니다.");
+
+    try {
+      if (!isLiked) {
+        await addLike(route.id);
+        setIsLiked(true);
+        setRoute((prev) => ({ ...prev, liked: prev.liked + 1 }));
+      } else {
+        await removeLike(route.id);
+        setIsLiked(false);
+        setRoute((prev) => ({ ...prev, liked: prev.liked - 1 }));
+      }
+    } catch {
+      alert("추천 처리 실패");
+    }
+  };
+
+  /* 저장 토글 */
+  const handleToggleBookmark = async () => {
+    if (!loginUserId) return alert("로그인 후 저장이 가능합니다.");
+
+    try {
+      if (!isBookmarked) {
+        await addDip(route.id, loginUserId);
+        setIsBookmarked(true);
+      } else {
+        await removeDip(route.id, loginUserId);
+        setIsBookmarked(false);
+      }
+    } catch {
+      alert("저장 기능 처리 실패");
+    }
+  };
+
+  /* 댓글 등록 */
+  const handleAddComment = async () => {
+    if (!loginUserId) return alert("로그인 후 댓글 작성 가능");
+    if (!commentInput.trim()) return;
+
+    try {
+      const newComment = await addRouteComment(id, commentInput.trim());
+      setComments((prev) => [...prev, newComment]);
+      setCommentInput("");
+    } catch {
+      alert("댓글 등록 실패");
+    }
+  };
+
+  /* 댓글 삭제 */
+  const handleDeleteComment = async (commentId, writerId) => {
+    if (loginUserId !== writerId) return alert("본인 댓글만 삭제할 수 있습니다.");
+    if (!window.confirm("삭제하시겠습니까?")) return;
+
+    try {
+      await deleteRouteComment(commentId);
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+    } catch {
+      alert("댓글 삭제 실패");
+    }
+  };
+
+  if (loading) {
+    return (
+      <main className="detail-page">
+        <p>코스 정보를 불러오는 중입니다...</p>
+      </main>
+    );
+  }
+
+  if (error || !route) {
+    return (
+      <main className="detail-page">
+        <h2>{error || "존재하지 않는 코스입니다."}</h2>
+        <div className="bottom-btn-wrapper">
+          <button className="back-list-btn" onClick={() => navigate("/routes")}>
+            목록으로
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  const descriptionLines = getDescriptionLines(route.description);
+  const difficultyLabel = getDifficultyLabel(route.difficulty);
+
   return (
     <main className="detail-page">
-
-      {/* 🔙 목록으로 돌아가기 */}
-      {/* <div className="back-link-wrapper">
-        <a href="/routes" className="back-link">
-          <FaArrowLeft /> 목록으로 돌아가기
-        </a>
-      </div> */}
-
-      {/* 제목 영역 */}
       <section className="title-section">
-
         <div className="title-row">
-          <h1 className="route-title">청계천 따라 달리기</h1>
-
-          {/* 리스트 페이지 태그와 동일 */}
-          <div className="course-tag drawing">드로잉런</div>
+          <h1 className="route-title">{route.title}</h1>
+          <div className={`course-tag ${route.type}`}>
+            {route.type === "drawing" ? "드로잉런" : "레귤러런"}
+          </div>
         </div>
 
         <div className="meta-row">
-          <span><FaMapMarkerAlt /> 서울 종로구</span>
-          <span><FaRunning /> 초급</span>
-          <span><FaRoute /> 6.5 KM</span>
-          <span><FaUser /> 작성자: 황떡배 님</span>
+          <span><FaMapMarkerAlt /> {route.region}</span>
+          <span><FaRunning /> {difficultyLabel}</span>
+          <span><FaRoute /> {route.distance} km</span>
+          <span><FaUser /> 작성자 {route.writer}</span>
         </div>
       </section>
 
-      {/* 메인 2단 레이아웃 */}
       <section className="main-layout">
-        
-        {/* 왼쪽: 지도 */}
         <div className="left-area">
-          <div className="map-box">Running Route Map Placeholder</div>
+          <div id="map" className="map-box"></div>
         </div>
 
-        {/* 오른쪽: 추천/저장 + 소개 */}
         <div className="right-area">
-
           <div className="recommend-row">
-            <button className="action-btn"><FaThumbsUp /> 추천 (123)</button>
-            <button className="action-btn"><FaBookmark /> 저장 (45)</button>
+            <button className={`action-btn ${isLiked ? "liked" : ""}`} onClick={handleLike}>
+              <FaThumbsUp /> 추천 ({route.liked})
+            </button>
+
+            <button className="action-btn" onClick={handleToggleBookmark}>
+              <FaBookmark /> {isBookmarked ? "저장됨" : "저장"}
+            </button>
           </div>
 
           <div className="course-summary-box">
             <h2>코스 소개</h2>
-            <p>
-              맑은 청계천을 따라 상쾌하게 달릴 수 있는 힐링 러닝 코스입니다.
-            </p>
-            <p>
-              초보자도 부담 없는 평탄한 코스로, 시원한 물소리와 함께 도심 속 힐링을 느낄 수 있어요.
-            </p>
+            {descriptionLines.length
+              ? descriptionLines.map((line, idx) => <p key={idx}>{line}</p>)
+              : <p>등록된 코스 설명이 없습니다.</p>}
           </div>
-
         </div>
-
       </section>
 
-      {/* 댓글 영역 */}
       <section className="comment-section">
-
-        <h2 className="comment-title">댓글 (3개)</h2>
+        <h2 className="comment-title">댓글 ({comments.length}개)</h2>
 
         <div className="comment-input-row">
-          <input type="text" placeholder="이 코스에 대한 답글을 남겨주세요.." />
-          <button className="comment-submit-btn">등록</button>
+          <input
+            type="text"
+            placeholder="댓글을 입력하세요"
+            value={commentInput}
+            onChange={(e) => setCommentInput(e.target.value)}
+          />
+          <button className="comment-submit-btn" onClick={handleAddComment}>등록</button>
         </div>
 
         <div className="comment-list">
+          {comments.map((item) => (
+            <div className="comment-item" key={item.id}>
+              <div className="comment-meta">
+                <strong>{item.writerId}</strong>
+                <span className="date">{formatDate(item.createdAt)}</span>
 
-          <div className="comment-item">
-            <div className="comment-meta">
-              <strong>정떡덕</strong>
-              <span className="date">2025.11.26</span>
+                {loginUserId === item.writerId && (
+                  <button
+                    className="comment-delete-btn"
+                    onClick={() => handleDeleteComment(item.id, item.writerId)}
+                  >
+                    삭제
+                  </button>
+                )}
+              </div>
+
+              <p className="comment-text">{item.content}</p>
             </div>
-            <p className="comment-text">
-              깔끔하고 달리기도 편했어요! 다음에도 또 이용할게요.
-            </p>
-          </div>
-
-          <div className="comment-item">
-            <div className="comment-meta">
-              <strong>러너123</strong>
-              <span className="date">2025.11.24</span>
-            </div>
-            <p className="comment-text">
-              코스 등록 감사합니다. 맵이 너무 보기 좋아요!
-            </p>
-          </div>
-
-          <div className="comment-item">
-            <div className="comment-meta">
-              <strong>coRunning운영진</strong>
-              <span className="date">2025.11.25</span>
-            </div>
-            <p className="comment-text">
-              좋은 코스 등록 감사합니다! 앞으로 더 많은 코스 제공할게요 😄
-            </p>
-          </div>
-
+          ))}
         </div>
-
       </section>
 
-      {/* 목록으로 돌아가기 */}
       <div className="bottom-btn-wrapper">
-        <a href="/routes" className="back-list-btn">목록으로</a>
+        <button className="back-list-btn" onClick={() => navigate("/routes")}>
+          목록으로
+        </button>
       </div>
-
     </main>
   );
 }

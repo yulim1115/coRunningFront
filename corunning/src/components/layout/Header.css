@@ -1,35 +1,38 @@
-/* Header 전체 */
 .header {
     width: 100%;
     height: 60px;
     position: fixed;
     top: 0;
     left: 0;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    background: var(--color-bg);
+    box-shadow: var(--shadow-card);
     display: flex;
     justify-content: center;
     z-index: 1000;
 }
 
-/* 내부 컨테이너 */
 .header-inner {
     width: 100%;
-    max-width: 1200px;
+    max-width: var(--layout-max-width);
     padding: 0 40px;
     display: flex;
     align-items: center;
-    position: relative; 
+    position: relative;
 }
 
-/* 로고 */
+/* Logo */
+.logo img {
+  height: 28px;
+  cursor: pointer;
+  display: block;
+}
+
 .logo {
-    font-size: 20px;
-    font-weight: 700;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
-/* 네비 - 화면 중앙 고정 */
+/* Navigation */
 .nav {
     position: absolute;
     left: 50%;
@@ -40,46 +43,61 @@
 
 .nav a {
     font-size: 14px;
-    color: #666;
-    text-decoration: none;
-}
-.nav a:hover {
-    color: #4A69BB;
+    color: var(--color-text-dark);
 }
 
-/* 로그인/회원가입 / 로그아웃 */
+.nav a:hover {
+    color: var(--color-accent);
+}
+
+/* Auth Section */
 .auth-area {
-    margin-left: auto; 
+    margin-left: auto;
     display: flex;
     align-items: center;
     gap: 12px;
-    width: 170px;
+    width: 240px;
     justify-content: flex-end;
 }
 
-/* 버튼 스타일 */
+/* Buttons 공통 */
+.login-btn,
+.signup-btn,
+.logout-btn {
+    height: var(--btn-small-height); /* 32px */
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--btn-radius-small); /* 16px */
+    font-size: var(--font-caption); /* 14px */
+    color: var(--color-white);
+    border: none;
+    transition: 0.2s ease;
+}
+
+/* Button Colors */
 .login-btn {
-    padding: 6px 14px;
-    background: #415472;
-    color: white;
-    border-radius: 16px;
-    font-size: 14px;
+    background: var(--color-main);
 }
 
 .signup-btn {
-    padding: 6px 14px;
-    background: #4A69BB;
-    color: white;
-    border-radius: 16px;
-    font-size: 14px;
+    background: var(--color-accent);
 }
 
 .logout-btn {
-    padding: 6px 14px;
-    background: #d9534f;
-    color: white;
-    border-radius: 16px;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
+    background: var(--color-red);
+}
+
+/* Hover */
+.login-btn:hover {
+    background: var(--color-main-hover);
+}
+
+.signup-btn:hover {
+    background: var(--color-accent-hover);
+}
+
+.logout-btn:hover {
+    background: var(--color-red-hover);
 }
