@@ -1,330 +1,676 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>coRunning - 나만의 러닝 코스를 만들고 공유해보세요!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>coRunning - 메인 페이지</title>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+
+
     <style>
-        /* 기본 색상 정의 */
-        /* 메인 블루: #4A69BB, 진한 네이비: #1A2F4B, 배경: #F8F9FA, 좋아요: #D9534F */
+        /* ====================================
+        1. GLOBAL STYLE & RESET
+        ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            margin: 0;
-            padding-top: 60px; 
-            color: #333333;
-            background-color: #FFFFFF; 
+            color: #1A2F4B;
+            background: #FDFDFD;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            line-height: 1.6; 
+            overflow-x: hidden;
         }
 
-        /* 폰트 크기 조정 및 색상 통일 */
-        h1 { font-size: 44px; color: #1A2F4B; font-weight: 900; margin: 0; } 
-        h2 { font-size: 34px; color: #1A2F4B; font-weight: 700; margin: 0; } 
-        h3 { font-size: 20px; color: #1A2F4B; font-weight: 700; margin: 0; } 
-        
-        /* 컨텐츠 중앙 정렬 및 좌우 여백 */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 40px; 
+            padding: 0 24px;
         }
 
-        /* ---------------------------------- */
-        /* 헤더 스타일 */
-        /* ---------------------------------- */
-        .header {
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            background-color: #FFFFFF; 
-            border-bottom: 1px solid #E0E0E0; 
-            z-index: 1000;
-        }
-        .header-content {
-            height: 100%; display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo { font-weight: 900; font-size: 24px; color: #1A2F4B; text-decoration: none; }
-        .nav-menu a { font-size: 15px; color: #666666; text-decoration: none; margin: 0 25px; font-weight: 500; transition: color 0.2s; }
-        .nav-menu a:hover { color: #4A69BB; }
-        
-        /* 로그인 버튼 */
-        .login-btn {
-            display: inline-flex; height: 32px; padding: 0 16px; justify-content: center; align-items: center;
-            font-size: 14px; font-weight: 500; border-radius: 16px; 
-            transition: background 0.2s;
-            color: #FFFFFF; border: none; background: #415472;
-            text-decoration: none;
-        }
-        .login-btn:hover { background: #1A2F4B; }
-
-
-        /* ---------------------------------- */
-        /* 메인 배너 */
-        /* ---------------------------------- */
-        .hero-banner {
-            background: linear-gradient(135deg, #4A69BB 0%, #1A2F4B 100%);
-            color: #FFFFFF; 
-            padding: 100px 0; 
-            text-align: center; 
-            margin-bottom: 80px; 
-        }
-        .hero-banner h1 { font-size: 56px; color: #FFFFFF; margin-bottom: 20px; }
-        .hero-banner p { font-size: 20px; font-weight: 300; max-width: 900px; margin: 0 auto; line-height: 1.5; }
-
-        /* ---------------------------------- */
-        /* 메인 컨텐츠 분할 섹션 */
-        /* ---------------------------------- */
-        .main-content-split-section {
-            padding-bottom: 80px;
-        }
-        .main-content-split {
-            display: flex; 
-            gap: 40px;
-            align-items: flex-start; 
-        }
-
-        /* 지도 섹션 (왼쪽 2/3) */
-        .map-section { 
-            width: 66.666%; 
-            scroll-margin-top: 80px; 
-        }
-        .map-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 20px; 
-            height: 36px; 
-        }
-        .map-header h2 { font-size: 30px; }
-        .map-controls { display: flex; gap: 10px; }
-        
-        .map-control-btn {
-            display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; 
-            border-radius: 6px; font-size: 14px; font-weight: 500; transition: all 0.2s;
-            border: 1px solid #DDDDDD; background-color: #FFFFFF; color: #333333; text-decoration: none;
-        }
-        .map-control-btn:hover { background-color: #F8F9FA; border-color: #4A69BB; }
-        .map-control-btn.create-course { 
-            background-color: #1A2F4B; 
-            color: #FFFFFF; 
-            border-color: #1A2F4B; 
-            font-weight: 700; 
-        }
-        .map-control-btn.create-course:hover { background-color: #4A69BB; border-color: #4A69BB; }
-
-        .map-placeholder {
-            width: 100%; height: 600px; 
-            background-color: #F8F9FA; 
-            border-radius: 10px; 
-            box-shadow: 0 0 0 1px #E0E0E0; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            color: #AAAAAA;
-        }
-
-        /* 인기 코스 목록 섹션 (오른쪽 1/3) - 사이드바 스타일 */
-        .popular-courses-list-section {
-            width: 33.333%; 
-            display: flex;
-            flex-direction: column;
-            background-color: #F8F9FA; 
-            padding: 20px; 
-            border-radius: 10px; 
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-top: 0; 
-            padding-top: 25px; 
-            position: relative; 
-        }
-        
-        .popular-courses-list-section h2 { 
-            font-size: 24px; 
-            color: #1A2F4B;
-            margin-bottom: 25px; 
-            padding-bottom: 5px;
-            margin-top: 0; 
-            line-height: 1.2; 
-        }
-        
-        /* TOP RUN 뱃지 (사이드바 상단) */
-        .top-badge-sidebar { 
-            position: absolute;
-            top: 25px; 
-            right: 20px; 
-            background-color: #D9534F; 
-            color: #FFFFFF;
-            padding: 4px 10px;
-            font-size: 14px;
-            font-weight: 700;
-            border-radius: 4px;
-            letter-spacing: 0.5px;
-        }
-
-        /* Simple List Card */
-        .simple-course-list { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-        } 
-        .simple-list-item {
-            display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; 
-            background-color: #FFFFFF; 
-            border: 1px solid #EEEEEE; 
-            border-radius: 8px;
-            transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s, background-color 0.2s; /* 배경색 전환 추가 */
-            text-decoration: none; color: #333333;
-            position: relative; 
-            overflow: hidden; 
-        }
-        .simple-list-item:hover { 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
-            border-color: #4A69BB;
-            transform: translateY(-2px); 
-        }
-        
-        /* 🚀 [디자인 재수정] 첫 번째 코스 (TOP1) 색상 기반의 은은한 강조 */
-        .simple-course-list .simple-list-item:first-child {
-            background-color: #FDFDFD; /* 아주 미묘하게 밝은 배경색 */
-            border: 1px solid #4A69BB; /* 메인 블루 테두리 */
-            box-shadow: 0 4px 12px rgba(74, 105, 187, 0.15); /* 메인 블루 계열의 은은한 그림자 */
-        }
-
-        /* TOP1 아이템 내부 텍스트 및 아이콘 색상은 일반 아이템과 동일하게 유지 */
-        .simple-course-list .simple-list-item:first-child h4 {
-            color: #1A2F4B; 
-            font-weight: 700; /* 폰트 두께 변경 없음 */
-        }
-        .simple-course-list .simple-list-item:first-child .list-item-meta span i {
-            color: #4A69BB; 
-        }
-        .simple-course-list .simple-list-item:first-child .list-item-likes {
-            color: #D9534F; 
-        }
-        .simple-course-list .simple-list-item:first-child .list-item-tag {
-            background-color: #E9ECEF; 
-            color: #1A2F4B; 
-        }
-
-
-        /* 일반 아이템 스타일 (유지) */
-        .list-item-info { flex-grow: 1; padding-right: 10px; }
-        .list-item-header { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; } 
-        .list-item-info h4 { font-size: 15px; font-weight: 700; color: #1A2F4B; margin: 0; } 
-        .list-item-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; color: #666666; margin-top: 5px; } 
-        .list-item-meta span i { color: #4A69BB; font-size: 11px; margin-right: 4px;}
-        
-        .list-item-tag { background-color: #E9ECEF; color: #1A2F4B; padding: 3px 8px; font-size: 10px; font-weight: 500; border-radius: 4px; }
-        
-        .list-item-likes { 
-            flex-shrink: 0; 
-            font-size: 15px; 
-            font-weight: 700; 
-            color: #D9534F; 
-            display: flex;
-            align-items: center;
-        } 
-        .list-item-likes i { margin-right: 4px; }
-
-        /* 더 보기 버튼 스타일 */
-        .more-routes-btn {
-            display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; width: 100%; 
-            border-radius: 8px; font-size: 15px; font-weight: 700; transition: background-color 0.2s, color 0.2s;
-            border: 1px solid #4A69BB; background-color: #FFFFFF; color: #4A69BB; text-decoration: none; margin-top: 20px; 
-        }
-        .more-routes-btn:hover { background-color: #4A69BB; color: #FFFFFF; }
-
-
-        /* ---------------------------------- */
-        /* Value Proposition Section (유지) */
-        /* ---------------------------------- */
-        .value-proposition-section {
+        section {
             padding: 100px 0;
-            background-color: #F8F9FA; 
+            position: relative;
         }
-        .section-header { 
-            text-align: center; 
-            margin-bottom: 50px; 
-        } 
-        .section-header h2 { font-size: 38px; margin-bottom: 10px; }
-        .value-grid {
-            display: flex; 
-            justify-content: center; 
-            gap: 40px; 
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 38px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 18px;
+            color: #1A2F4B;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #6B7280;
+            font-size: 17px;
+            margin-bottom: 60px;
+            line-height: 1.5;
+        }
+
+        /* ====================================
+        2. HEADER
+        ==================================== */
+        header {
+            width: 100%;
+            height: 70px;
+            border-bottom: 1px solid rgba(229, 231, 235, 0.7);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-inner {
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 40px;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .value-card {
-            width: 300px; 
-            flex-shrink: 0;
-            background-color: #FFFFFF; 
-            border-radius: 12px;
-            padding: 40px 30px; 
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .value-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        .value-icon {
-            font-size: 52px; 
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
             color: #4A69BB;
-            margin-bottom: 25px;
-            display: block;
+            letter-spacing: -1px;
         }
-        .value-card h3 {
-            font-size: 22px;
-            color: #1A2F4B;
-            margin-bottom: 10px;
+
+        nav a {
+            margin-left: 35px;
+            font-weight: 500;
+            color: #34455A;
+            font-size: 16px;
+            padding: 5px 0;
+            transition: color 0.3s ease-in-out;
+            position: relative;
         }
-        .value-card p {
+
+        nav a:hover {
+            color: #4A69BB;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -8px;
+            width: 0;
+            height: 2px;
+            background-color: #4A69BB;
+            transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .login-btn {
+            margin-left: 50px;
+            padding: 10px 22px;
+            border-radius: 25px;
+            background: #4A69BB;
+            color: #ffffff;
             font-size: 15px;
-            color: #666666;
+            font-weight: 600;
+            box-shadow: 0 6px 15px rgba(74, 105, 187, 0.35);
+            transition: 0.3s ease-in-out;
+        }
+
+        .login-btn:hover {
+            background: #3A55A5;
+            box-shadow: 0 8px 20px rgba(74, 105, 187, 0.45);
+            transform: translateY(-1px);
+        }
+
+        /* ====================================
+        3. BANNER
+        ==================================== */
+        .banner {
+            background: linear-gradient(135deg, #4A69BB, #1A2F4B);
+            text-align: center;
+            padding: 130px 0 150px;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 62px;
+            font-weight: 900;
+            margin-bottom: 28px;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: -1.5px;
+        }
+
+        .banner p {
+            font-size: 24px;
+            opacity: 0.9;
+            margin-bottom: 50px;
+            font-weight: 300;
+        }
+
+        .banner-btn {
+            display: inline-block;
+            padding: 18px 45px;
+            background: #ffffff;
+            color: #1A2F4B;
+            border-radius: 35px;
+            font-weight: 700;
+            font-size: 18px;
+            transition: 0.3s ease-in-out;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ====================================
+        4. COURSE CREATE SECTION (삽입된 코스 생성 영역)
+        ==================================== */
+        .course-section {
+            background: #FAFAFC;
+            padding: 50px 0;
+        }
+        
+        /* 메인 페이지의 .container와 충돌 방지 및 재정의 */
+        .course-section > .container {
+             display: flex;
+             flex-direction: column;
+             height: 100%;
+        }
+
+        /* 코스 생성 섹션 제목 */
+        .course-section .section-header {
             margin-bottom: 20px;
         }
-        .value-card .cta-btn {
-            display: inline-block;
-            padding: 10px 20px; 
-            background-color: #1A2F4B;
-            color: #FFFFFF;
-            border-radius: 20px;
+
+        .course-section .section-title {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #1A2F4B;
+            text-align: left; /* 메인 페이지 섹션 제목과 달리 왼쪽 정렬 */
+            font-family: 'Noto Sans KR', sans-serif; /* 폰트 재정의 */
+        }
+        
+        .course-section .section-desc {
             font-size: 14px;
+            color: #6B7280;
+            line-height: 1.4;
+            text-align: left; /* 메인 페이지 섹션 부제목과 달리 왼쪽 정렬 */
+        }
+
+        /* 지도 + 패널 레이아웃 */
+        .map-layout {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+        }
+
+        /* 지도 영역 */
+        .map-box {
+            flex: 8;
+            background: #E5E9F0;
+            border-radius: 14px;
+            height: 100%;
+            min-height: 500px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 사이드 패널 */
+        .side-panel {
+            flex: 4;
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E5E7EB;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            max-height: 600px; /* 메인 페이지에 삽입되므로 높이 제한 */
+            overflow-y: hidden;
+        }
+
+        /* 패널 그룹 */
+        .panel-group {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        /* 패널 그룹 헤더 스타일 */
+        .side-panel h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #34455A;
+            margin-bottom: 10px;
+            border-left: 3px solid #4A69BB;
+            padding-left: 8px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding-right: 5px;
+        }
+        
+        .side-panel h3 span {
+            display: flex;
+            align-items: center;
+        }
+
+        /* 총 거리 텍스트 스타일 */
+        .distance-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: #4A69BB;
+            margin-left: auto;
+        }
+
+
+        /* 좌표 데이터 섹션 */
+        .coordinate-display {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .coordinate-display textarea {
+            width: 100%;
+            height: 80px;
+            padding: 8px;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #34455A;
+            background: #F8F9FA;
+            resize: none;
+            overflow: auto;
+            font-family: monospace;
+        }
+
+        .copy-btn {
+            background: #F3F6FC;
+            color: #4A69BB;
+            border: 1px solid #4A69BB;
+            font-size: 14px;
+            font-weight: 600;
+            height: 35px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #4A69BB;
+            color: #ffffff;
+        }
+
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* 버튼 디자인 */
+        .panel-btn {
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid #D1D5DB;
+            background: #FFFFFF;
+            color: #1A2F4B;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .panel-btn i {
+            margin-right: 6px;
+            font-size: 13px;
+            color: #4A69BB;
+        }
+
+        .panel-btn:hover {
+            border-color: #4A69BB;
+            color: #4A69BB;
+            background: #F3F6FC;
+        }
+
+        /* 코스 생성 (메인 버튼) */
+        .primary-btn {
+            background: #4A69BB;
+            color: #FFF;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 3px 8px rgba(74, 105, 187, 0.4);
+            margin-top: 5px;
+        }
+
+        .primary-btn:hover {
+            background: #3A55A5;
+            box-shadow: 0 4px 10px rgba(74, 105, 187, 0.5);
+            transform: translateY(-0.5px);
+        }
+
+        .primary-btn i {
+            color: #ffffff;
+        }
+
+        /* ====================================
+        5. FILTER SECTION (Dark Background, Split Layout)
+        ==================================== */
+        /* 메인 페이지의 기존 FILTER SECTION 스타일 유지 */
+        .filter-section {
+            background: #1A2F4B;
+            padding: 80px 0;
+            z-index: 10;
+            color: #ffffff;
+        }
+
+        .filter-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 50px;
+        }
+        
+        .filter-text {
+            width: 35%;
+            padding-top: 20px;
+        }
+        
+        .filter-text h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 34px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        
+        .filter-text p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.85;
+        }
+        
+        .filter-text a {
+            color: #4A69BB;
+            font-weight: 700;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .filter-box {
+            width: 65%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-row select {
+            flex-grow: 1;
+            padding: 12px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .filter-row select option {
+            background-color: #1A2F4B;
+            color: #ffffff;
+        }
+
+
+        .filter-btn {
+            width: 140px;
+            min-width: 140px;
+            height: 44px;
+            background: #4A69BB;
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .filter-btn:hover {
+            background: #3A55A5;
+            transform: translateY(-1px);
+        }
+        .filter-btn i {
+            margin-right: 5px;
+        }
+
+
+        /* ====================================
+        6. COURSE & CREW SECTION
+        ==================================== */
+        /* 메인 페이지의 기존 COURSE & CREW 스타일 유지 */
+        .course-crew-section {
+            background: #FDFDFD;
+            padding-top: 100px;
+            padding-bottom: 120px;
+        }
+        
+        .section-header-split {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 35px;
+        }
+
+        .section-header-split h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 0;
+            color: #1A2F4B;
+            letter-spacing: -0.5px;
+        }
+
+        .section-header-split a {
+            font-size: 15px;
+            color: #4A69BB;
             font-weight: 500;
-            text-decoration: none;
-            transition: background-color 0.2s;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
         }
-        .value-card .cta-btn:hover {
-            background-color: #4A69BB;
+
+        .section-header-split a:hover {
+            color: #3A55A5;
+        }
+
+        .section-header-split a i {
+            margin-left: 5px;
+            font-size: 13px;
         }
 
 
-        /* ---------------------------------- */
-        /* 푸터 스타일 */
-        /* ---------------------------------- */
+        .split-area {
+            display: flex;
+            gap: 50px;
+        }
+
+        .left,
+        .right {
+            width: 50%;
+        }
+
+        .card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .list-card {
+            background: #ffffff;
+            border: 1px solid #E5E7EB;
+            padding: 22px 25px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            transition: 0.3s ease-in-out;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .list-card:hover {
+            border-color: #4A69BB;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .list-info {
+            flex-grow: 1;
+        }
+
+        .list-info h4 {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1A2F4B;
+        }
+
+        .list-meta {
+            font-size: 14px;
+            color: #6B7280;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .tag {
+            background: #EBF2FA;
+            color: #4A69BB;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .like-count {
+            font-size: 17px;
+            font-weight: 700;
+            color: #D9534F;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .like-count i {
+            margin-right: 6px;
+        }
+
+        .crew-status {
+            font-weight: 700;
+            font-size: 15px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            white-space: nowrap;
+            animation: pulse 1.5s infinite;
+        }
+
+        .recruiting {
+            color: #2ECC71;
+            background-color: #E6F7E9;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.03);
+                opacity: 0.9;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* ====================================
+        7. FOOTER
+        ==================================== */
         footer {
-            padding: 50px 0; 
-            background: #1A2F4B; 
-            text-align: center; 
-            font-size: 15px; 
-            color: #CCD1D8; 
             margin-top: auto;
+            background: #1A2F4B;
+            color: #CCD1D8;
+            text-align: center;
+            padding: 50px 0;
+            font-size: 15px;
         }
     </style>
 </head>
+
 <body>
 
-    <header class="header">
-        <div class="container header-content">
-            <a href="#" class="logo">coRunning</a>
-            <nav class="nav-menu">
+    <header>
+        <div class="nav-inner">
+            <a class="logo" href="#">coRunning</a>
+            <nav>
                 <a href="#">Run Routes</a>
                 <a href="#">Crew Finder</a>
                 <a href="#">Run Log</a>
@@ -334,144 +680,197 @@
         </div>
     </header>
 
-    <main>
-        
-        <section class="hero-banner">
-            <div class="container">
-                <h1>나만의 러닝 코스를 만들고 공유해보세요!</h1>
-                <p>클릭 몇 번으로 새로운 러닝 루트를 설계하고, 친구들과 공유하며, 새로운 러닝의 재미를 발견하세요.</p>
+    <section class="banner">
+        <div class="container">
+            <h1>나만의 러닝 코스를<br>만들고 공유하며 달려보세요!</h1>
+            <p>지도 드로잉으로 코스를 생성하고, 자유롭게 저장하고 공유하며 러닝 경험을 넓혀보세요.</p>
+            <a href="#" class="banner-btn">코스 생성 시작하기 <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </section>
+    
+    <section class="course-section">
+        <div class="container">
+
+            <div class="section-header">
+                <h1 class="section-title">러닝 코스 그리기 및 생성 🗺️</h1>
+                <p class="section-desc">
+                    지도 위에서 클릭하여 나만의 러닝 경로를 직접 드로잉하고, 코스를 생성해보세요.
+                </p>
             </div>
-        </section>
-        
-        <section class="main-content-split-section">
-            <div class="container main-content-split">
-                
-                <div class="map-section" id="map-section">
-                    <div class="map-header">
-                        <h2>러닝 코스 생성</h2> 
-                        <div class="map-controls">
-                            <a href="#map-section" class="map-control-btn create-course"><i class="fas fa-plus-circle"></i> 코스 생성</a>
-                            <button class="map-control-btn"><i class="fas fa-undo"></i> 되돌리기</button>
-                            <button class="map-control-btn"><i class="fas fa-image"></i> 이미지 다운로드</button>
-                            <button class="map-control-btn"><i class="fas fa-copy"></i> 경로 복사</button>
+
+            <div class="map-layout">
+
+                <div class="map-box">
+                    </div>
+
+                <div class="side-panel">
+
+                    <div class="panel-group">
+                        <h3>
+                            <span><i class="fa-solid fa-pen-fancy"></i> 드로잉 컨트롤</span>
+                        </h3>
+                        <div class="btn-group">
+                            <button class="panel-btn"><i class="fa-solid fa-rotate-left"></i> 되돌리기</button>
+                            <button class="panel-btn"><i class="fa-solid fa-trash-can"></i> 초기화</button>
+                            <button class="primary-btn panel-btn"><i class="fa-solid fa-check"></i> 코스 생성</button>
                         </div>
                     </div>
-                    <div class="map-placeholder">
-                        여기에 지도가 표시됩니다 (카카오맵 API 연동 예정)
+
+                    <div class="panel-group">
+                        <h3>
+                            <span><i class="fa-solid fa-route"></i> 총 거리</span>
+                            <span class="distance-text">5.8km</span>
+                        </h3>
+                    </div>
+
+
+                    <div class="btn-group">
+                        <button class="panel-btn"><i class="fa-solid fa-image"></i> 이미지 다운로드</button>
+                    </div>
+
+                    <div class="panel-group">
+                        <h3>
+                            <span><i class="fa-solid fa-code"></i> 경로 좌표 배열</span>
+                        </h3>
+                        <div class="coordinate-display">
+                            <textarea readonly id="route-coordinates">[[126.976869,37.56489],[126.976843,37.564842],[126.976966,37.564871], ..., [126.977079,37.564861]]</textarea>
+                            <button class="copy-btn"><i class="fa-solid fa-copy"></i> 경로 복사</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section class="filter-section">
+        <div class="container">
+            <div class="filter-content">
+                <div class="filter-text">
+                    <h2>Filter</h2>
+                    <p>지역, 난이도, 종류를 설정하여 원하는 코스를 찾아보세요.</p>
+                    <a href="#">전체 코스 보기 <i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+
+                <div class="filter-box">
+                    <div class="filter-row">
+                        <select><option>지역 선택</option><option>서울</option><option>부산</option><option>대구</option></select>
+                        <select><option>난이도 선택</option><option>초급</option><option>중급</option><option>고급</option></select>
+                        <select><option>종류 선택</option><option>드로잉런</option><option>레귤러런</option><option>힐링런</option></select>
+                        <button class="filter-btn"><i class="fa-solid fa-magnifying-glass"></i> 검색</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="course-crew-section">
+        <div class="container">
+
+            <div class="split-area">
+                <div class="left">
+                    <div class="section-header-split">
+                        <h2>지금 인기 있는 코스 TOP 3 🔥</h2>
+                        <a href="#">전체 코스 보기 <i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                    <div class="card-list">
+                        <div class="list-card">
+                            <div class="list-info">
+                                <h4>여의도 한강공원 힐링런</h4>
+                                <div class="list-meta">
+                                    <span class="tag">한강 코스</span>
+                                    <span>• 7.2km</span>
+                                    <span>• 초급</span>
+                                    <span>• 드로잉런</span>
+                                </div>
+                            </div>
+                            <div class="like-count"><i class="fa-solid fa-heart"></i>&nbsp;345</div>
+                        </div>
+
+                        <div class="list-card">
+                            <div class="list-info">
+                                <h4>남산 팔각정 정복 챌린지</h4>
+                                <div class="list-meta">
+                                    <span class="tag">언덕 코스</span>
+                                    <span>• 8.8km</span>
+                                    <span>• 고급</span>
+                                    <span>• 레귤러런</span>
+                                </div>
+                            </div>
+                            <div class="like-count"><i class="fa-solid fa-heart"></i>&nbsp;288</div>
+                        </div>
+
+                        <div class="list-card">
+                            <div class="list-info">
+                                <h4>석촌호수 벚꽃길 드로잉런</h4>
+                                <div class="list-meta">
+                                    <span class="tag">도심 코스</span>
+                                    <span>• 5.0km</span>
+                                    <span>• 초급</span>
+                                    <span>• 드로잉런</span>
+                                </div>
+                            </div>
+                            <div class="like-count"><i class="fa-solid fa-heart"></i>&nbsp;220</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="popular-courses-list-section">
-                    <h2>추천 인기 코스</h2>
-                    <span class="top-badge-sidebar">TOP RUN</span>
-                    <div class="simple-course-list">
-                        
-                        <a href="#" class="simple-list-item">
-                            <div class="list-item-info">
-                                <div class="list-item-header">
-                                    <h4>여의도 한강 공원 힐링 런</h4>
-                                    <span class="list-item-tag">드로잉런</span>
-                                </div>
-                                <div class="list-item-meta">
-                                    <span><i class="fas fa-map-marker-alt"></i> 영등포구</span>
-                                    <span><i class="fas fa-route"></i> 7.2 KM</span>
-                                    <span><i class="fas fa-shoe-prints"></i> 초급</span>
-                                </div>
-                            </div>
-                            <div class="list-item-likes"><i class="fas fa-heart"></i> 345</div>
-                        </a>
-
-                        <a href="#" class="simple-list-item">
-                            <div class="list-item-info">
-                                <div class="list-item-header">
-                                    <h4>남산 팔각정 정복 챌린지</h4>
-                                    <span class="list-item-tag regular">레귤러런</span>
-                                </div>
-                                <div class="list-item-meta">
-                                    <span><i class="fas fa-map-marker-alt"></i> 서울 용산구</span>
-                                    <span><i class="fas fa-route"></i> 8.8 KM</span>
-                                    <span><i class="fas fa-shoe-prints"></i> 고급</span>
-                                </div>
-                            </div>
-                            <div class="list-item-likes"><i class="fas fa-heart"></i> 288</div>
-                        </a>
-
-                        <a href="#" class="simple-list-item">
-                            <div class="list-item-info">
-                                <div class="list-item-header">
-                                    <h4>부산 광안리 야경 로맨틱 런</h4>
-                                    <span class="list-item-tag">야간런</span>
-                                </div>
-                                <div class="list-item-meta">
-                                    <span><i class="fas fa-map-marker-alt"></i> 부산 수영구</span>
-                                    <span><i class="fas fa-route"></i> 5.0 KM</span>
-                                    <span><i class="fas fa-shoe-prints"></i> 중급</span>
-                                </div>
-                            </div>
-                            <div class="list-item-likes"><i class="fas fa-heart"></i> 251</div>
-                        </a>
-                        
-                        <a href="#" class="simple-list-item">
-                            <div class="list-item-info">
-                                <div class="list-item-header">
-                                    <h4>석촌호수 벚꽃 런 랩</h4>
-                                    <span class="list-item-tag">레귤러런</span>
-                                </div>
-                                <div class="list-item-meta">
-                                    <span><i class="fas fa-map-marker-alt"></i> 서울 송파구</span>
-                                    <span><i class="fas fa-route"></i> 2.5 KM</span>
-                                    <span><i class="fas fa-shoe-prints"></i> 초급</span>
-                                </div>
-                            </div>
-                            <div class="list-item-likes"><i class="fas fa-heart"></i> 210</div>
-                        </a>
-
+                <div class="right">
+                    <div class="section-header-split">
+                        <h2>마감 임박 번개런 & 크루 ⚡</h2>
+                        <a href="#">전체 번개런/크루 보기 <i class="fa-solid fa-chevron-right"></i></a>
                     </div>
-                    
-                    <a href="#" class="more-routes-btn">
-                        <i class="fas fa-list-alt"></i> 더 많은 코스 보러가기
-                    </a>
+                    <div class="card-list">
+                        <div class="list-card">
+                            <div class="list-info">
+                                <h4>서울 도심 야경 힐링 번개런</h4>
+                                <div class="list-meta">
+                                    <span class="tag">번개런</span>
+                                    <span>• D-1 마감</span>
+                                    <span>• 10명 모집중</span>
+                                </div>
+                            </div>
+                            <span class="crew-status recruiting">모집중</span>
+                        </div>
+
+                        <div class="list-card">
+                            <div class="list-info">
+                                <h4>부산 광안리 야경 러닝 크루</h4>
+                                <div class="list-meta">
+                                    <span class="tag">크루런</span>
+                                    <span>• D-3 마감</span>
+                                    <span>• 8명 참여중</span>
+                                </div>
+                            </div>
+                            <span class="crew-status recruiting">모집중</span>
+                        </div>
+
+                        <div class="list-card">
+                            <div class="list-info">
+                                <h4>경복궁 돌담길 야간 달리기</h4>
+                                <div class="list-meta">
+                                    <span class="tag">번개런</span>
+                                    <span>• 오늘 저녁</span>
+                                    <span>• 4명 남음</span>
+                                </div>
+                            </div>
+                            <span class="crew-status recruiting">모집중</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
-        
-        <section class="value-proposition-section">
-            <div class="section-header container">
-                <h2>왜 coRunning을 선택해야 할까요?</h2>
-                <p>단순한 경로 서비스가 아닌, 러닝 경험의 모든 것을 연결합니다.</p>
-            </div>
 
-            <div class="value-grid">
-                
-                <div class="value-card">
-                    <i class="fas fa-pen-nib value-icon"></i>
-                    <h3>1. CREATE: 창의적인 경로</h3>
-                    <p>클릭과 드로잉으로 나만의 러닝 코스를 손쉽게 만들고, 지도 이미지를 저장하여 공유하세요.</p>
-                    <a href="#map-section" class="cta-btn">코스 생성 시작하기</a>
-                </div>
-                
-                <div class="value-card">
-                    <i class="fas fa-users value-icon"></i>
-                    <h3>2. CONNECT: 크루와 함께</h3>
-                    <p>지역별, 난이도별 러닝 크루를 찾고 참여하세요. 함께 달릴 때 동기 부여는 배가 됩니다.</p>
-                    <a href="#" class="cta-btn">크루 찾아보기</a>
-                </div>
-                
-                <div class="value-card">
-                    <i class="fas fa-trophy value-icon"></i>
-                    <h3>3. ACHIEVE: 기록 관리</h3>
-                    <p>완주 기록을 체계적으로 관리하고, 누적 통계를 확인하여 목표 달성의 즐거움을 경험하세요.</p>
-                    <a href="#" class="cta-btn">내 기록 확인하기</a>
-                </div>
+        </div>
+    </section>
 
-            </div>
-        </section>
-
-    </main>
-    
     <footer>
-        <p>&copy; 2025 coRunning. All rights reserved.</p>
+        <div class="container">
+            <p>&copy; 2025 coRunning. All rights reserved.</p>
+        </div>
     </footer>
 
 </body>
+
 </html>
