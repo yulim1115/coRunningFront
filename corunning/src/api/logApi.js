@@ -5,7 +5,7 @@ const API_BASE_DIP = `${BACKEND_BASE}/api/dip`;
 const API_BASE_RUN = `${BACKEND_BASE}/api/run`;
 
 // 현재 로그인한 사용자 ID(이메일) 불러오기
-// 세션/로컬 둘 다 확인
+// 세션 확인
 const getUserId = () =>
   sessionStorage.getItem("userEmail");
 
