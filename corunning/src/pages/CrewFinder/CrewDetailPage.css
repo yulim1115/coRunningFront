@@ -1,0 +1,299 @@
+/* 전체 페이지 */
+.crew-detail-page {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 80px auto;
+  padding: 0 40px;
+  color: var(--color-text-dark);
+}
+
+/* 제목 영역 */
+.title-section {
+  padding: 20px 0 10px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.crew-title {
+  font-size: var(--font-h1);
+  font-weight: var(--fw-bold);
+  margin: 0;
+  color: var(--color-main);
+}
+
+/* 타입 태그 */
+.crew-type-tag {
+  padding: 4px 16px;
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  border-radius: 999px;
+  border: 2px solid;
+}
+
+/* CrewListPage와 동일 색상 */
+.tag-type-normal {
+  border-color: #4A69BB;
+  color: #4A69BB;
+}
+.tag-type-flash {
+  border-color: #D9534F;
+  color: #D9534F;
+}
+.tag-type-drawing {
+  border-color: #C79E3B;
+  color: #C79E3B;
+}
+
+/* 메타 */
+.meta-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: var(--color-text-light);
+}
+
+.meta-row span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 메인 2단 레이아웃 */
+.main-layout {
+  display: flex;
+  gap: 40px;
+  margin: 15px 0 60px;
+}
+
+.left-area {
+  flex: 2;
+  width: 100%;
+}
+
+.right-area {
+  flex: 1;
+}
+
+/* 지도 */
+.map-box {
+  height: 350px;
+  min-height: 300px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: var(--color-bg-light);
+}
+
+/* 모집 정보 카드 */
+.info-card {
+  padding: 20px;
+  background: var(--color-bg);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.info-card h2 {
+  margin: 0 0 12px;
+  font-size: var(--font-h3);
+  color: var(--color-main);
+  font-weight: var(--fw-bold);
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.info-label {
+  font-size: 14px;
+  color: var(--color-text-light);
+  font-weight: var(--fw-medium);
+}
+
+.info-value {
+  margin-left: 12px;
+  font-size: 15px;
+  font-weight: var(--fw-medium);
+  color: var(--color-text-dark);
+}
+
+/* 모집 인원 강조 */
+.recruit-current {
+  color: var(--color-accent);
+  font-weight: var(--fw-bold);
+}
+
+/* 모집 상태 (카드 우측 상단) */
+.info-status-tag {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  font-weight: var(--fw-bold);
+  color: var(--color-white);
+}
+
+.info-status-tag.recruiting {
+  background: var(--color-green);
+}
+
+.info-status-tag.closed {
+  background: #777;
+}
+
+/* 신청 카드 */
+.apply-card {
+  padding: 20px;
+  border-radius: 10px;
+  background: var(--color-bg-light);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.apply-info {
+  font-size: var(--font-caption);
+  color: var(--color-text-light);
+}
+
+.apply-btn {
+  min-width: 120px;
+  height: var(--btn-medium-height);
+  border-radius: 6px;
+  border: none;
+  font-weight: var(--fw-bold);
+}
+
+.apply-btn.active {
+  background: var(--color-accent);
+  color: var(--color-white);
+}
+
+.apply-btn.active:hover {
+  background: var(--color-accent-hover);
+}
+
+.apply-btn.done {
+  background: var(--color-main);
+  color: var(--color-white);
+  cursor: default;
+}
+
+.apply-btn.disabled {
+  background: #ccc;
+  color: var(--color-white);
+  cursor: default;
+}
+
+/* 소개 박스 */
+.course-summary-box {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+}
+
+.course-summary-box h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* 댓글 */
+.comment-section {
+  border-top: 1px solid var(--color-border);
+  padding-top: 30px;
+}
+
+.comment-title {
+  font-size: var(--font-h2);
+  margin-bottom: 20px;
+  color: var(--color-main);
+}
+
+.comment-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.comment-input-row input {
+  flex: 1;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+.comment-submit-btn {
+  height: 40px;
+  padding: 0 20px;
+  background: var(--color-main);
+  color: #fff;
+  border-radius: 8px;
+  border: none;
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comment-item {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.comment-meta {
+  display: flex;
+  font-size: 13px;
+  gap: 10px;
+  align-items: center;
+}
+
+.comment-delete-btn {
+  margin-left: auto;
+  padding: 3px 8px;
+  background: #aaa;
+  color: #fff;
+  border: none;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.comment-delete-btn:hover {
+  background: #888;
+}
+
+.comment-text {
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+/* 목록 버튼 */
+.bottom-btn-wrapper {
+  text-align: center;
+  margin: 40px 0 60px;
+}
+
+.back-list-btn {
+  padding: 8px 16px;
+  background: rgba(0,0,0,0.2);
+  color: white;
+  border-radius: 6px;
+  border: none;
+}

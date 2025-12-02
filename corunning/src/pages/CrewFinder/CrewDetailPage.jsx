@@ -1,185 +1,362 @@
-import { getCrewDetailAPI, applyCrewAPI, postCrewCommentAPI, getCrewCommentsAPI } from "../../api/crewApi.js";
-import React, { useState, useEffect } from "react";
+/* CrewDetailPage.jsx */
+import React, { useEffect, useState, useRef } from "react";
+import "./CrewDetailPage.css";
+
+import {
+  FaMapMarkerAlt,
+  FaUser,
+  FaClock,
+} from "react-icons/fa";
+
 import { useParams, useNavigate } from "react-router-dom";
 
-function CrewDetailPage() {
-    const { id } = useParams();
-    const [crewDetail, setCrewDetail] = useState(null);
-    const navigate = useNavigate();
-    const [comment, setComment] = useState([]);
-    const [commentList, setComments] = useState([]);
-    useEffect(() => {
-        const fetchCrewDetail = async () => {
-            try {
-                const data = await getCrewDetailAPI(id);
-                setCrewDetail(data);
-            } catch (error) {
-                console.error("크루 상세 정보 불러오기 실패:", error);
-            }
-        }
-        fetchCrewDetail();
-    }, [id]);
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
-    // 모집 상태 필터
-    const recruitState = (recruitCount, currentCount, deadline) => {
-        if (currentCount >= recruitCount || new Date(deadline) < new Date()) {
-            return "모집마감";
-        } else {
-            return "모집중";
+import {
+  getCrewDetailAPI,
+  applyCrewAPI,
+  getCrewCommentsAPI,
+  postCrewCommentAPI,
+  deleteCrewCommentAPI,
+  checkApplicationAPI,
+} from "../../api/crewApi";
+
+function CrewDetailPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [crew, setCrew] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isApplied, setIsApplied] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [commentInput, setCommentInput] = useState("");
+  const [error, setError] = useState("");
+
+  const loginUserId = sessionStorage.getItem("userEmail");
+
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+
+  /* 날짜 포맷 */
+  const formatDate = (date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}.${String(d.getDate()).padStart(2, "0")}`;
+  };
+
+  /* 타입 태그 라벨 */
+  const getTypeLabel = (type) => {
+    switch (type) {
+      case "FLASH":
+        return "번개";
+      case "DRAWING":
+        return "드로잉";
+      default:
+        return "일반";
+    }
+  };
+
+  /* 타입 태그 클래스 */
+  const getTypeTagClass = (type) => {
+    switch (type) {
+      case "FLASH":
+        return "tag-type-flash";
+      case "DRAWING":
+        return "tag-type-drawing";
+      default:
+        return "tag-type-normal";
+    }
+  };
+
+  /* 상세 + 댓글 */
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+
+        const detail = await getCrewDetailAPI(id);
+        const commentList = await getCrewCommentsAPI(id);
+
+        setCrew(detail);
+        setComments(commentList);
+
+        if (loginUserId) {
+          const applied = await checkApplicationAPI(id);
+          setIsApplied(applied);
         }
+      } catch (err) {
+        console.error(err);
+        setError("크루 정보를 불러오는 중 오류 발생");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    // 크루 신청하기
-    const handleApply = async (e) => {
-        e.preventDefault();
-        try {
-            await applyCrewAPI(id);
-            alert("크루 신청이 완료되었습니다.");
-        } catch (error) {
-            console.error("크루 신청 실패:", error);
-            alert("크루 신청에 실패했습니다.");
-        }
+    loadData();
+  }, [id, loginUserId]);
+
+  /* 지도 렌더 */
+  useEffect(() => {
+    if (!crew?.routePathJson || loading) return;
+
+    let coords;
+    try {
+      coords = JSON.parse(crew.routePathJson);
+    } catch (e) {
+      console.error("좌표 파싱 오류", e);
+      return;
     }
 
-    //댓글 등록하기
-    const postComment = async (e) => {
-        e.preventDefault();
-        const commentData = {
-            content: comment,
-        };
-        try {
-            await postCrewCommentAPI(id, commentData);
-            alert("댓글이 등록되었습니다.");
-        } catch (error) {
-            console.error("댓글 등록 실패:", error);
-            alert("댓글 등록에 실패했습니다.");
-        }
+    if (!Array.isArray(coords) || coords.length < 2) return;
+    if (!mapContainerRef.current) return;
+
+    if (mapRef.current) {
+      mapRef.current.remove();
+      mapRef.current = null;
     }
 
-    //댓글 목록 가져오기
-    useEffect(() => {
-        const fetchComments = async () => {
-            try {
-                const data = await getCrewCommentsAPI(id);  // axios GET
-                console.log("댓글 목록 데이터:", data);
-                setComments(data);                          // 상태에 저장
-            } catch (error) {
-                console.error("댓글 목록 불러오기 실패:", error);
-                if (error.response) {
-                    console.error("서버 응답:", error.response.data);
-                }
-            }
-        };
-        if (id) fetchComments();
-    }, [id]);
+    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: coords[0],
+      zoom: 14,
+      attributionControl: false,
+    });
 
+    mapRef.current = map;
 
-    if (!crewDetail) {
-        return <div>로딩 중...</div>;
+    map.on("load", () => {
+      map.addSource("routeLine", {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          geometry: { type: "LineString", coordinates: coords },
+        },
+      });
+
+      map.addLayer({
+        id: "routeLineLayer",
+        type: "line",
+        source: "routeLine",
+        paint: { "line-width": 5, "line-color": "#e5634f" },
+      });
+
+      const bounds = coords.reduce(
+        (b, c) => b.extend(c),
+        new mapboxgl.LngLatBounds()
+      );
+      map.fitBounds(bounds, { padding: 40 });
+      map.resize();
+    });
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
+  }, [crew?.routePathJson, loading]);
+
+  /* 모집 마감 여부 */
+  const isClosed =
+    !crew ||
+    crew.currentCount >= crew.recruitCount ||
+    new Date(crew.deadline) < new Date();
+
+  /* 신청 */
+  const handleApply = async () => {
+    if (!loginUserId) return alert("로그인 후 신청 가능합니다.");
+
+    try {
+      await applyCrewAPI(id);
+      setIsApplied(true);
+    } catch (err) {
+      alert(err.response?.data || "신청 실패");
     }
-    return (<div>
-        <div className="detail-page-wrapper">
-            <div className="container post-container-inner">
-                <a href="#" className="back-link-top">
-                    <i className="fas fa-arrow-left" onClick={() => navigate("/crews")}></i> 목록으로 돌아가기
-                </a>
-                <div className="route-title-area">
-                    <div className="title-meta-wrapper">
-                        <div className="title-group">
-                            <h1 style={{ fontSize: "32px;" }}>{crewDetail.title}</h1>
-                        </div>
-                        <div className="meta-info-block">
-                            <span><i className="fas fa-user"></i> 작성자: {crewDetail.writerId}</span>
-                            <span><i className="fas fa-clock"></i>{crewDetail.createdAt.substr(0, 10)}등록</span>
-                        </div>
-                    </div>
-                    <div className="application-action-group">
-                        <button className="standard-button btn-main-action" onClick={handleApply}>
-                            <i className="fas fa-running" style={{ marginRight: "5px;" }}></i> 크루 신청하기
-                        </button>
-                    </div>
-                </div>
+  };
 
-                <div className="route-content">
-                    <div className="image-section">
-                        <div className="map-visual-area">
-                            {/*<img src="https://via.placeholder.com/800x450?text=CREW+RUNNING+ROUTE+MAP" alt="크루 모집 경로 지도">*/}
-                        </div>
-                    </div>
-                    <div className="actions-section">
-                        <div className="recruitment-info-box">
-                            <h2>크루 모집 정보</h2>
-                            <div className="info-detail-group">
-                                <p><strong>모집 상태:</strong>
-                                    <span className="status-highlight">
-                                        &nbsp;{recruitState(crewDetail.recruitCount, crewDetail.currentCount, crewDetail.deadline)}
-                                    </span>
-                                </p>
-                                <p><strong>모집 인원:</strong>
-                                    <span className="status-highlight">{crewDetail.currentCount}명 / {crewDetail.recruitCount}명</span>
-                                </p>
-                            </div>
-                            <div className="info-detail-group">
-                                <p><strong>활동 지역:</strong> {crewDetail.region}</p>
-                                <p><strong>활동 타입:</strong> {crewDetail.boardType}</p>
-                            </div>
-                            <div className="info-detail-group" style={{ marginBottom: "0;" }}>
-                                <p><strong>마감일:</strong> {crewDetail.deadline}</p>
-                            </div>
-                        </div>
-                        <div className="apply-action-box" style={{ marginBottom: "0;" }}>
-                            <p>신청 완료 후 크루장에게 전달되며, 크루장이 개별적으로 연락드립니다.</p>
-                            <p className="extra-small">모집 인원이 모두 차거나 마감일이 지나면 신청이 자동으로 마감됩니다.</p>
-                        </div>
-                    </div>
-                </div>
+  /* 댓글 등록 */
+  const handleAddComment = async () => {
+    if (!loginUserId) return alert("로그인 후 댓글 작성");
+    if (!commentInput.trim()) return;
 
+    try {
+      const newComment = await postCrewCommentAPI(id, {
+        content: commentInput.trim(),
+      });
+      setComments((prev) => [...prev, newComment]);
+      setCommentInput("");
+    } catch {
+      alert("댓글 등록 실패");
+    }
+  };
 
-                <div className="post-body">
-                    <h2 style={{ fontSize: "20px;" }}>{crewDetail.content}</h2>
-                </div>
+  /* 댓글 삭제 */
+  const handleDeleteComment = async (commentId) => {
+    if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
 
+    try {
+      await deleteCrewCommentAPI(commentId);
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+    } catch {
+      alert("댓글 삭제 실패");
+    }
+  };
 
-                <section className="comments-section">
-                    <div className="comments-header">
-                        <h2>댓글 ({commentList.length}개)</h2>
-                    </div>
-                    <div className="comment-input-area">
-                        <input type="text" value={comment} onChange={(e) => setComment(e.target.value)} placeholder="크루 활동에 대한 문의를 남겨주세요." />
-                        <button className="submit-btn" onClick={postComment}>등록</button>
-                    </div>
+  /* 스켈레톤 */
+  if (loading) {
+    return (
+      <main className="crew-detail-page">로딩중...</main>
+    );
+  }
 
-                    {/* 댓글 목록 */}
-                    <div className="comment-list">
-                        {commentList.map((comment) => (
-                            <div className="comment-item" key={comment.id}>
-                                <div className="comment-avatar">
-                                    {comment.writerId ? comment.writerId.substr(0, 1) : "?"}
-                                </div>
+  if (!crew || error) {
+    return (
+      <main className="crew-detail-page">
+        <h2>{error || "존재하지 않는 모집글입니다."}</h2>
+        <button className="back-list-btn" onClick={() => navigate("/crews")}>
+          목록으로
+        </button>
+      </main>
+    );
+  }
 
-                                <div className="comment-content-area">
-                                    <div className="comment-author-info">
-                                        <strong>{comment.writerId}</strong>
-                                        <span className="date">
-                                            {comment.createdAt?.substr(0, 10)}
-                                        </span>
-                                    </div>
+  const hasRoute = crew.routePathJson && crew.routePathJson.length > 10;
 
-                                    <p className="comment-text">{comment.content}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+  return (
+    <main className="crew-detail-page">
+      {/* 제목 영역 */}
+      <section className="title-section">
+        <div className="title-row">
+          <h1 className="crew-title">{crew.title}</h1>
 
-                </section>
-
-                <a href="#" className="back-to-list-btn">
-                    <i className="fas fa-list-ul" style={{ marginRight: "5px;" }}></i> 크루 모집 목록으로 돌아가기
-                </a>
-
-            </div>
+          {/* 타입 태그 */}
+          <span className={`crew-type-tag ${getTypeTagClass(crew.boardType)}`}>
+            {getTypeLabel(crew.boardType)}
+          </span>
         </div>
-    </div>);
+
+        <div className="meta-row">
+          <span><FaUser /> {crew.writerId}</span>
+          <span><FaClock /> {formatDate(crew.createdAt)}</span>
+        </div>
+      </section>
+
+      {/* 메인 레이아웃 */}
+      <section className="main-layout">
+        <div className="left-area">
+          {hasRoute ? (
+            <div ref={mapContainerRef} className="map-box"></div>
+          ) : (
+            <div className="course-summary-box">
+              <h2>크루 소개</h2>
+              <p>{crew.content}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="right-area">
+          <div className="info-card">
+            <h2>모집 정보</h2>
+
+           <div className="info-row">
+  <span className="info-label">모집 인원</span>
+  <span className="info-value">
+    <span className="recruit-current">{crew.currentCount}명</span> / {crew.recruitCount}명
+  </span>
+</div>
+
+<div className="info-row">
+  <span className="info-label">마감일</span>
+  <span className="info-value">{crew.deadline}</span>
+</div>
+
+<div className="info-row">
+  <span className="info-label">지역</span>
+  <span className="info-value">{crew.region}</span>
+</div>
+
+            {/* 우측 상단 모집 상태 */}
+            <div className={`info-status-tag ${isClosed ? "closed" : "recruiting"}`}>
+              {isClosed ? "모집마감" : "모집중"}
+            </div>
+          </div>
+
+          <div className="apply-card">
+            <div className="apply-info">
+              모집글 신청 시 크루장에게 정보가 전달되며 개별적으로 연락됩니다.
+            </div>
+
+            {isApplied ? (
+              <button className="apply-btn done" disabled>신청완료</button>
+            ) : isClosed ? (
+              <button className="apply-btn disabled" disabled>모집마감</button>
+            ) : (
+              <button className="apply-btn active" onClick={handleApply}>
+                신청하기
+              </button>
+            )}
+          </div>
+
+          {hasRoute && (
+            <div className="course-summary-box below">
+              <h2>크루 소개</h2>
+              <p>{crew.content}</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 댓글 */}
+      <section className="comment-section">
+        <h2 className="comment-title">댓글 ({comments.length})</h2>
+
+        <div className="comment-input-row">
+          <input
+            type="text"
+            placeholder="댓글을 입력하세요"
+            value={commentInput}
+            onChange={(e) => setCommentInput(e.target.value)}
+          />
+          <button className="comment-submit-btn" onClick={handleAddComment}>
+            등록
+          </button>
+        </div>
+
+        <div className="comment-list">
+          {comments.map((c) => (
+            <div className="comment-item" key={c.id}>
+              <div className="comment-meta">
+                <strong>{c.writerId}</strong>
+                <span className="date">{formatDate(c.createdAt)}</span>
+
+                {/* 본인 댓글일 때만 삭제 버튼 */}
+                {loginUserId === c.writerId && (
+                  <button
+                    className="comment-delete-btn"
+                    onClick={() => handleDeleteComment(c.id)}
+                  >
+                    삭제
+                  </button>
+                )}
+              </div>
+
+              <p className="comment-text">{c.content}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="bottom-btn-wrapper">
+        <button className="back-list-btn" onClick={() => navigate("/crews")}>
+          목록으로
+        </button>
+      </div>
+    </main>
+  );
 }
 
 export default CrewDetailPage;

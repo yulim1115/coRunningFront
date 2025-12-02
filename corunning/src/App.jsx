@@ -58,12 +58,6 @@ function App() {
     
                     {/* Run Log */}
                     {/* <Route path="/runlog" element={<RunLogPage />} /> */}
-                    {/* <Route path="/crews" element={<CrewListPage />} /> */}
-                    {/* <Route path="/crews/:id" element={<CrewDetailPage />} /> */}
-                    {/* <Route path="/crews/create" element={<CrewCreatePage />} /> */}
-    
-                    {/* Run Log */}
-                    {/* <Route path="/runlog" element={<RunLogPage />} /> */}
     
                     {/* My Page */}
                     {/* <Route path="/mypage" element={<MyPage />} /> */}
