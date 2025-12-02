@@ -1,4 +1,3 @@
-import "./CrewPage.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CrewListPage.jsx";

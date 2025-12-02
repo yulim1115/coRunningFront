@@ -1,6 +1,5 @@
 import { getCrewDetailAPI, applyCrewAPI, postCrewCommentAPI, getCrewCommentsAPI } from "../../api/crewApi.js";
 import React, { useState, useEffect } from "react";
-import "./CrewPage.css";
 import { useParams, useNavigate } from "react-router-dom";
 
 function CrewDetailPage() {
