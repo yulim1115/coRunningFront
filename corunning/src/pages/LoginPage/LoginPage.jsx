@@ -25,6 +25,7 @@ function LoginPage() {
 
       // 로그인 상태 저장
       sessionStorage.setItem("isLogin", "true");
+
       sessionStorage.setItem("userEmail", email);
 
       // 헤더 강제 업데이트

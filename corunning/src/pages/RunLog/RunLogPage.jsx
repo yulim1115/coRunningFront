@@ -1,18 +1,19 @@
 // src/pages/RunRoutes/RunLogPage.jsx
 import React, { useState, useEffect } from "react";
-import LogCard from "../../components/cards/LogCard";
-import "./RunLogPage.css";
-
 import {
-  getSavedCourses,
   getRecords,
   finishCourse,
   createRecord,
   updateRecord,
-  deleteRecord
+  deleteRecord,
+  getSavedCourses,
 } from "../../api/logApi";
+import LogCard from "../../components/cards/LogCard";
+import "./RunLogPage.css";
 
 export default function RunLogPage() {
+  const [userId, setUserId] = useState(null);
+
   const [savedCourses, setSavedCourses] = useState([]);
   const [records, setRecords] = useState([]);
 
@@ -20,260 +21,197 @@ export default function RunLogPage() {
   const [editingRecordId, setEditingRecordId] = useState(null);
   const [showNewRecordForm, setShowNewRecordForm] = useState(false);
 
-  const [inputValues, setInputValues] = useState({});
-  const [editValues, setEditValues] = useState({});
-
   const [newRecord, setNewRecord] = useState({
     title: "",
+    location: "",
     distance: "",
     date: "",
-    time: ""
+    time: "",
   });
 
-  // 로딩
+  const [finishInput, setFinishInput] = useState({
+    date: "",
+    time: "",
+  });
+
+  // 로그인 정보 불러오기
   useEffect(() => {
-    loadSavedCourses();
-    loadRecords();
+    const stored =
+      sessionStorage.getItem("userEmail") || localStorage.getItem("user_id");
+    setUserId(stored);
   }, []);
 
-  // ───────────────────────────────────────────
-  // 저장한 코스 불러오기
-  const loadSavedCourses = async () => {
+  // 로그인 여부에 따라 데이터 로딩
+  useEffect(() => {
+    if (userId) {
+      loadSaved();
+      loadRecords(userId);
+    } else {
+      setSavedCourses([]);
+      setRecords([]);
+    }
+  }, [userId]);
+
+  // 저장한 코스 로딩
+  const loadSaved = async () => {
     try {
-      const data = await getSavedCourses();
-      setSavedCourses(
-        data.map((d) => ({
-          id: d.routeId,
-          title: d.route,
-          location: d.location,
-          distance: d.distance,
-          level: d.level ?? "기본"
-        }))
-      );
+      const saved = await getSavedCourses();
+      setSavedCourses(saved || []);
     } catch (err) {
-      // fallback
-      setSavedCourses([
-        {
-          id: 1,
-          title: "남산 순환 도로",
-          location: "서울 용산구",
-          distance: 7.2,
-          level: "고급"
-        },
-        {
-          id: 2,
-          title: "광안리 해변 힐링 런",
-          location: "부산 수영구",
-          distance: 5.0,
-          level: "초급"
-        }
-      ]);
+      console.error("저장코스 조회 실패", err);
+      setSavedCourses([]);
     }
   };
 
-  // ───────────────────────────────────────────
-  // 완주 기록 불러오기
-  const loadRecords = async () => {
+  // 완주 기록 로딩
+  const loadRecords = async (uid) => {
     try {
-      const data = await getRecords();
-      setRecords(
-        data.map((r) => ({
-          id: r.recordId,
-          title: r.courseName,
-          distance: r.distance,
-          location: r.location,
-          rawDate: r.runDate,
-          date: r.runDate.replace(/-/g, "."),
-          time: r.runTime
-        }))
-      );
+      const dbRecords = await getRecords(uid);
+      setRecords(dbRecords || []);
     } catch (err) {
-      // fallback
-      setRecords([
-        {
-          id: 11,
-          title: "청계천 따라 달리기",
-          location: "서울 종로구",
-          distance: 6.5,
-          rawDate: "2025-11-20",
-          date: "2025.11.20",
-          time: "00:45:30"
-        },
-        {
-          id: 12,
-          title: "한강공원 10K",
-          location: "지역 미정",
-          distance: 10,
-          rawDate: "2025-11-15",
-          date: "2025.11.15",
-          time: "01:05:12"
-        }
-      ]);
+      console.error("기록 조회 실패", err);
+      setRecords([]);
     }
   };
 
-  // ───────────────────────────────────────────
-  // 저장한 코스 입력값 업데이트
-  const updateInput = (courseId, field, value) => {
-    setInputValues((prev) => ({
-      ...prev,
-      [courseId]: {
-        ...prev[courseId],
-        [field]: value
-      }
-    }));
-  };
-
-  // ───────────────────────────────────────────
-  // 저장한 코스 → 아래 기록으로 추가
-  const submitFinish = async (course) => {
-    const { date, time } = inputValues[course.id] || {};
-
-    if (!date || !time) return alert("날짜와 시간을 모두 입력하세요!");
+  // 저장한 코스 → 완주 처리
+  const handleFinishCourse = async (saved) => {
+    if (!finishInput.date || !finishInput.time) {
+      alert("완주 날짜와 시간을 입력하세요.");
+      return;
+    }
 
     try {
       await finishCourse({
-        routeId: course.id,
-        runDate: date,
-        runTime: time
+        routeId: saved.routeId || saved.id,
+        title: saved.title,
+        location: saved.location,
+        distance: saved.distance,
+        runDate: finishInput.date,
+        runTime: finishInput.time,
       });
-      await loadRecords();
-    } catch (err) {
-      // fallback
-      setRecords((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          title: course.title,
-          location: course.location,
-          distance: course.distance,
-          rawDate: date,
-          date: date.replace(/-/g, "."),
-          time
-        }
-      ]);
-    }
 
-    // 초기화
-    setInputValues((prev) => ({ ...prev, [course.id]: {} }));
-    setOpenSavedId(null);
+      alert("완주 기록이 저장되었습니다.");
+      setOpenSavedId(null);
+      setFinishInput({ date: "", time: "" });
+      loadRecords(userId);
+    } catch (err) {
+      console.error("완주 처리 실패", err);
+      alert("완주 처리에 실패했습니다.");
+    }
   };
 
-  // ───────────────────────────────────────────
-  // 새 자율 기록 추가
-  const submitNewRecord = async () => {
-    const { title, distance, date, time } = newRecord;
+  // 자율 완주 기록 생성
+  const handleCreateRecord = async () => {
+    const { title, location, distance, date, time } = newRecord;
 
-    if (!title || !date || !time) return alert("필수값을 입력하세요!");
+    if (!title || !location || !distance || !date || !time) {
+      alert("모든 필드를 입력해야 합니다.");
+      return;
+    }
 
     try {
       await createRecord({
-        courseName: title,
-        distance: Number(distance) || null,
+        title,
+        location,
+        distance: parseFloat(distance),
         runDate: date,
-        runTime: time
+        runTime: time,
       });
-      await loadRecords();
+
+      alert("자율 완주 기록 생성 완료!");
+      setShowNewRecordForm(false);
+      setNewRecord({
+        title: "",
+        location: "",
+        distance: "",
+        date: "",
+        time: "",
+      });
+      loadRecords(userId);
     } catch (err) {
-      setRecords((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          title,
-          distance,
-          rawDate: date,
-          date: date.replace(/-/g, "."),
-          time
-        }
-      ]);
+      console.error("자율 기록 생성 실패", err);
+      alert("자율 기록 생성에 실패했습니다.");
     }
-
-    setNewRecord({ title: "", distance: "", date: "", time: "" });
-    setShowNewRecordForm(false);
   };
 
-  // ───────────────────────────────────────────
   // 기록 수정
-  const updateEditInput = (id, field, value) => {
-    setEditValues((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        [field]: value
+  
+  const handleUpdateRecord = async (record) => {
+    const data = {
+        title: record.title,
+        location: record.location,
+        distance: parseFloat(record.distance),
+        runDate: record.rawDate,
+        runTime: record.time,
       }
-    }));
-  };
-
-  const submitEditRecord = async (record) => {
-    const date = editValues[record.id]?.date || record.rawDate;
-    const time = editValues[record.id]?.time || record.time;
-
     try {
-      await updateRecord(record.id, { runDate: date, runTime: time });
-      await loadRecords();
-    } catch {
-      setRecords((prev) =>
-        prev.map((r) =>
-          r.id === record.id
-            ? { ...r, rawDate: date, date: date.replace(/-/g, "."), time }
-            : r
-        )
-      );
-    }
+      await updateRecord(record.id, data);
 
-    setEditingRecordId(null);
+      console.log("수정 데이터 확인 :",record);
+      setEditingRecordId(null);
+      loadRecords(userId);
+    } catch (err) {
+      console.error("기록 수정 실패", err);
+      alert("기록 수정에 실패했습니다.");
+    }
   };
 
-  // ───────────────────────────────────────────
   // 기록 삭제
-  const deleteRec = async (id) => {
-    if (!window.confirm("정말 삭제할까요?")) return;
+  const handleDeleteRecord = async (id) => {
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
     try {
-      await deleteRecord(id);
-      await loadRecords();
-    } catch {
-      setRecords((prev) => prev.filter((r) => r.id !== id));
+      await deleteRecord(id, userId); // ★ userId 함께 전달
+      alert("삭제되었습니다.");
+      loadRecords(userId);
+    } catch (err) {
+      console.error("삭제 실패", err);
+      alert("삭제에 실패했습니다.");
     }
   };
 
-  // ───────────────────────────────────────────
-  // 컴포넌트 구조
   return (
     <div className="runlog-wrapper">
-
       <h2 className="runlog-title">Run Log</h2>
 
-      {/* ---------------- 저장한 코스 ---------------- */}
+      {/* 저장한 코스 영역 */}
       <div className="section-box">
         <div className="section-header">
-          <h3>저장한 코스 <span>(총 {savedCourses.length}개)</span></h3>
+          <h3>
+            저장한 코스 <span>(총 {savedCourses.length}개)</span>
+          </h3>
         </div>
 
-        {savedCourses.map((course) => (
-          <div key={course.id}>
+        {savedCourses.length === 0 && (
+          <p className="empty-msg">저장한 코스가 없습니다.</p>
+        )}
+
+        {savedCourses.map((saved) => (
+          <div key={saved.id}>
             <LogCard
               type="saved"
-              item={course}
-              isOpen={openSavedId === course.id}
+              item={saved}
+              isOpen={openSavedId === saved.id}
               onMainButton={() =>
-                setOpenSavedId(openSavedId === course.id ? null : course.id)
+                setOpenSavedId(openSavedId === saved.id ? null : saved.id)
               }
+              // 저장 코스 삭제를 run 기록 삭제 API로 할 생각이 아니면 onDelete 빼도 됨
+              // onDelete={() => handleDeleteSavedCourse(saved.id)}
             />
 
-            {/* ▼ 여기서 기록 입력 폼을 표시한다 (세 번째 이미지 스타일) */}
-            {openSavedId === course.id && (
-              <div className="input-form-large">
-                <p className="form-title">코스 완주 기록 입력</p>
+            {openSavedId === saved.id && (
+              <div className="input-form">
+                <p className="form-title">기록 입력: {saved.title}</p>
 
-                <div className="two-cols">
+                <div className="three-grid">
                   <div className="form-row">
                     <label>완주 날짜</label>
                     <input
                       type="date"
-                      value={inputValues[course.id]?.date || ""}
+                      value={finishInput.date}
                       onChange={(e) =>
-                        updateInput(course.id, "date", e.target.value)
+                        setFinishInput({ ...finishInput, date: e.target.value })
                       }
                     />
                   </div>
@@ -282,47 +220,52 @@ export default function RunLogPage() {
                     <label>완주 시간</label>
                     <input
                       type="text"
-                      placeholder="00:45:30"
-                      value={inputValues[course.id]?.time || ""}
+                      placeholder="01:30:05"
+                      value={finishInput.time}
                       onChange={(e) =>
-                        updateInput(course.id, "time", e.target.value)
+                        setFinishInput({ ...finishInput, time: e.target.value })
                       }
                     />
                   </div>
                 </div>
 
-                <button className="btn-submit" onClick={() => submitFinish(course)}>
-                  기록 저장
+                <button
+                  className="btn-submit"
+                  onClick={() => handleFinishCourse(saved)}
+                >
+                  완주 완료
                 </button>
               </div>
             )}
           </div>
         ))}
-
-        {savedCourses.length === 0 && (
-          <p className="empty">저장한 코스가 없습니다.</p>
-        )}
       </div>
 
-      {/* ---------------- 완주 기록 ---------------- */}
+      {/* 코스 완주 기록 영역 */}
       <div className="section-box">
         <div className="section-header">
-          <h3>코스 완주 기록 <span>(총 {records.length}개)</span></h3>
+          <h3>
+            코스 완주 기록 <span>(총 {records.length}개)</span>
+          </h3>
 
-          <button className="btn-add" onClick={() => setShowNewRecordForm(!showNewRecordForm)}>
-            + 새 완주 기록 추가
+          <button
+            className="btn-add"
+            onClick={() => setShowNewRecordForm(!showNewRecordForm)}
+          >
+            {showNewRecordForm ? "닫기" : "+ 새 완주 기록 추가"}
           </button>
         </div>
 
-        {/* ▼ 세 번째 사진의 입력칸 그대로 */}
+        {/* 자율 기록 입력 폼 */}
         {showNewRecordForm && (
           <div className="input-form-large">
-            <p className="form-title">자율 완주 기록 추가</p>
+            <p className="form-title">자율 완주 기록</p>
 
             <div className="two-cols">
               <div className="form-row">
                 <label>코스 이름</label>
                 <input
+                  type="text"
                   value={newRecord.title}
                   onChange={(e) =>
                     setNewRecord({ ...newRecord, title: e.target.value })
@@ -331,20 +274,35 @@ export default function RunLogPage() {
               </div>
 
               <div className="form-row">
+                <label>지역</label>
+                <input
+                  type="text"
+                  value={newRecord.location}
+                  onChange={(e) =>
+                    setNewRecord({ ...newRecord, location: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="form-row">
                 <label>거리(KM)</label>
                 <input
                   type="number"
+                  step="0.1"
                   value={newRecord.distance}
                   onChange={(e) =>
-                    setNewRecord({ ...newRecord, distance: e.target.value })
+                    setNewRecord({
+                      ...newRecord,
+                      distance: e.target.value,
+                    })
                   }
                 />
               </div>
             </div>
 
-            <div className="two-cols">
+            <div className="three-grid">
               <div className="form-row">
-                <label>완주 날짜</label>
+                <label>날짜</label>
                 <input
                   type="date"
                   value={newRecord.date}
@@ -355,9 +313,10 @@ export default function RunLogPage() {
               </div>
 
               <div className="form-row">
-                <label>완주 시간</label>
+                <label>시간</label>
                 <input
                   type="text"
+                  placeholder="01:30:05"
                   value={newRecord.time}
                   onChange={(e) =>
                     setNewRecord({ ...newRecord, time: e.target.value })
@@ -366,13 +325,17 @@ export default function RunLogPage() {
               </div>
             </div>
 
-            <button className="btn-submit" onClick={submitNewRecord}>
+            <button className="btn-submit" onClick={handleCreateRecord}>
               기록 저장
             </button>
           </div>
         )}
 
-        {/* ▼ 완료 기록 리스트 */}
+        {/* 기존 기록 카드들 */}
+        {records.length === 0 && (
+          <p className="empty-msg">완주 기록이 없습니다.</p>
+        )}
+
         {records.map((record) => (
           <div key={record.id}>
             <LogCard
@@ -380,40 +343,41 @@ export default function RunLogPage() {
               item={record}
               isOpen={editingRecordId === record.id}
               onMainButton={() =>
-                setEditingRecordId(editingRecordId === record.id ? null : record.id)
+                setEditingRecordId(
+                  editingRecordId === record.id ? null : record.id
+                )
               }
-              onDelete={() => deleteRec(record.id)}
+              onDelete={() => handleDeleteRecord(record.id)}
             />
 
             {editingRecordId === record.id && (
-              <div className="input-form-large">
-                <p className="form-title">기록 수정</p>
+              <div className="edit-form">
+                <p className="form-title">기록 수정: {record.title}</p>
 
-                <div className="two-cols">
+                <div className="three-grid">
                   <div className="form-row">
-                    <label>완주 날짜</label>
+                    <label>날짜</label>
                     <input
                       type="date"
                       defaultValue={record.rawDate}
-                      onChange={(e) =>
-                        updateEditInput(record.id, "date", e.target.value)
-                      }
+                      onChange={(e) => (record.rawDate = e.target.value)}
                     />
                   </div>
 
                   <div className="form-row">
-                    <label>완주 시간</label>
+                    <label>시간</label>
                     <input
                       type="text"
                       defaultValue={record.time}
-                      onChange={(e) =>
-                        updateEditInput(record.id, "time", e.target.value)
-                      }
+                      onChange={(e) => (record.time = e.target.value)}
                     />
                   </div>
                 </div>
 
-                <button className="btn-submit" onClick={() => submitEditRecord(record)}>
+                <button
+                  className="btn-submit"
+                  onClick={() => handleUpdateRecord(record)}
+                >
                   수정 완료
                 </button>
               </div>
