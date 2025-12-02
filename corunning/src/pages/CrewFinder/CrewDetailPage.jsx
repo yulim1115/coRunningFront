@@ -209,7 +209,41 @@ function CrewDetailPage() {
   /* 스켈레톤 */
   if (loading) {
     return (
-      <main className="crew-detail-page">로딩중...</main>
+      <main className="detail-page">
+        <div className="skeleton-title-section">
+          <div className="skeleton skeleton-title"></div>
+          <div className="skeleton skeleton-tag"></div>
+
+          <div className="skeleton-meta-row">
+            <div className="skeleton skeleton-meta"></div>
+            <div className="skeleton skeleton-meta"></div>
+          </div>
+        </div>
+
+        <section className="main-layout">
+          <div className="left-area">
+            <div className="skeleton skeleton-map"></div>
+          </div>
+
+          <div className="right-area">
+            <div className="skeleton skeleton-subtitle"></div>
+            <div className="skeleton skeleton-text"></div>
+            <div className="skeleton skeleton-text"></div>
+            <div className="skeleton skeleton-text short"></div>
+          </div>
+        </section>
+
+        <section className="comment-section">
+          <div className="skeleton skeleton-subtitle"></div>
+          <div className="skeleton skeleton-input"></div>
+
+          <div className="comment-list">
+            {[1, 2, 3].map((v) => (
+              <div key={v} className="skeleton skeleton-comment-item"></div>
+            ))}
+          </div>
+        </section>
+      </main>
     );
   }
 
@@ -232,8 +266,6 @@ function CrewDetailPage() {
       <section className="title-section">
         <div className="title-row">
           <h1 className="crew-title">{crew.title}</h1>
-
-          {/* 타입 태그 */}
           <span className={`crew-type-tag ${getTypeTagClass(crew.boardType)}`}>
             {getTypeLabel(crew.boardType)}
           </span>
@@ -262,24 +294,23 @@ function CrewDetailPage() {
           <div className="info-card">
             <h2>모집 정보</h2>
 
-           <div className="info-row">
-  <span className="info-label">모집 인원</span>
-  <span className="info-value">
-    <span className="recruit-current">{crew.currentCount}명</span> / {crew.recruitCount}명
-  </span>
-</div>
+            <div className="info-row">
+              <span className="info-label">모집 인원</span>
+              <span className="info-value">
+                <span className="recruit-current">{crew.currentCount}명</span> / {crew.recruitCount}명
+              </span>
+            </div>
 
-<div className="info-row">
-  <span className="info-label">마감일</span>
-  <span className="info-value">{crew.deadline}</span>
-</div>
+            <div className="info-row">
+              <span className="info-label">마감일</span>
+              <span className="info-value">{crew.deadline}</span>
+            </div>
 
-<div className="info-row">
-  <span className="info-label">지역</span>
-  <span className="info-value">{crew.region}</span>
-</div>
+            <div className="info-row">
+              <span className="info-label">지역</span>
+              <span className="info-value">{crew.region}</span>
+            </div>
 
-            {/* 우측 상단 모집 상태 */}
             <div className={`info-status-tag ${isClosed ? "closed" : "recruiting"}`}>
               {isClosed ? "모집마감" : "모집중"}
             </div>
@@ -333,7 +364,6 @@ function CrewDetailPage() {
                 <strong>{c.writerId}</strong>
                 <span className="date">{formatDate(c.createdAt)}</span>
 
-                {/* 본인 댓글일 때만 삭제 버튼 */}
                 {loginUserId === c.writerId && (
                   <button
                     className="comment-delete-btn"
