@@ -44,7 +44,7 @@
     background: var(--color-main);
     color: var(--color-white);
     font-weight: var(--fw-bold);
-    border-radius: 6px;
+    border-radius: 999px;
     border: none;
     transition: 0.2s;
 }
@@ -117,6 +117,8 @@
     color: var(--color-white);
     border-radius: 4px;
     border: none;
+    font-size: var(--font-caption);
+    font-weight: var(--fw-medium);
 }
 
 .search-button:hover {
@@ -166,12 +168,12 @@
     overflow: hidden;
     cursor: pointer;
     transition: 0.25s;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-medium);
 }
 
 .route-item:hover {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-medium);
+    box-shadow: var(--shadow-strong);
 }
 
 /* 카드 본문 */
