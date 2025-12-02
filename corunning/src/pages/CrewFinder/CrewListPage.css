@@ -1,0 +1,319 @@
+/* 페이지 래퍼 */
+.crew-page-wrapper {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 60px auto;
+  padding: 0 40px;
+  color: var(--color-text-dark);
+}
+
+/* 페이지 헤더 */
+.page-header-area {
+  padding: 20px 0 10px;
+}
+
+.page-header-area h1 {
+  font-size: var(--font-h1);
+  font-weight: var(--fw-bold);
+  color: var(--color-main);
+}
+
+/* 등록 안내 박스 */
+.registration-notice {
+  margin-bottom: 30px;
+  background: var(--color-bg-card);
+  border-left: 6px solid var(--color-accent);
+  border-radius: 8px;
+  padding: 30px 40px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+  color: var(--color-main);
+}
+
+/* 크루 등록 버튼 */
+.register-crew-btn {
+  display: inline-flex;
+  height: var(--btn-large-height);
+  padding: 0 24px;
+  align-items: center;
+  background: var(--color-main);
+  color: var(--color-white);
+  font-weight: var(--fw-bold);
+  border-radius: 999px;
+  border: none;
+  transition: 0.2s;
+}
+
+.register-crew-btn:hover {
+  background: var(--color-main-hover);
+}
+
+/* 탭 영역 */
+.crew-tabs-area {
+  margin-bottom: 10px;
+}
+
+/* 탭 버튼 그룹 */
+.crew-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+/* 탭 버튼 */
+.crew-tab {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  font-size: var(--font-caption);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-light);
+  transition: 0.2s;
+}
+
+.crew-tab:hover {
+  background: var(--color-bg-light);
+  color: var(--color-main);
+  border-color: var(--color-main);
+}
+
+.crew-tab.active {
+  background: var(--color-main);
+  color: var(--color-white);
+}
+
+/* 필터 영역 */
+.filter-controls-area {
+  padding-bottom: 25px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* 상태 필터 그룹 */
+.status-filter-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* 상태 칩 버튼 */
+.status-chip {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  font-size: var(--font-caption);
+  color: var(--color-text-light);
+  font-weight: var(--fw-medium);
+  transition: 0.2s;
+}
+
+.status-chip:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.status-chip.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+/* 크루 개수 */
+.crew-count {
+  font-size: var(--font-caption);
+  color: var(--color-text-light);
+  padding-top: 6px;
+}
+
+/* 섹션 타이틀 */
+.crew-section-title {
+  font-size: var(--font-h2);
+  font-weight: var(--fw-bold);
+  color: var(--color-main);
+  margin-bottom: 20px;
+  padding-top: 10px;
+}
+
+/* 리스트 그리드 */
+.crew-list-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin-bottom: 50px;
+}
+
+/* 카드 */
+.crew-card {
+  background: var(--color-white);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow-medium);
+  transition: 0.25s;
+  position: relative;
+}
+
+/* TYPE 별 테두리 */
+.border-normal {
+  border: 2px solid #4A69BB;
+}
+
+.border-flash {
+  border: 2px solid #D9534F;
+}
+
+.border-drawing {
+  border: 2px solid #C79E3B;
+}
+
+.crew-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-strong);
+}
+
+/* 모집 상태 배지 */
+.recruitment-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: var(--fw-bold);
+  border-radius: 0 8px 0 4px;
+}
+
+.recruitment-tag.recruiting {
+  background: var(--color-green);
+  color: var(--color-white);
+}
+
+.recruitment-tag.closed {
+  background: #777;
+  color: var(--color-white);
+}
+
+/* 카드 내용 */
+.crew-content {
+  padding: 16px;
+}
+
+/* 타입 + 지역 태그 줄 */
+.crew-tag-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* 타입 태그 공통 */
+.tag-type {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  border-radius: 14px;
+  border: 2px solid;
+  background: none;
+}
+
+/* 타입 태그 개별 색상 */
+.tag-type-normal {
+  border-color: #4A69BB;
+  color: #4A69BB;
+}
+
+.tag-type-flash {
+  border-color: #D9534F;
+  color: #D9534F;
+}
+
+.tag-type-drawing {
+  border-color: #C79E3B;
+  color: #C79E3B;
+}
+
+/* 지역 태그 */
+.tag-region {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  border-radius: 16px;
+  background: var(--color-bg-light);
+  color: var(--color-sub);
+}
+
+/* 제목 */
+.crew-content h3 {
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+  color: var(--color-main);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+/* 모집 인원 */
+.crew-recruitment-status {
+  font-size: var(--font-caption);
+  font-weight: var(--fw-medium);
+  margin-bottom: 8px;
+  color: var(--color-text-dark);
+}
+
+.crew-recruitment-status .highlight {
+  color: var(--color-accent);
+  font-weight: var(--fw-bold);
+}
+
+/* 메타 정보 줄 */
+.crew-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--color-text-light);
+}
+
+.crew-meta-item strong {
+  font-weight: var(--fw-bold);
+  color: var(--color-text-dark);
+}
+
+/* 좋아요/댓글 영역 */
+.crew-interaction {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.count-item {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-light);
+}
+
+.count-item svg {
+  color: var(--color-sub);
+}
+
+/* 빈 상태 */
+.crew-empty {
+  margin: 40px 0 60px;
+  padding: 40px 0;
+  text-align: center;
+  border-radius: 8px;
+  background: var(--color-bg-gray);
+  color: var(--color-text-light);
+  font-size: var(--font-body);
+}

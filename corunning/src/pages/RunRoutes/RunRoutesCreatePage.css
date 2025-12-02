@@ -88,12 +88,6 @@
   outline: none;
 }
 
-/* 3분할 */
-.meta-fields {
-  display: flex;
-  gap: 16px;
-}
-
 /* 지도 박스 */
 .mapbox-container {
   width: 100%;
@@ -202,19 +196,25 @@
 .meta-fields {
   display: flex;
   gap: 16px;
+  width: 100%;
+}
+
+/* 각 요소 동일하게 차지 */
+.meta-fields .form-group {
+  flex: 1;
 }
 
 /* 커스텀 select 래퍼 */
 .select-wrap {
   position: relative;
-  width: 150px;
+  width: 100%;
 }
 
 /* 커스텀 select */
 .select-wrap select {
   width: 100%;
   height: 40px;
-  padding: 0 34px 0 12px;
+  padding: 0 40px 0 12px;
   font-size: 14px;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -236,10 +236,10 @@
 /* 화살표 아이콘 */
 .select-arrow {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 16px;
+  font-size: 18px;
   color: var(--color-sub);
   pointer-events: none;
 }

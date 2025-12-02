@@ -42,15 +42,12 @@ function RunRoutesDetailPage() {
 
   const loginUserId = sessionStorage.getItem("userEmail");
 
-  // 지도 DOM을 안정적으로 잡기 위한 ref
   const mapContainerRef = useRef(null);
-  const mapRef = useRef(null); // Mapbox map 인스턴스를 저장할 ref
+  const mapRef = useRef(null);
 
-  /* 난이도 라벨 */
   const getDifficultyLabel = (d) =>
     d === "easy" ? "초급" : d === "medium" ? "중급" : d === "hard" ? "고급" : d;
 
-  /* 날짜 */
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -63,7 +60,7 @@ function RunRoutesDetailPage() {
   const getDescriptionLines = (txt) =>
     txt ? txt.split(/\r?\n/).filter((v) => v.trim() !== "") : [];
 
-  /* 상세 정보 + 저장/추천 상태 로드 */
+  // 상세 정보 + 상태 로드
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -93,7 +90,6 @@ function RunRoutesDetailPage() {
             getDipList(loginUserId),
             checkLiked(id),
           ]);
-
           setIsBookmarked(dips.some((v) => Number(v.routeId) === Number(id)));
           setIsLiked(liked);
         } else {
@@ -111,12 +107,11 @@ function RunRoutesDetailPage() {
     loadData();
   }, [id, loginUserId]);
 
-  /* 지도 렌더링 (안정화 버전) */
+  // 지도 렌더링
   useEffect(() => {
-    if (!route?.route) return;
+    if (!route?.route || loading) return; // 로딩 중이면 실행하지 않음
 
     let coords;
-
     try {
       coords = JSON.parse(route.route);
     } catch (e) {
@@ -124,28 +119,22 @@ function RunRoutesDetailPage() {
       return;
     }
 
-    if (!Array.isArray(coords) || coords.length < 2) {
-      console.warn("좌표 데이터가 유효하지 않습니다.");
-      return;
-    }
-
+    if (!Array.isArray(coords) || coords.length < 2) return;
     if (!mapContainerRef.current) return;
 
-    // 이미 생성된 지도 있으면 제거 (StrictMode 대처)
     if (mapRef.current) {
       mapRef.current.remove();
       mapRef.current = null;
     }
 
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
-
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: "mapbox://styles/mapbox/streets-v12",
       center: coords[0],
       zoom: 14,
       language: "ko",
-      attributionControl: false
+      attributionControl: false,
     });
 
     mapRef.current = map;
@@ -171,22 +160,18 @@ function RunRoutesDetailPage() {
         new mapboxgl.LngLatBounds()
       );
       map.fitBounds(bounds, { padding: 40 });
-
       map.resize();
     });
 
     return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-      }
+      map.remove();
+      mapRef.current = null;
     };
-  }, [route?.route]);
+  }, [route?.route, loading]);
 
-  /* 추천 토글 */
+
   const handleLike = async () => {
     if (!loginUserId) return alert("로그인 후 추천이 가능합니다.");
-
     try {
       if (!isLiked) {
         await addLike(route.id);
@@ -202,10 +187,8 @@ function RunRoutesDetailPage() {
     }
   };
 
-  /* 저장 토글 */
   const handleToggleBookmark = async () => {
     if (!loginUserId) return alert("로그인 후 저장이 가능합니다.");
-
     try {
       if (!isBookmarked) {
         await addDip(route.id, loginUserId);
@@ -219,7 +202,6 @@ function RunRoutesDetailPage() {
     }
   };
 
-  /* 댓글 등록 */
   const handleAddComment = async () => {
     if (!loginUserId) return alert("로그인 후 댓글 작성 가능");
     if (!commentInput.trim()) return;
@@ -233,7 +215,6 @@ function RunRoutesDetailPage() {
     }
   };
 
-  /* 댓글 삭제 */
   const handleDeleteComment = async (commentId, writerId) => {
     if (loginUserId !== writerId)
       return alert("본인 댓글만 삭제할 수 있습니다.");
@@ -247,13 +228,13 @@ function RunRoutesDetailPage() {
     }
   };
 
+  // --- 로딩 스켈레톤 ---
   if (loading) {
     return (
       <main className="detail-page">
         <div className="skeleton-title-section">
           <div className="skeleton skeleton-title"></div>
           <div className="skeleton skeleton-tag"></div>
-
           <div className="skeleton-meta-row">
             <div className="skeleton skeleton-meta"></div>
             <div className="skeleton skeleton-meta"></div>
@@ -296,7 +277,7 @@ function RunRoutesDetailPage() {
     );
   }
 
-
+  // --- 오류 처리 ---
   if (error || !route) {
     return (
       <main className="detail-page">
@@ -313,6 +294,7 @@ function RunRoutesDetailPage() {
   const descriptionLines = getDescriptionLines(route.description);
   const difficultyLabel = getDifficultyLabel(route.difficulty);
 
+  // --- 정상 화면 ---
   return (
     <main className="detail-page">
       <section className="title-section">
@@ -341,8 +323,12 @@ function RunRoutesDetailPage() {
 
       <section className="main-layout">
         <div className="left-area">
-          <div id="map" ref={mapContainerRef} className="map-box"></div>
+          <div
+            ref={mapContainerRef}
+            className={`map-box ${loading ? "skeleton-map" : ""}`}
+          ></div>
         </div>
+
 
         <div className="right-area">
           <div className="recommend-row">
