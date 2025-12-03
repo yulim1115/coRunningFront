@@ -28,7 +28,7 @@ function LoginPage() {
 
       sessionStorage.setItem("userEmail", email);
 
-      // 헤더 강제 업데이트
+      // 아이디 정보 로컬 저장소에 복사
       localStorage.setItem("user_id",email);
 
       /* 헤더 강제 업데이트 */
