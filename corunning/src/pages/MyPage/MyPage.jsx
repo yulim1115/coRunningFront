@@ -464,8 +464,7 @@ function MyPage() {
             </div>
           </div>
         );
-
-        case "logout":
+      case "logout":
         return (
           <div id="logout" className="content-black active">
             <h1 style={{ marginBottom: 20 }}>로그아웃</h1>
