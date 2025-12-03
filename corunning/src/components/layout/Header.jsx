@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../styles/Global.css";
 import "./Header.css";
 import logoImg from "../../assets/images/logo.png";
+import { logoutAPI } from "../../api/userApi";
 
 function Header() {
   const navigate = useNavigate();
@@ -19,11 +20,12 @@ function Header() {
     return () => window.removeEventListener("storage", checkLogin);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     sessionStorage.removeItem("isLogin");
     sessionStorage.removeItem("userEmail");
     window.dispatchEvent(new Event("storage"));
-    
+    await logoutAPI();
+    alert("로그아웃 되었습니다.");
     navigate("/");
   };
 
