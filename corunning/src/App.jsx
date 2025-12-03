@@ -13,7 +13,7 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 
 // Pages
-import HomePage from "./pages/HomePage/HomePage";
+import MainPage from "./pages/MainPage/MainPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 
@@ -39,7 +39,7 @@ function App() {
                 {/* Page Routing */}
                 <Routes>
                     {/* 메인 */}
-                    <Route path="/" element={<HomePage />} />
+                    <Route path="/" element={<MainPage />} />
     
                     {/* 인증 */}
                     <Route path="/login" element={<LoginPage />} />
