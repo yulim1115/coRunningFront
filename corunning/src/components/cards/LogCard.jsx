@@ -6,7 +6,8 @@ export default function LogCard({
   item,
   isOpen,
   onMainButton,
-  onDelete
+  onDelete,
+  onCancel
 }) {
   return (
     <div className="logcard">
@@ -33,10 +34,14 @@ export default function LogCard({
         <button className="btn-main" onClick={onMainButton}>
           {isOpen ? "닫기" : type === "saved" ? "기록 입력" : "수정"}
         </button>
-
+        {type === "record" && (
+          <button className="btn-delete" onClick={onCancel}>
+            완주 취소
+          </button>
+        )}
         {type === "record" && (
           <button className="btn-danger" onClick={onDelete}>
-            삭제
+            찜 해제
           </button>
         )}
       </div>

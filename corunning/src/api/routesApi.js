@@ -96,7 +96,7 @@ export const addDip = async (routeId, userId) => {
 // 저장 삭제
 export const removeDip = async (routeId, userId) => {
   const res = await fetch(
-    `/api/dip/remove?userId=${encodeURIComponent(userId)}&routeId=${routeId}`,
+    `/api/dip/remove?routeId=${routeId}&userId=${encodeURIComponent(userId)}`,
     { method: "DELETE" }
   );
 
@@ -104,3 +104,32 @@ export const removeDip = async (routeId, userId) => {
   if (!res.ok) throw new Error(text);
   return text;
 };
+
+export const updateDip = async (id, complete, record) => {
+  // ✅ 숫자 ID를 문자열로 변환하지 않음
+  const qId = String(id);  // Long -> String 변환만
+  const qComplete = complete.toString();  // boolean -> "true"/"false"
+  const qRecord = record == null ? "" : encodeURIComponent(record);
+
+  const url = `/api/dip/update?id=${qId}&complete=${qComplete}&record=${qRecord}`;
+  console.log("UpdateDip URL:", url);  // ✅ 디버깅용 로그
+  
+  const res = await fetch(url, { method: "PUT" });
+  const text = await res.text();
+  if (!res.ok) throw new Error(text);
+  return text;
+};
+
+// 자율 완주 기록 생성 (찜 목록과 무관하게 독립적으로 기록 저장)
+export const createRunRecord = async (userId, title, distance, date, time) => {
+  const record = `${date} ${time}`;
+  const qRecord = encodeURIComponent(record);
+  
+  const url = `/api/record/create?userId=${encodeURIComponent(userId)}&title=${encodeURIComponent(title)}&distance=${distance}&record=${qRecord}`;
+  console.log("CreateRunRecord URL:", url);
+  
+  const res = await fetch(url, { method: "POST" });
+  const text = await res.text();
+  if (!res.ok) throw new Error(text);
+  return text;
+};;
