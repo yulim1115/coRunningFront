@@ -8,6 +8,36 @@ body {
             flex-direction: column;
             min-height: 100vh;
         }
+        /* 주소 입력 행 */
+.address-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+/* 우편번호 input 크기 */
+.address-row input {
+  width: 70%;
+  min-width: 120px;
+}
+
+/* 주소 검색 버튼 */
+.address-search-btn {
+  flex: 1;
+  height: var(--btn-large-height);
+  background: var(--color-sub);
+  color: var(--color-white);
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  transition: 0.2s;
+}
+
+.address-search-btn:hover {
+  background: var(--color-sub-hover);
+}
 
         /* 폰트 크기 조정 */
         h1 { font-size: 32px; color: #333333; font-weight: 700; margin: 0; }
@@ -16,6 +46,7 @@ body {
         .body-base { font-size: 16px; } 
         .caption-small { font-size: 14px; }
         .extra-small { font-size: 12px; }
+        
 
         /* 컨텐츠 중앙 정렬 및 좌우 여백 */
         .container {
@@ -353,3 +384,4 @@ body {
             color: #AAAAAA;
             margin-top: auto;
         }
+        
