@@ -176,6 +176,11 @@ function CrewDetailPage() {
     } catch (err) {
       alert(err.response?.data || "신청 실패");
     }
+
+    setCrew(prev => ({
+      ...prev,
+      currentCount: prev.currentCount + 1
+    }));
   };
 
   /* 댓글 등록 */
@@ -280,15 +285,26 @@ function CrewDetailPage() {
       {/* 메인 레이아웃 */}
       <section className="main-layout">
         <div className="left-area">
-          {hasRoute ? (
-            <div ref={mapContainerRef} className="map-box"></div>
-          ) : (
+          {hasRoute && (
+            <>
+              <div ref={mapContainerRef} className="map-box"></div>
+
+              {/* 지도 아래에 소개 박스 표시 */}
+              <div className="course-summary-box" style={{ marginTop: "20px" }}>
+                <h2>크루 소개</h2>
+                <p>{crew.content}</p>
+              </div>
+            </>
+          )}
+
+          {!hasRoute && (
             <div className="course-summary-box">
               <h2>크루 소개</h2>
               <p>{crew.content}</p>
             </div>
           )}
         </div>
+
 
         <div className="right-area">
           <div className="info-card">
@@ -331,13 +347,6 @@ function CrewDetailPage() {
               </button>
             )}
           </div>
-
-          {hasRoute && (
-            <div className="course-summary-box below">
-              <h2>크루 소개</h2>
-              <p>{crew.content}</p>
-            </div>
-          )}
         </div>
       </section>
 
