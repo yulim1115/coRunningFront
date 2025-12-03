@@ -44,14 +44,13 @@ function MainPage() {
     }
   };
 
-  /* 타입 라벨 */
+  /* 타입 라벨 (한글 변환) */
   const getTypeLabel = (type) => {
     switch (type) {
-      case "DRAWING":
-        return "드로잉 런";
-      case "REGULAR":
-      case "NORMAL":
-        return "레귤러 런";
+      case "drawing":
+        return "드로잉런";
+      case "regular":
+        return "레귤러런";
       default:
         return type;
     }
@@ -213,6 +212,7 @@ function MainPage() {
                 {topRoutes.map((route) => {
                   const diff = getDifficultyInfo(route.difficulty);
                   const typeLabel = getTypeLabel(route.type);
+
                   return (
                     <div
                       className="list-card"
@@ -220,12 +220,15 @@ function MainPage() {
                       onClick={() => navigate(`/routes/${route.id}`)}
                     >
                       <div className="list-card-main">
+
+                        {/* 타입 태그 추가 */}
                         <div className="card-top-row">
                           <span className="badge-type">{typeLabel}</span>
                         </div>
 
                         <div className="list-info">
                           <h3>{route.title}</h3>
+
                           <div className="list-meta">
                             <span><FaMapMarkerAlt /> {route.region}</span>
                             <span><FaRunning /> {diff.label}</span>

@@ -266,6 +266,10 @@
   box-shadow: 0 8px 20px rgba(26,47,75,0.3);
 }
 
+.main-page .likes svg {
+    color: #fff;
+}
+
 /* 번개런 상태 */
 .main-page .crew-status {
   background: #27AE60;
