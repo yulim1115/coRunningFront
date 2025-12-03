@@ -4,21 +4,23 @@ import { FiChevronDown } from "react-icons/fi";   // 셀렉트 화살표
 
 export default function RegionSelector({ onChange }) {
   const [sidoCode, setSidoCode] = useState("");
+  const [sidoName, setSidoName] = useState("");
   const [guList, setGuList] = useState([]);
+  const [guName, setGuName] = useState("");
   const [guCode, setGuCode] = useState("");
 
   // 시도 선택
   const handleSidoChange = (e) => {
     const code = e.target.value;
     setSidoCode(code);
+    setGuCode("");
+    setGuName("");
 
     const sidoObj = sidoList.find((s) => s.code === code);
-    const list = sidoObj ? sidoObj.subClassList : [];
-    setGuList(list);
-    setGuCode("");
-
-    if (onChange) {
-      onChange({ sido: sidoObj.name, gu: "" });
+    if (sidoObj) {
+      setSidoName(sidoObj.name);
+      setGuList(sidoObj.subClassList);
+      onChange({ sido: sidoObj.name, gu: "" });  // ✅ 추가
     }
   };
 
@@ -28,12 +30,10 @@ export default function RegionSelector({ onChange }) {
     setGuCode(code);
 
     const guObj = guList.find((g) => g.code === code);
-
-    if (onChange) {
-      onChange({
-        sido: sidoList.find((s) => s.code === sidoCode)?.name || "",
-        gu: guObj?.name || "",
-      });
+    if (guObj) {
+      setGuCode(code);
+      setGuName(guObj.name);
+      onChange({ sido: sidoName, gu: guObj.name });  // ✅ 추가
     }
   };
 

@@ -25,9 +25,8 @@ import CrewListPage from "./pages/CrewFinder/CrewListPage";
 import CrewDetailPage from "./pages/CrewFinder/CrewDetailPage";
 import CrewCreatePage from "./pages/CrewFinder/CrewCreatePage";
 
-// import RunLogPage from "./pages/RunLog/RunLogPage";
-// import RunLogPage from "./pages/RunLog/RunLogPage";
-// import MyPage from "./pages/MyPage/MyPage";
+import RunLogPage from "./pages/RunLog/RunLogPage";
+import MyPage from "./pages/MyPage/MyPage";
 
 function App() {
     return (
@@ -57,10 +56,10 @@ function App() {
                     <Route path="/crews/create" element={<CrewCreatePage />} />
     
                     {/* Run Log */}
-                    {/* <Route path="/runlog" element={<RunLogPage />} /> */}
+                    <Route path="/runlog" element={<RunLogPage />} />
     
                     {/* My Page */}
-                    {/* <Route path="/mypage" element={<MyPage />} /> */}
+                    <Route path="/mypage" element={<MyPage />} />
                 </Routes>
     
                 {/* 공통 Footer */}

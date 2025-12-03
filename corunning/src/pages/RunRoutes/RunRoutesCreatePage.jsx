@@ -8,7 +8,7 @@ import "./RunRoutesCreatePage.css";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
 function RunRoutesCreatePage() {
-  // 상태
+  // 상태값
   const [routeCoords, setRouteCoords] = useState([]);
   const [snappedCoords, setSnappedCoords] = useState([]);
   const [distance, setDistance] = useState(0);
@@ -22,7 +22,7 @@ function RunRoutesCreatePage() {
   const mapRef = useRef(null);
   const markersRef = useRef([]);
 
-  // 지도 초기화
+  // ---------------------- 지도 초기화 -------------------------
   useEffect(() => {
     if (mapRef.current) return;
 
@@ -31,7 +31,6 @@ function RunRoutesCreatePage() {
       style: "mapbox://styles/mapbox/streets-v12",
       center: [126.9784, 37.5665],
       zoom: 12,
-      language: "ko",
       attributionControl: false
     });
 
@@ -47,19 +46,19 @@ function RunRoutesCreatePage() {
       });
     });
 
-    // cleanup 추가 : 페이지 떠날 때 지도 완전 제거
     return () => {
-    if (mapRef.current) {
-      mapRef.current.remove();   // Mapbox 객체 제거
-      mapRef.current = null;     // 다음에 페이지 돌아올 때 새로 생성되도록
-    }
-  };
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
   }, []);
 
-  // 마커 및 임시 라인 렌더
+  // ---------------------- 마커 및 임시 라인 렌더 -------------------------
   useEffect(() => {
     if (!mapRef.current) return;
 
+    // 기존 마커 초기화
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
 
@@ -84,6 +83,7 @@ function RunRoutesCreatePage() {
       markersRef.current.push(marker);
     });
 
+    // 임시 라인 제거
     if (mapRef.current.getSource("temp-route")) {
       mapRef.current.removeLayer("temp-route");
       mapRef.current.removeSource("temp-route");
@@ -107,7 +107,7 @@ function RunRoutesCreatePage() {
     }
   }, [routeCoords]);
 
-  // 스냅 경로 렌더
+  // ---------------------- 스냅 경로 렌더 -------------------------
   useEffect(() => {
     if (!mapRef.current || snappedCoords.length === 0) return;
 
@@ -136,11 +136,12 @@ function RunRoutesCreatePage() {
     });
   }, [snappedCoords]);
 
-  // 한 점 되돌리기
-  const undoLastPoint = () =>
+  // ---------------------- 한 점 되돌리기 -------------------------
+  const undoLastPoint = () => {
     setRouteCoords((prev) => prev.slice(0, -1));
+  };
 
-  // 전체 초기화
+  // ---------------------- 전체 초기화 -------------------------
   const resetRoute = () => {
     setRouteCoords([]);
     setSnappedCoords([]);
@@ -149,7 +150,7 @@ function RunRoutesCreatePage() {
     markersRef.current = [];
   };
 
-  // 경로 스냅
+  // ---------------------- 경로 스냅 -------------------------
   const finishRoute = async () => {
     if (routeCoords.length < 2) {
       alert("경로가 너무 짧습니다.");
@@ -174,16 +175,18 @@ function RunRoutesCreatePage() {
       const line = turf.lineString(snapped);
       const meters = Math.round(turf.length(line, { units: "kilometers" }) * 1000);
       setDistance(meters);
+
     } catch {
       alert("스냅 요청 오류");
     }
   };
 
-  // 제출
+  // ---------------------- 코스 업로드 -------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!snappedCoords.length) return alert("경로를 완성해주세요.");
+    if (!snappedCoords.length)
+      return alert("경로를 완성해주세요.");
     if (!title.trim() || !region.sido || !difficulty)
       return alert("필수 항목을 입력해주세요.");
 
@@ -215,6 +218,7 @@ function RunRoutesCreatePage() {
     }
   };
 
+  // ---------------------- UI 렌더링 -------------------------
   return (
     <main className="route-create-container">
       <div className="create-wrapper">
@@ -267,7 +271,7 @@ function RunRoutesCreatePage() {
             />
           </div>
 
-          {/* 지역 / 난이도 / 유형 */}
+          {/* 메타필드 */}
           <div className="meta-fields">
             <div className="form-group">
               <label className="form-label">
@@ -318,7 +322,7 @@ function RunRoutesCreatePage() {
             />
           </div>
 
-          {/* 등록/취소 버튼 */}
+          {/* 버튼 */}
           <div className="create-btn-row">
             <button type="submit" className="btn-medium main" disabled={!snappedCoords.length}>
               등록하기
