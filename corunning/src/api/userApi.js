@@ -15,6 +15,10 @@ export const loginAPI = (data) => {
   });
 };
 
+// 로그아웃
+export const logoutAPI = () =>{
+  return axios.post(`${API_BASE}/logout`, {}, {withCredentials: true});
+}
 // 내 정보 갖고 오기
 export const getMyInfo = async() => {
   return axios.get(`${API_BASE}/me`, {withCredentials: true});

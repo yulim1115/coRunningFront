@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./MyPage.css";
+<<<<<<< Updated upstream
 import DaumPostcode from "react-daum-postcode";
 import { getMyInfo, updateUserInfo, updatePassword } from "../../api/userApi";
+=======
+import { getUserAPI, updateUserAPI, logoutAPI } from "../../api/mypageApi";
+>>>>>>> Stashed changes
 import { useNavigate } from "react-router-dom";
 
 function MyPage() {
@@ -169,6 +173,7 @@ function MyPage() {
                 </div>
 
             </div>
+<<<<<<< Updated upstream
 
             {/* 우편번호 모달 */}
             {showPostcode && (
@@ -187,6 +192,113 @@ function MyPage() {
                     }}
                 />
             )}
+=======
+          </div>
+        );
+      case "logout":
+        return (
+          <div id="logout" className="content-black active">
+            <h1 style={{ marginBottom: 20 }}>로그아웃</h1>
+            <p style={{ marginBottom: 30 }}>정말 로그아웃하시겠습니까?</p>
+
+            <div style={{display: "flex", gap: "10px"}}>
+              <button 
+                className="register-btn"
+                onClick={async() => {
+                  try {
+                    await logoutAPI();
+                  } catch(e) {
+                    console.error("로그아웃 실패: ",e);
+                  }
+
+                  sessionStorage.removeItem("isLogin");
+                  sessionStorage.removeItem("userEmail");
+                  localStorage.removeItem("user_id");
+
+                  alert("로그아웃 완료");
+                  navigate("/login");
+                }}
+              >
+                네
+              </button>
+
+              <button
+                className="cancel-btn"
+                onClick={() => setActiveContent("dashboard")}
+              >
+                아니오
+              </button>
+            </div>
+          </div>
+        );      
+    }
+  };
+
+  return (
+    <div>
+      <main className="container mypage-wrapper">
+        <div className="sidebar">
+          <div className="profile-section">
+            <div className="profile-info">
+              <h3 style={{ fontSize: 24 }}>{userData.userName}님</h3>
+              <p>coRunning과 {DayDiff()}일째</p>
+            </div>
+          </div>
+
+          <ul className="menu-list">
+            <li>
+              <a href="#dashboard" className={`menu-item ${activeContent === "dashboard" ? "active" : ""
+                }`}
+                data-content-id="dashboard"
+                onClick={(e) => handleMenuClick(e, "dashboard")}
+              >
+                <i className="fas fa-chart-line" /> 러닝 통계 대시보드
+              </a>
+            </li>
+            <li>
+              <a
+                href="#account"
+                className={`menu-item ${
+                  activeContent === "account" ? "active" : ""
+                }`}
+                data-content-id="account"
+                onClick={(e) => handleMenuClick(e, "account")}
+              >
+                <i className="fas fa-user-cog" /> 프로필/계정 정보 수정
+              </a>
+            </li>
+            <li>
+              <a
+                href="#myroutes"
+                className={`menu-item ${
+                  activeContent === "myroutes" ? "active" : ""
+                }`}
+                data-content-id="myroutes"
+                onClick={(e) => handleMenuClick(e, "myroutes")}
+              >
+                <i className="fas fa-route" /> 코스 관리
+              </a>
+            </li>
+            <li>
+              <a
+                href="#mycrew"
+                className={`menu-item ${
+                  activeContent === "mycrew" ? "active" : ""
+                }`}
+                data-content-id="mycrew"
+                onClick={(e) => handleMenuClick(e, "mycrew")}
+              >
+                <i className="fas fa-users" /> 크루 모집 관리
+              </a>
+            </li>
+          </ul>
+
+          <div className="logout-link" onClick={(e) => handleMenuClick(e,"logout")}>
+            <a href="#logout">
+              <i className="fas fa-sign-out-alt" /> 로그아웃
+            </a>
+          </div>
+>>>>>>> Stashed changes
         </div>
     );
 }

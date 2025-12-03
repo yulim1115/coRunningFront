@@ -55,8 +55,21 @@ export default function RunLogPage() {
   // 저장한 코스 로딩
   const loadSaved = async () => {
     try {
+<<<<<<< Updated upstream
       const saved = await getSavedCourses();
       setSavedCourses(saved || []);
+=======
+      const data = await getSavedCourses();
+      setSavedCourses(
+        data.map((d) => ({
+          id: d.routeId,
+          title: d.title,
+          location: d.location,
+          distance: d.distance,
+          level: d.level ?? "기본"
+        }))
+      );
+>>>>>>> Stashed changes
     } catch (err) {
       console.error("저장코스 조회 실패", err);
       setSavedCourses([]);
@@ -66,8 +79,23 @@ export default function RunLogPage() {
   // 완주 기록 로딩
   const loadRecords = async (uid) => {
     try {
+<<<<<<< Updated upstream
       const dbRecords = await getRecords(uid);
       setRecords(dbRecords || []);
+=======
+      const data = await getRecords();
+      setRecords(
+        data.map((r) => ({
+          id: r.recordId,
+          title: r.title,
+          distance: r.distance,
+          location: r.location,
+          rawDate: r.date,
+          date: r.date.replace(/-/g, "."),
+          time: r.time
+        }))
+      );
+>>>>>>> Stashed changes
     } catch (err) {
       console.error("기록 조회 실패", err);
       setRecords([]);

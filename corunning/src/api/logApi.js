@@ -1,9 +1,5 @@
 import axios from "axios";
 
-const BACKEND_BASE = "http://localhost:8080";
-const API_BASE_DIP = `${BACKEND_BASE}/api/dip`;
-const API_BASE_RUN = `${BACKEND_BASE}/api/run`;
-
 // 현재 로그인한 사용자 ID(이메일) 불러오기
 // 세션 확인
 const getUserId = () =>
@@ -27,7 +23,7 @@ const mapRecord = (rec) => ({
 // ==========================
 export const saveRoute = (route) =>
   axios
-    .post(`${API_BASE_DIP}/add`, {
+    .post(`api/dip/add`, {
       userId: getUserId(),
       routeId: route.id,
       title: route.title,
@@ -42,8 +38,8 @@ export const saveRoute = (route) =>
 // ==========================
 export const getSavedCourses = () =>
   axios
-    .get(`${API_BASE_DIP}/list`, {
-      params: { userId: getUserId() },
+    .get(`/api/dip/list`, {
+      params: { userId: getUserId() } // 백엔드에서 userId 필요할 수 있어서 같이 전송
     })
     .then((res) => res.data);
 
@@ -52,8 +48,8 @@ export const getSavedCourses = () =>
 // ==========================
 export const getRecords = (userId) =>
   axios
-    .get(`${API_BASE_RUN}/records`, {
-      params: { userId },
+    .get(`/api/run/records`, {
+      params: { userId: getUserId() }
     })
     .then((res) => res.data.map(mapRecord));
 
@@ -62,7 +58,7 @@ export const getRecords = (userId) =>
 // ==========================
 export const finishCourse = (data) =>
   axios
-    .post(`${API_BASE_RUN}/finish`, {
+    .post(`/api/run/finish`, {
       ...data,
       userId: getUserId(),
     })
@@ -73,7 +69,7 @@ export const finishCourse = (data) =>
 // ==========================
 export const createRecord = (data) =>
   axios
-    .post(`${API_BASE_RUN}/create`, {
+    .post(`/api/run/save-record`, {
       ...data,
       userId: getUserId(),
     })
@@ -84,19 +80,16 @@ export const createRecord = (data) =>
 // ==========================
 export const updateRecord = (id, data) =>
   axios
-    .put(`${API_BASE_RUN}/update/${id}`, {
+    .put(`/api/run/records/${recordId}`, {
       ...data,
       userId: getUserId(),
     })
     .then((res) => res.data);
 
-// ==========================
-//  기록 삭제
-// ==========================
-export const deleteRecord = (id, userId) => {
-  return axios
-    .delete(`${API_BASE_RUN}/records/${id}`, {
-      params: { userId },
+// ✅ 기록 삭제
+export const deleteRecord = (recordId) =>
+  axios
+    .delete(`/api/run/records/${recordId}`, {
+      params: { userId: getUserId() }
     })
     .then((res) => res.data);
-  };
