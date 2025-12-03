@@ -11,7 +11,7 @@ export const getUserAPI = async (userId) => {
         console.error("회원정보 조회 실패:", error);
         throw error;
     }   
-}
+};
 
 //회원정보 수정하기
 export const updateUserAPI = async (userData) => {
@@ -23,7 +23,7 @@ export const updateUserAPI = async (userData) => {
         console.error("프로필/계정 정보 수정 실패:", error);
         throw error;
     }   
-}
+};
 
 // 로그아웃
 export const logoutAPI = async () => {

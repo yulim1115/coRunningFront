@@ -563,7 +563,7 @@ function MyPage() {
             </li>
           </ul>
 
-          <div className="logout-link">
+          <div className="logout-link" onClick={(e) => handleMenuClick(e,"logout")}>
             <a href="#logout">
               <i className="fas fa-sign-out-alt" /> 로그아웃
             </a>
