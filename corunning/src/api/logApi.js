@@ -80,7 +80,7 @@ export const createRecord = (data) =>
 // ==========================
 export const updateRecord = (id, data) =>
   axios
-    .put(`/api/run/records/${recordId}`, {
+    .put(`/api/run/records/${id}`, {
       ...data,
       userId: getUserId(),
     })
