@@ -1,0 +1,178 @@
+/* CrewModifyPage.jsx */
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./CrewCreatePage.css";
+import RegionSelector from "../../components/common/RegionSelector";
+import { crewCreateAPI } from "../../api/crewApi";
+import { FiChevronDown } from "react-icons/fi";
+
+function CrewModifyPage() {
+  const navigate = useNavigate();
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [routePath, setRoutePath] = useState("");
+  const [region, setRegion] = useState({ sido: "", gu: "" });
+  const [boardType, setBoardType] = useState("");
+  const [recruitCount, setRecruitCount] = useState("");
+  const [deadline, setDeadline] = useState("");
+
+  const isDisabled =
+    !title.trim() ||
+    !content.trim() ||
+    !region.sido ||
+    !boardType ||
+    !recruitCount ||
+    !deadline;
+
+  // 등록 요청
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      title,
+      content,
+      routePathJson: routePath,
+      region: `${region.sido} ${region.gu}`,
+      boardType,
+      recruitCount,
+      deadline,
+    };
+
+    try {
+      await crewCreateAPI(data);
+      alert("크루 모집 글이 등록되었습니다!");
+      navigate("/crews");
+    } catch {
+      alert("등록 실패. 다시 시도해주세요.");
+    }
+  };
+
+  return (
+    <main className="route-create-container">
+      <div className="create-wrapper">
+        <h1 className="create-title">크루 모집 등록</h1>
+
+        <form onSubmit={handleSubmit} className="create-form">
+          {/* 제목 */}
+          <div className="form-group">
+            <label className="form-label">
+              모집 글 제목 <span className="required">*</span>
+            </label>
+            <input
+              type="text"
+              className="input-field"
+              placeholder="예 : 서울 야경 명소 크루, '@@@' 모집"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+
+          {/* 내용 */}
+          <div className="form-group">
+            <label className="form-label">
+              모집 글 내용 <span className="required">*</span>
+            </label>
+            <textarea
+              className="textarea-field"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="크루 소개, 준비물, 시간 등을 작성하세요."
+            />
+          </div>
+
+          {/* 추천 코스 JSON */}
+          <div className="form-group">
+            <label className="form-label">추천 코스 데이터 업로드 (선택)</label>
+            <textarea
+              className="textarea-field"
+              value={routePath}
+              onChange={(e) => setRoutePath(e.target.value)}
+              placeholder="RunRoutes에서 생성한 경로 JSON을 넣을 수 있습니다."
+            />
+          </div>
+
+          {/* 지역 1줄 */}
+          <div className="meta-fields single">
+            <div className="form-group full">
+              <label className="form-label">
+                지역 <span className="required">*</span>
+              </label>
+              <RegionSelector onChange={(v) => setRegion(v)} />
+            </div>
+          </div>
+
+          {/* 타입 / 인원 / 마감일 */}
+          <div className="meta-fields triple">
+            {/* 타입 */}
+            <div className="form-group">
+              <label className="form-label">
+                타입 <span className="required">*</span>
+              </label>
+              <div className="select-wrap">
+                <select
+                  value={boardType}
+                  onChange={(e) => setBoardType(e.target.value)}
+                >
+                  <option value="">선택</option>
+                  <option value="NORMAL">크루 모집</option>
+                  <option value="DRAWING">드로잉런</option>
+                  <option value="FLASH">번개런</option>
+                </select>
+                <FiChevronDown className="select-arrow" />
+              </div>
+            </div>
+
+            {/* 모집 인원 */}
+            <div className="form-group">
+              <label className="form-label">
+                모집 인원 <span className="required">*</span>
+              </label>
+              <input
+                type="number"
+                className="input-field"
+                placeholder="예: 10"
+                min="1"
+                value={recruitCount}
+                onChange={(e) => setRecruitCount(e.target.value)}
+              />
+            </div>
+
+            {/* 모집 마감일 */}
+            <div className="form-group">
+              <label className="form-label">
+                모집 마감일 <span className="required">*</span>
+              </label>
+              <input
+                type="date"
+                className="input-field"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* 버튼 */}
+          <div className="create-btn-row">
+            <button
+              type="submit"
+              className="btn-medium main"
+              disabled={isDisabled}
+            >
+              등록
+            </button>
+            <button
+              type="button"
+              className="btn-medium"
+              onClick={() => navigate("/crews")}
+            >
+              취소
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  );
+}
+
+export default CrewModifyPage;
