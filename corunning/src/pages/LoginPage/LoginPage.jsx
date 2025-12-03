@@ -28,13 +28,11 @@ function LoginPage() {
 
       sessionStorage.setItem("userEmail", email);
 
-<<<<<<< Updated upstream
-      // 헤더 강제 업데이트
-=======
+
       localStorage.setItem("user_id",email);
 
       /* 헤더 강제 업데이트 */
->>>>>>> Stashed changes
+
       window.dispatchEvent(new Event("storage"));
 
       alert("로그인 성공!");
