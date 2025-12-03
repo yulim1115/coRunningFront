@@ -148,6 +148,18 @@ function RunRoutesCreatePage() {
     setDistance(0);
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
+
+    /* 임시 라인 제거 */
+  if (mapRef.current?.getSource("temp-route")) {
+    mapRef.current.removeLayer("temp-route");
+    mapRef.current.removeSource("temp-route");
+  }
+
+  /* 스냅 라인 제거 */
+  if (mapRef.current?.getSource("route")) {
+    mapRef.current.removeLayer("route");
+    mapRef.current.removeSource("route");
+  }
   };
 
   // ---------------------- 경로 스냅 -------------------------
