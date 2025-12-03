@@ -86,7 +86,7 @@ export const updateRecord = (id, data) =>
     })
     .then((res) => res.data);
 
-// ✅ 기록 삭제
+// 기록 삭제
 export const deleteRecord = (recordId) =>
   axios
     .delete(`/api/run/records/${recordId}`, {
