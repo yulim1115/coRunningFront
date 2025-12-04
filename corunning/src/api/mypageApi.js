@@ -70,3 +70,14 @@ export const deleteCrewAPI = async (crewId) => {
         throw error;
     }   
 }
+//신청자 명단 가져오기
+export const getApplicationsAPI = async(crewId) => {
+    try {
+        const response = await axios.get(`/api/crew-board/${crewId}/applications`, {withCredentials: true})
+        console.log("신청자 명단 가져오기 API 응답: ", response.data);
+        return response.data;
+    }catch (error){
+        console.error("신청자 명단 가져오기 실패:", error);
+        throw error;
+    }
+}

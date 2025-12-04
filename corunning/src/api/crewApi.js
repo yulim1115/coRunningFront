@@ -97,3 +97,28 @@ export const deleteCrewCommentAPI = async (commentId) => {
     throw err;
   }
 };
+
+//id로 크루 정보 가져오기
+export const getCrewByIdAPI = async (userId) => {
+    try {
+        const response = await axios.get(`/api/crew-board/user/${userId}`, {withCredentials: true});
+        console.log("크루 정보 조회 API 응답:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("크루 정보 조회 실패:", error);
+        throw error;
+    }
+}
+
+//크루 정보 수정하기
+export const updateCrewAPI = async(id, updateData) =>{
+  try {
+    const response = await axios.put(`/api/crew-board/${id}`, updateData, {withCredentials: true});
+    console.log("크루정보 수정 성공");
+    return response.data
+  }
+  catch (error){
+    console.error("크루정보 수정 실패", error);
+    throw error;
+  }
+}

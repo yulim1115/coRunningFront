@@ -1,14 +1,14 @@
 /* CrewModifyPage.jsx */
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "./CrewCreatePage.css";
 import RegionSelector from "../../components/common/RegionSelector";
-import { crewCreateAPI } from "../../api/crewApi";
+import { getCrewDetailAPI, updateCrewAPI } from "../../api/crewApi";
 import { FiChevronDown } from "react-icons/fi";
+import { useParams, useNavigate } from "react-router-dom";
 
 function CrewModifyPage() {
+  const { id } = useParams();
   const navigate = useNavigate();
-
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [routePath, setRoutePath] = useState("");
@@ -17,7 +17,28 @@ function CrewModifyPage() {
   const [recruitCount, setRecruitCount] = useState("");
   const [deadline, setDeadline] = useState("");
 
-  const isDisabled =
+  useEffect(() => {
+      const fetchCrews = async () => {
+        try {
+          const data = await getCrewDetailAPI(id); 
+          console.log("내 크루 정보:", data);
+          setTitle(data.title?? "");
+          setContent(data.content?? "");
+          setRoutePath(data.routePath);
+          const [sido, gu] = (data.region?? "").split(" ");
+          setRegion({ sido, gu });
+          setBoardType(data.boardType);
+          setRecruitCount(data.recruitCount);
+          setDeadline(data.deadline);
+        } catch (error) {
+          console.error("크루 정보 불러오기 실패:", error);
+        }  
+      };
+      fetchCrews();
+  
+    }, [id]);
+
+    const isDisabled =
     !title.trim() ||
     !content.trim() ||
     !region.sido ||
@@ -25,10 +46,9 @@ function CrewModifyPage() {
     !recruitCount ||
     !deadline;
 
-  // 등록 요청
-  const handleSubmit = async (e) => {
+    //수정
+    const handleSubmit = async (e) => {
     e.preventDefault();
-
     const data = {
       title,
       content,
@@ -38,20 +58,19 @@ function CrewModifyPage() {
       recruitCount,
       deadline,
     };
-
     try {
-      await crewCreateAPI(data);
-      alert("크루 모집 글이 등록되었습니다!");
-      navigate("/crews");
-    } catch {
-      alert("등록 실패. 다시 시도해주세요.");
-    }
-  };
+          await updateCrewAPI(id, data);
+          alert("크루 모집 글이 수정되었습니다!");
+          navigate("//mypage");
+        } catch {
+          alert("수정 실패. 다시 시도해주세요.");
+        }
+      };
 
   return (
     <main className="route-create-container">
       <div className="create-wrapper">
-        <h1 className="create-title">크루 모집 등록</h1>
+        <h1 className="create-title">크루 모집글 수정</h1>
 
         <form onSubmit={handleSubmit} className="create-form">
           {/* 제목 */}
@@ -62,7 +81,6 @@ function CrewModifyPage() {
             <input
               type="text"
               className="input-field"
-              placeholder="예 : 서울 야경 명소 크루, '@@@' 모집"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
@@ -77,7 +95,6 @@ function CrewModifyPage() {
               className="textarea-field"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="크루 소개, 준비물, 시간 등을 작성하세요."
             />
           </div>
 
@@ -88,7 +105,6 @@ function CrewModifyPage() {
               className="textarea-field"
               value={routePath}
               onChange={(e) => setRoutePath(e.target.value)}
-              placeholder="RunRoutes에서 생성한 경로 JSON을 넣을 수 있습니다."
             />
           </div>
 
@@ -98,7 +114,7 @@ function CrewModifyPage() {
               <label className="form-label">
                 지역 <span className="required">*</span>
               </label>
-              <RegionSelector onChange={(v) => setRegion(v)} />
+              <RegionSelector value={region} onChange={(v) => setRegion(v)} />
             </div>
           </div>
 
@@ -159,7 +175,7 @@ function CrewModifyPage() {
               className="btn-medium main"
               disabled={isDisabled}
             >
-              등록
+              수정
             </button>
             <button
               type="button"

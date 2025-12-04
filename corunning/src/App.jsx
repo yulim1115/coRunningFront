@@ -55,7 +55,7 @@ function App() {
                     <Route path="/crews" element={<CrewListPage />} />
                     <Route path="/crews/:id" element={<CrewDetailPage />} />
                     <Route path="/crews/create" element={<CrewCreatePage />} />
-                    <Route path="/crews/modify" element={<CrewModifyPage />} />
+                    <Route path="/crews/modify/:id" element={<CrewModifyPage />} />
     
                     {/* Run Log */}
                     <Route path="/runlog" element={<RunLogPage />} />
