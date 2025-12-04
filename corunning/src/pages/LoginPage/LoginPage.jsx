@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Global.css";
 import "./LoginPage.css";
-import { loginAPI } from "../../api/userApi";
+import { getMyInfo, loginAPI } from "../../api/userApi";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -23,10 +23,13 @@ function LoginPage() {
 
     try {
       await loginAPI(data);
-
+      const userdata = await getMyInfo();
+      console.log("로그인 사용자 정보:", userdata);
       /* 로그인 상태 저장 */
       sessionStorage.setItem("isLogin", "true");
-      sessionStorage.setItem("userEmail", email);
+      sessionStorage.setItem("userEmail", userdata.data.userId);
+      sessionStorage.setItem("userName", userdata.data.userName);
+      console.log(sessionStorage.getItem("userName"));
 
       /* 헤더 강제 업데이트 */
       window.dispatchEvent(new Event("storage"));

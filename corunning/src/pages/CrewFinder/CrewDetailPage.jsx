@@ -277,7 +277,7 @@ function CrewDetailPage() {
         </div>
 
         <div className="meta-row">
-          <span><FaUser /> {crew.writerId}</span>
+          <span><FaUser /> {crew.writer_name}</span>
           <span><FaClock /> {formatDate(crew.createdAt)}</span>
         </div>
       </section>
@@ -370,7 +370,7 @@ function CrewDetailPage() {
           {comments.map((c) => (
             <div className="comment-item" key={c.id}>
               <div className="comment-meta">
-                <strong>{c.writerId}</strong>
+                <strong>{c.writer_name}</strong>
                 <span className="date">{formatDate(c.createdAt)}</span>
 
                 {loginUserId === c.writerId && (

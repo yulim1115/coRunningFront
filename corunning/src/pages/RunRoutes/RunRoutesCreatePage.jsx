@@ -31,7 +31,8 @@ function RunRoutesCreatePage() {
       style: "mapbox://styles/mapbox/streets-v12",
       center: [126.9784, 37.5665],
       zoom: 12,
-      attributionControl: false
+      attributionControl: false,
+      language: "ko"
     });
 
     mapRef.current.addControl(

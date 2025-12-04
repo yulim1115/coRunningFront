@@ -253,7 +253,7 @@ function CrewListPage() {
 
                   <div className="crew-meta-item">
                     <strong>작성자</strong>
-                    <span>{crew.writerId}</span>
+                    <span>{crew.writer_name}</span>
                   </div>
 
                   <div className="crew-meta-item">

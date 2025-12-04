@@ -281,7 +281,6 @@ export default function RunLogPage() {
                   [course.dipId]: !p[course.dipId]
                 }))
               }
-              onDelete={() => handleRemoveDip(course)}
             />
 
             {openSavedIds[course.dipId] && (
@@ -345,6 +344,7 @@ export default function RunLogPage() {
                 }))
               }
               onCancel={() => deleteRec(record)}
+              onDelete={() => handleRemoveDip(record)}
             />
 
             {editingRecordIds[record.id] && (

@@ -78,6 +78,7 @@ function RunRoutesDetailPage() {
           difficulty: routeData.difficulty,
           distance: routeData.distance,
           writer: routeData.writer,
+          writerName: routeData.writer_name,
           liked: routeData.liked ?? 0,
           description: routeData.description,
           route: routeData.route,
@@ -109,66 +110,88 @@ function RunRoutesDetailPage() {
 
   // 지도 렌더링
   useEffect(() => {
-    if (!route?.route || loading) return; // 로딩 중이면 실행하지 않음
-
-    let coords;
-    try {
-      coords = JSON.parse(route.route);
-    } catch (e) {
-      console.error("좌표 파싱 오류:", e);
+    // route가 완전히 로드되지 않았으면 실행하지 않음
+    if (!route || !route.route) {
+      console.log("route 데이터 대기 중...");
       return;
     }
 
-    if (!Array.isArray(coords) || coords.length < 2) return;
-    if (!mapContainerRef.current) return;
+    // setTimeout으로 DOM이 렌더링된 후 실행되도록 함
+    const timer = setTimeout(() => {
+      if (!mapContainerRef.current) {
+        console.warn("mapContainerRef.current가 여전히 없음");
+        return;
+      }
 
-    if (mapRef.current) {
-      mapRef.current.remove();
-      mapRef.current = null;
-    }
+      let coords;
+      try {
+        coords = JSON.parse(route.route);
+      } catch (e) {
+        console.error("좌표 파싱 오류:", e);
+        return;
+      }
 
-    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/streets-v12",
-      center: coords[0],
-      zoom: 14,
-      language: "ko",
-      attributionControl: false,
-    });
+      if (!Array.isArray(coords) || coords.length < 2) {
+        console.warn("좌표 배열 오류");
+        return;
+      }
 
-    mapRef.current = map;
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
 
-    map.on("load", () => {
-      map.addSource("routeLine", {
-        type: "geojson",
-        data: {
-          type: "Feature",
-          geometry: { type: "LineString", coordinates: coords },
-        },
+      mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+
+      const map = new mapboxgl.Map({
+        container: mapContainerRef.current,
+        style: "mapbox://styles/mapbox/streets-v12",
+        center: coords[0],
+        zoom: 14,
+        language: "ko",
+        attributionControl: false,
       });
 
-      map.addLayer({
-        id: "routeLineLayer",
-        type: "line",
-        source: "routeLine",
-        paint: { "line-width": 5, "line-color": "#e5634f" },
+      mapRef.current = map;
+
+      map.on("load", () => {
+        console.log("지도 로드 완료");
+        map.addSource("routeLine", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            geometry: { type: "LineString", coordinates: coords },
+          },
+        });
+
+        map.addLayer({
+          id: "routeLineLayer",
+          type: "line",
+          source: "routeLine",
+          paint: { "line-width": 5, "line-color": "#e5634f" },
+        });
+
+        const bounds = coords.reduce(
+          (b, c) => b.extend(c),
+          new mapboxgl.LngLatBounds()
+        );
+        map.fitBounds(bounds, { padding: 40 });
+        map.resize();
       });
 
-      const bounds = coords.reduce(
-        (b, c) => b.extend(c),
-        new mapboxgl.LngLatBounds()
-      );
-      map.fitBounds(bounds, { padding: 40 });
-      map.resize();
-    });
+      map.on("error", (e) => {
+        console.error("Mapbox 에러:", e);
+      });
+    }, 0);
 
     return () => {
-      map.remove();
-      mapRef.current = null;
+      clearTimeout(timer);
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
     };
-  }, [route?.route, loading]);
-
+  }, [route]);
 
   const handleLike = async () => {
     if (!loginUserId) return alert("로그인 후 추천이 가능합니다.");
@@ -316,7 +339,7 @@ function RunRoutesDetailPage() {
             <FaRoute /> {route.distance} km
           </span>
           <span>
-            <FaUser /> 작성자 {route.writer}
+            <FaUser /> 작성자 {route.writerName}
           </span>
         </div>
       </section>
@@ -374,7 +397,7 @@ function RunRoutesDetailPage() {
           {comments.map((item) => (
             <div className="comment-item" key={item.id}>
               <div className="comment-meta">
-                <strong>{item.writerId}</strong>
+                <strong>{item.writer_name}</strong>
                 <span className="date">{formatDate(item.createdAt)}</span>
 
                 {loginUserId === item.writerId && (
