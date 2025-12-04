@@ -2,50 +2,275 @@
 .main-page .container {
   width: 100%;
   max-width: var(--layout-max-width);
-  margin: 60px auto;
+  margin: 0 auto;
   padding: 0 40px;
 }
 
-/* 배너 */
+/* 배너 섹션 */
 .main-page .banner {
-  background: linear-gradient(135deg, #4A69BB, #1A2F4B);
-  padding: 130px 0 150px;
-  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 460px;
+  padding-top: 60px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* 배너 배경 이미지 */
+.main-page .banner-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.main-page .banner-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.35);
+  transform: scale(1.03);
+}
+
+/* 배너 내부 콘텐츠 */
+.main-page .banner-inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--layout-max-width);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 배너 텍스트 */
+.main-page .banner-text h1 {
+  font-size: 52px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  line-height: 1.2;
+}
+
+.main-page .banner-text p {
+  font-size: 18px;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+/* 배너 버튼 영역 */
+.main-page .banner-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 배너 버튼 공통 */
+.main-page .banner-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 28px;
+  font-weight: 600;
+  border-radius: 10px;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 1px solid transparent;
+}
+
+/* 배너 메인 버튼 */
+.main-page .banner-btn.primary {
+  background: #fff;
+  color: #1a2f4b;
+}
+
+.main-page .banner-btn.primary:hover {
+  transform: translateY(-3px);
+  background: #f2f6ff;
+}
+
+/* 배너 서브 버튼 */
+.main-page .banner-btn.secondary {
+  background: transparent;
+  border: 1px solid #fff;
   color: #fff;
 }
 
-.main-page .banner h1 {
-  font-size: 62px;
-  font-weight: 900;
-  margin-bottom: 25px;
+.main-page .banner-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-3px);
 }
 
-.main-page .banner p {
-  font-size: 24px;
-  opacity: 0.9;
-  margin-bottom: 45px;
+/* 지도 드로잉 섹션 */
+.main-page .course-map-section {
+  background: #fafafc;
+  padding: 60px 0 70px;
 }
 
-.main-page .banner-btn {
-  display: inline-flex;
+/* 지도 섹션 헤더 */
+.main-page .course-map-header {
+  margin-bottom: 24px;
+}
+
+.main-page .course-map-header h2 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #1a2f4b;
+  margin-bottom: 8px;
+}
+
+.main-page .course-map-header p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* 지도 + 패널 레이아웃 */
+.main-page .course-map-layout {
+  display: flex;
+  gap: 24px;
+}
+
+/* 지도 영역 */
+.main-page .course-map-box {
+  flex: 7;
+  min-height: 420px;
+  border-radius: 14px;
+  background: #e5e9f0;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* 맵 마커 */
+.main-page .map-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #4a69bb;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
   align-items: center;
-  padding: 18px 45px;
-  background: #fff;
-  color: #1A2F4B;
-  border-radius: 35px;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* 사이드 패널 */
+.main-page .course-map-panel {
+  flex: 4;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 520px;
+}
+
+/* 패널 블록 */
+.main-page .panel-block h3 {
+  font-size: 15px;
   font-weight: 700;
-  font-size: 18px;
-  transition: 0.2s ease;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+  color: #34455a;
+  margin-bottom: 10px;
+  border-left: 3px solid #4a69bb;
+  padding-left: 8px;
 }
 
-.main-page .banner-btn svg {
-  margin-left: 10px;
+/* 패널 버튼 그룹 */
+.main-page .panel-btn-group {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
 }
 
-.main-page .banner-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+.main-page .panel-btn-group .panel-btn {
+  flex: 1;
+}
+
+/* 패널 버튼 공통 */
+.main-page .panel-btn {
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #1a2f4b;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-page .panel-btn.download,
+.main-page .panel-btn.outline {
+  padding: 0 18px;
+}
+
+/* 패널 버튼 기본 hover */
+.main-page .panel-btn:hover {
+  border-color: #4a69bb;
+  color: #4a69bb;
+  background: #f3f6fc;
+}
+
+/* 패널 메인 버튼 */
+.main-page .panel-btn.primary {
+  background: #4a69bb;
+  color: #fff;
+  border-color: #4a69bb;
+  box-shadow: 0 3px 8px rgba(74, 105, 187, 0.4);
+}
+
+.main-page .panel-btn.primary:hover {
+  background: #3a55a5;
+  border-color: #3a55a5;
+  color: #fff;
+}
+
+/* 패널 아웃라인 버튼 */
+.main-page .panel-btn.outline {
+  background: #f3f6fc;
+  color: #4a69bb;
+  border-color: #4a69bb;
+}
+
+.main-page .panel-btn.outline:hover {
+  background: #4a69bb;
+  color: #fff;
+}
+
+/* 패널 거리 텍스트 */
+.main-page .panel-distance {
+  font-size: 16px;
+  font-weight: 700;
+  color: #4a69bb;
+  margin-top: 4px;
+}
+
+/* 패널 좌표 박스 */
+.main-page .panel-coord-box {
+  width: 100%;
+  height: 90px;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #34455a;
+  background: #f8f9fa;
+  resize: none;
+  overflow: auto;
+  font-family: monospace;
+  margin-bottom: 8px;
 }
 
 /* 필터 섹션 */
@@ -55,6 +280,7 @@
   color: var(--color-white);
 }
 
+/* 필터 내용 */
 .main-page .filter-content {
   display: flex;
   justify-content: space-between;
@@ -62,6 +288,7 @@
   gap: 80px;
 }
 
+/* 필터 텍스트 */
 .main-page .filter-text {
   width: 35%;
 }
@@ -70,7 +297,6 @@
   font-size: 34px;
   font-weight: 900;
   margin-bottom: 18px;
-  color: var(--color-white);
 }
 
 .main-page .filter-text p {
@@ -83,13 +309,13 @@
 .main-page .filter-box {
   width: 65%;
   padding: 28px 32px;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 18px;
   backdrop-filter: blur(18px);
 }
 
-/* 필터 로우 */
+/* 필터 행 */
 .main-page .filter-row {
   display: flex;
   gap: 18px;
@@ -101,8 +327,8 @@
   flex: 1;
   height: 50px;
   padding: 0 16px;
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 12px;
   color: #fff;
   font-size: 15px;
@@ -111,11 +337,11 @@
 }
 
 .main-page .filter-row select:hover {
-  background: rgba(255,255,255,0.28);
+  background: rgba(255, 255, 255, 0.28);
 }
 
 .main-page .filter-row select option {
-  color: #1A2F4B;
+  color: #1a2f4b;
   background: #fff;
 }
 
@@ -131,25 +357,27 @@
   border: none;
   cursor: pointer;
   transition: 0.2s ease;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
 }
 
 .main-page .filter-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 }
 
-/* 코스 + 크루 섹션*/
+/* 코스+크루 섹션 */
 .main-page .course-crew-section {
   padding: 50px 0 80px;
-  background: #F7F8FA; 
+  background: #f7f8fa;
 }
 
+/* 레이아웃 분할 */
 .main-page .split-area {
   display: flex;
   gap: 40px;
 }
 
+/* 좌우 박스 */
 .main-page .left,
 .main-page .right {
   width: 50%;
@@ -171,12 +399,12 @@
 .main-page .section-subtitle {
   margin-top: 6px;
   font-size: 14px;
-  color: #6C7584;
+  color: #6c7584;
 }
 
 .main-page .section-link {
   font-size: 14px;
-  color: #6C7584;
+  color: #6c7584;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -193,7 +421,7 @@
   gap: 18px;
 }
 
-/* 리스트 카드 */
+/* 카드 */
 .main-page .list-card {
   background: #fff;
   border-radius: 16px;
@@ -202,7 +430,7 @@
   justify-content: space-between;
   align-items: center;
   border: 1px solid var(--color-border);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
   transition: 0.2s ease;
   cursor: pointer;
 }
@@ -210,40 +438,47 @@
 .main-page .list-card:hover {
   transform: translateY(-3px);
   border-color: var(--color-main);
-  box-shadow: 0 14px 36px rgba(0,0,0,0.12);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
 }
 
-/* 상단 타입 라벨 */
+/* 카드 메인 영역 */
+.main-page .list-card-main {
+  flex: 1;
+}
+
+/* 카드 상단 타입 라벨 */
 .main-page .card-top-row {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
+/* 타입 라벨 */
 .main-page .badge-type {
   padding: 4px 10px;
-  background: rgba(74,105,187,0.12);
-  color: #4A69BB;
+  background: rgba(74, 105, 187, 0.12);
+  color: #4a69bb;
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
 }
 
 .main-page .badge-flash {
-  background: rgba(255,193,7,0.18);
-  color: #B98600;
+  background: rgba(255, 193, 7, 0.18);
+  color: #b98600;
 }
 
-/* 카드 내부 */
+/* 카드 제목 */
 .main-page .list-info h3 {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 6px;
 }
 
+/* 카드 정보 */
 .main-page .list-meta {
   display: flex;
   gap: 14px;
   font-size: 14px;
-  color: #6C7584;
+  color: #6c7584;
 }
 
 .main-page .list-meta span {
@@ -252,7 +487,7 @@
   gap: 6px;
 }
 
-/* 추천수 */
+/* 추천 배지 */
 .main-page .likes {
   background: var(--color-main);
   color: #fff;
@@ -263,16 +498,16 @@
   align-items: center;
   gap: 6px;
   font-weight: bold;
-  box-shadow: 0 8px 20px rgba(26,47,75,0.3);
+  box-shadow: 0 8px 20px rgba(26, 47, 75, 0.3);
 }
 
 .main-page .likes svg {
-    color: #fff;
+  color: #fff;
 }
 
-/* 번개런 상태 */
+/* 번개런 상태 배지 */
 .main-page .crew-status {
-  background: #27AE60;
+  background: #27ae60;
   color: #fff;
   padding: 8px 14px;
   border-radius: 12px;
