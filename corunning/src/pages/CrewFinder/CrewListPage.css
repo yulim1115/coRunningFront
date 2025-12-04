@@ -216,25 +216,26 @@
 .tag-type {
   padding: 4px 10px;
   font-size: 11px;
-  font-weight: var(--fw-bold);
-  border-radius: 14px;
-  border: 2px solid;
-  background: none;
+  font-weight: 600;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.2px;
 }
 
 /* 타입 태그 개별 색상 */
 .tag-type-normal {
-  border-color: #4A69BB;
-  color: #4A69BB;
+  background: rgba(74, 105, 187, 0.12); /* 연한 블루 */
+  color: #4A69BB; /* 메인 블루 */
 }
 
 .tag-type-flash {
-  border-color: #D9534F;
-  color: #D9534F;
+  background: rgba(255, 193, 7, 0.18); /* 연한 노랑 */
+  color: #C28A00;
 }
 
 .tag-type-drawing {
-  border-color: #C79E3B;
+  background: rgba(199, 158, 59, 0.18); /* 연한 골드 */
   color: #C79E3B;
 }
 
@@ -242,10 +243,10 @@
 .tag-region {
   padding: 4px 10px;
   font-size: 11px;
-  font-weight: var(--fw-medium);
-  border-radius: 16px;
-  background: var(--color-bg-light);
-  color: var(--color-sub);
+  font-weight: 500;
+  border-radius: 12px;
+  background: rgba(26, 47, 75, 0.08);
+  color: #1A2F4B;
 }
 
 /* 제목 */

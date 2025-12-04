@@ -260,16 +260,6 @@ function CrewListPage() {
                     <strong>모집 마감일</strong>
                     <span>{crew.deadline}</span>
                   </div>
-
-                  {/* 좋아요/댓글 수 */}
-                  <div className="crew-interaction">
-                    <span className="count-item">
-                      <FaHeart /> 0
-                    </span>
-                    <span className="count-item">
-                      <FaCommentDots /> 0
-                    </span>
-                  </div>
                 </div>
               </div>
             );

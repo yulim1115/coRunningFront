@@ -1,5 +1,6 @@
+// src/pages/RunRoutes/RunRoutesListPage.jsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./RunRoutesListPage.css";
 
 import {
@@ -12,27 +13,25 @@ import {
 } from "react-icons/fa";
 
 import { getRoutes } from "../../api/routesApi";
-
-//지역 목록 (시/도만 사용 — RegionSelector와 동일한 시도 리스트)
 import { sidoList } from "sigungu";
 
 function RunRoutesListPage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // 필터
+  /* 필터 상태 */
   const [sort, setSort] = useState("latest");
   const [region, setRegion] = useState("전체 지역");
   const [difficultyFilter, setDifficultyFilter] = useState("전체 난이도");
   const [typeFilter, setTypeFilter] = useState("전체 타입");
 
-  // 데이터
+  /* 데이터 */
   const [originRoutes, setOriginRoutes] = useState([]);
   const [routes, setRoutes] = useState([]);
 
-  // 난이도 매핑
+  /* 난이도 매핑 */
   const getDifficultyInfo = (difficulty) => {
     const diff = difficulty?.toLowerCase();
-
     switch (diff) {
       case "easy":
         return { label: "초급", className: "difficulty-low" };
@@ -46,16 +45,16 @@ function RunRoutesListPage() {
     }
   };
 
-  // 필터 적용
-  const handleFilter = () => {
+  /* 필터 적용 */
+  const applyFilter = () => {
     let filtered = [...originRoutes];
 
-    // 시/도 기준 지역 필터
+    // 지역
     if (region !== "전체 지역") {
       filtered = filtered.filter((r) => r.region.startsWith(region));
     }
 
-    // 난이도 필터
+    // 난이도
     if (difficultyFilter !== "전체 난이도") {
       filtered = filtered.filter((r) => {
         const info = getDifficultyInfo(r.difficulty);
@@ -63,34 +62,21 @@ function RunRoutesListPage() {
       });
     }
 
-    // 타입 필터
+    // 타입
     if (typeFilter !== "전체 타입") {
       const typeMap = { 드로잉런: "drawing", 레귤러런: "regular" };
       filtered = filtered.filter((r) => r.type === typeMap[typeFilter]);
     }
 
     // 정렬
-    if (sort === "latest") {
-      filtered = filtered.sort((a, b) => b.id - a.id);
-    } else if (sort === "oldest") {
-      filtered = filtered.sort((a, b) => a.id - b.id);
-    } else if (sort === "popular") {
-      filtered = filtered.sort((a, b) => b.likes - a.likes);
-    }
+    if (sort === "latest") filtered.sort((a, b) => b.id - a.id);
+    if (sort === "oldest") filtered.sort((a, b) => a.id - b.id);
+    if (sort === "popular") filtered.sort((a, b) => b.likes - a.likes);
 
     setRoutes(filtered);
   };
 
-  // 초기화
-  const handleReset = () => {
-    setSort("latest");
-    setRegion("전체 지역");
-    setDifficultyFilter("전체 난이도");
-    setTypeFilter("전체 타입");
-    setRoutes(originRoutes);
-  };
-
-  // DB 데이터 fetch
+  /* DB에서 전체 로드 */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -109,12 +95,39 @@ function RunRoutesListPage() {
         setOriginRoutes(mapped);
         setRoutes(mapped.sort((a, b) => b.id - a.id));
       } catch (err) {
-        console.error("코스 불러오기 실패:", err);
+        console.error("코스 로드 실패:", err);
       }
     };
 
     fetchData();
   }, []);
+
+  /* URL 파라미터 → 필터 적용 */
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+
+    const regionQ = params.get("region");
+    const diffQ = params.get("difficulty");
+    const typeQ = params.get("type");
+
+    if (regionQ) setRegion(regionQ);
+    if (diffQ) setDifficultyFilter(diffQ);
+    if (typeQ) setTypeFilter(typeQ);
+  }, [location.search]);
+
+  /* 필터 값이 바뀔 때마다 자동 필터 */
+  useEffect(() => {
+    applyFilter();
+  }, [region, difficultyFilter, typeFilter, sort, originRoutes]);
+
+  /* 초기화 */
+  const handleReset = () => {
+    setSort("latest");
+    setRegion("전체 지역");
+    setDifficultyFilter("전체 난이도");
+    setTypeFilter("전체 타입");
+    setRoutes(originRoutes);
+  };
 
   return (
     <main className="routes-container">
@@ -135,6 +148,7 @@ function RunRoutesListPage() {
       {/* 필터 */}
       <section className="filter-controls-area">
         <div className="filter-group-wrapper">
+
           {/* 정렬 */}
           <div className="filter-group">
             <label>정렬</label>
@@ -148,7 +162,7 @@ function RunRoutesListPage() {
             </div>
           </div>
 
-          {/* 지역 필터 — 시/도만 */}
+          {/* 지역 */}
           <div className="filter-group">
             <label>지역</label>
             <div className="custom-select">
@@ -195,9 +209,7 @@ function RunRoutesListPage() {
             </div>
           </div>
 
-          <button className="search-button" onClick={handleFilter}>
-            조회
-          </button>
+          {/* 초기화 */}
           <button className="reset-button" onClick={handleReset}>
             <FaUndo /> 초기화
           </button>
@@ -217,7 +229,6 @@ function RunRoutesListPage() {
             <div className="route-card-content">
               <div className="card-title-group">
                 <h3>{route.title}</h3>
-
                 <div
                   className={
                     route.type === "drawing"
@@ -238,14 +249,13 @@ function RunRoutesListPage() {
 
                 <span>
                   <FaRunning />
-                  {(() => {
-                    const info = getDifficultyInfo(route.difficulty);
-                    return (
-                      <span className={`difficulty-text ${info.className}`}>
-                        {info.label}
-                      </span>
-                    );
-                  })()}
+                  <span
+                    className={`difficulty-text ${
+                      getDifficultyInfo(route.difficulty).className
+                    }`}
+                  >
+                    {getDifficultyInfo(route.difficulty).label}
+                  </span>
                 </span>
 
                 <span>

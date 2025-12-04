@@ -87,46 +87,46 @@
 .signup-btn,
 .logout-btn {
     height: var(--btn-small-height);
-    padding: 0 12px;
+    padding: 0 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--btn-radius-small);
+    border-radius: 12px;
     font-size: var(--font-caption);
-    color: #fff;
     border: none;
     font-weight: 600;
     letter-spacing: -0.2px;
     transition: 0.25s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    background: transparent;
+    box-shadow: none;
 }
 
 /* 버튼 색상 */
 .login-btn {
-    background: var(--color-main);
+    background: rgba(74, 105, 187, 0.12);   /* 연한 파랑 */
+    color: #4A69BB;
 }
 .signup-btn {
-    background: var(--color-accent);
+    background: rgba(74, 187, 170, 0.12); 
+    color: #3AAE98;
 }
 .logout-btn {
-    background: var(--color-red);
+    background: rgba(229, 99, 79, 0.15);   /* 연한 레드 */
+    color: #D9534F;
 }
 
 /* 버튼 Hover */
 .login-btn:hover {
-    background: var(--color-main-hover);
+    background: rgba(74, 105, 187, 0.2);
     transform: translateY(-1px);
-    box-shadow: 0 6px 15px rgba(26,47,75,0.25);
 }
 
 .signup-btn:hover {
-    background: var(--color-accent-hover);
+    background: rgba(74, 187, 170, 0.20);
     transform: translateY(-1px);
-    box-shadow: 0 6px 15px rgba(74,105,187,0.25);
 }
 
 .logout-btn:hover {
-    background: var(--color-red-hover);
+    background: rgba(229, 99, 79, 0.25);
     transform: translateY(-1px);
-    box-shadow: 0 6px 15px rgba(229,99,79,0.25);
 }
