@@ -68,7 +68,51 @@ function MyPage() {
 
   // 여기 스켈레톤?? 넣음 돼여
   if (loading) {
-    return <div>로딩 중...</div>;
+    return(
+      <div>
+        <main className="container mypage-wrapper">
+          {/* 좌측 사이드바 */}
+          <div className="sidebar">
+            <div className="profile-section">
+              <div className="skeleton skeleton-profile" />
+              <div className="skeleton skeleton-profile-small" />
+            </div>
+
+            <ul className="menu-list">
+              {Array(4)
+                .fill(0)
+                .map((_, i) => (
+                  <li key={i}>
+                    <div className="skeleton skeleton-menu-item"></div>
+                  </li>
+                ))}
+            </ul>
+          </div>
+
+          {/* 우측 메인 콘텐츠 */}
+          <div className="main-content">
+            <div className="dashboard-title-group">
+              <div className="skeleton skeleton-title-large" />
+              <div className="skeleton skeleton-title-medium" />
+            </div>
+
+            <h2 style={{ marginBottom: 15, marginTop: 30 }}>
+              <div className="skeleton" style={{ width: "140px", height: "24px" }} />
+            </h2>
+
+            <div className="stats-section-grid">
+              {Array(4)
+                .fill(0)
+                .map((_, i) => (
+                  <div key={i}>
+                    <div className="skeleton skeleton-stat-card" />
+                  </div>
+                ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    )
   }
   if (!isLogin) {
     return null;
@@ -254,7 +298,7 @@ const handleOpenApplications = async (crew) => {
                 <p>총 달린 시간</p>
               </div>
               <div className="stat-card">
-                <h3>{getTotalRecordTime(dashboards)[2]}′{getTotalRecordTime(dashboards)[3]}″</h3>
+                <h3>{isNaN(getTotalRecordTime(dashboards)[2]) ? 0 : getTotalRecordTime(dashboards)[2]}′{isNaN(getTotalRecordTime(dashboards)[3]) ? 0 : getTotalRecordTime(dashboards)[3]}″</h3>
                 <p>내 페이스</p>
               </div>
             </div>
