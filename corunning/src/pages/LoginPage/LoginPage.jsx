@@ -40,7 +40,7 @@ function LoginPage() {
       window.dispatchEvent(new Event("storage"));
 
       alert("로그인 성공!");
-      window.history.back();
+      navigate("/");
 
     } catch (err) {
       console.error(err);
