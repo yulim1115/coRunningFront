@@ -19,17 +19,14 @@ function RunRoutesListPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  /* 필터 상태 */
   const [sort, setSort] = useState("latest");
   const [region, setRegion] = useState("전체 지역");
   const [difficultyFilter, setDifficultyFilter] = useState("전체 난이도");
   const [typeFilter, setTypeFilter] = useState("전체 타입");
 
-  /* 데이터 */
   const [originRoutes, setOriginRoutes] = useState([]);
   const [routes, setRoutes] = useState([]);
 
-  /* 난이도 매핑 */
   const getDifficultyInfo = (difficulty) => {
     const diff = difficulty?.toLowerCase();
     switch (diff) {
@@ -45,16 +42,13 @@ function RunRoutesListPage() {
     }
   };
 
-  /* 필터 적용 */
   const applyFilter = () => {
     let filtered = [...originRoutes];
 
-    // 지역
     if (region !== "전체 지역") {
       filtered = filtered.filter((r) => r.region.startsWith(region));
     }
 
-    // 난이도
     if (difficultyFilter !== "전체 난이도") {
       filtered = filtered.filter((r) => {
         const info = getDifficultyInfo(r.difficulty);
@@ -62,13 +56,11 @@ function RunRoutesListPage() {
       });
     }
 
-    // 타입
     if (typeFilter !== "전체 타입") {
       const typeMap = { 드로잉런: "drawing", 레귤러런: "regular" };
       filtered = filtered.filter((r) => r.type === typeMap[typeFilter]);
     }
 
-    // 정렬
     if (sort === "latest") filtered.sort((a, b) => b.id - a.id);
     if (sort === "oldest") filtered.sort((a, b) => a.id - b.id);
     if (sort === "popular") filtered.sort((a, b) => b.likes - a.likes);
@@ -76,7 +68,6 @@ function RunRoutesListPage() {
     setRoutes(filtered);
   };
 
-  /* DB에서 전체 로드 */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -102,7 +93,6 @@ function RunRoutesListPage() {
     fetchData();
   }, []);
 
-  /* URL 파라미터 → 필터 적용 */
   useEffect(() => {
     const params = new URLSearchParams(location.search);
 
@@ -115,12 +105,10 @@ function RunRoutesListPage() {
     if (typeQ) setTypeFilter(typeQ);
   }, [location.search]);
 
-  /* 필터 값이 바뀔 때마다 자동 필터 */
   useEffect(() => {
     applyFilter();
   }, [region, difficultyFilter, typeFilter, sort, originRoutes]);
 
-  /* 초기화 */
   const handleReset = () => {
     setSort("latest");
     setRegion("전체 지역");
@@ -138,18 +126,16 @@ function RunRoutesListPage() {
       <div className="registration-notice">
         <p>나만의 특별한 러닝 코스를 공유하고 싶으신가요?</p>
         <button
-          className="register-course-btn"
+          className="btn btn-main btn-large"
           onClick={() => navigate("/routes/create")}
         >
           <FaRoute /> &nbsp; 코스 등록하기
         </button>
       </div>
 
-      {/* 필터 */}
       <section className="filter-controls-area">
         <div className="filter-group-wrapper">
 
-          {/* 정렬 */}
           <div className="filter-group">
             <label>정렬</label>
             <div className="custom-select">
@@ -162,7 +148,6 @@ function RunRoutesListPage() {
             </div>
           </div>
 
-          {/* 지역 */}
           <div className="filter-group">
             <label>지역</label>
             <div className="custom-select">
@@ -176,7 +161,6 @@ function RunRoutesListPage() {
             </div>
           </div>
 
-          {/* 난이도 */}
           <div className="filter-group">
             <label>난이도</label>
             <div className="custom-select">
@@ -193,7 +177,6 @@ function RunRoutesListPage() {
             </div>
           </div>
 
-          {/* 타입 */}
           <div className="filter-group">
             <label>타입</label>
             <div className="custom-select">
@@ -209,7 +192,6 @@ function RunRoutesListPage() {
             </div>
           </div>
 
-          {/* 초기화 */}
           <button className="reset-button" onClick={handleReset}>
             <FaUndo /> 초기화
           </button>
@@ -218,23 +200,21 @@ function RunRoutesListPage() {
         <p className="route-count">총 {routes.length}개의 코스</p>
       </section>
 
-      {/* 리스트 */}
       <section className="route-list">
         {routes.map((route) => (
           <div
-            className="route-item"
+            className="card-base route-item"
             key={route.id}
             onClick={() => navigate(`/routes/${route.id}`)}
           >
             <div className="route-card-content">
               <div className="card-title-group">
                 <h3>{route.title}</h3>
+
                 <div
-                  className={
-                    route.type === "drawing"
-                      ? "course-tag drawing"
-                      : "course-tag regular"
-                  }
+                  className={`tag tag-small ${
+                    route.type === "drawing" ? "tag-drawing" : "tag-regular"
+                  }`}
                 >
                   {route.type === "drawing" ? "드로잉런" : "레귤러런"}
                 </div>
@@ -246,7 +226,6 @@ function RunRoutesListPage() {
                 <span>
                   <FaMapMarkerAlt /> {route.region}
                 </span>
-
                 <span>
                   <FaRunning />
                   <span
@@ -257,7 +236,6 @@ function RunRoutesListPage() {
                     {getDifficultyInfo(route.difficulty).label}
                   </span>
                 </span>
-
                 <span>
                   <FaRoute /> {route.distance} km
                 </span>

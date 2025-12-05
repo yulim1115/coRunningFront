@@ -1,0 +1,107 @@
+/* 공통 버튼 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: 0.25s ease;
+  border: none;
+  outline: none;
+}
+
+/* 버튼 크기 */
+.btn-large {
+  height: var(--btn-large-height);
+  padding: var(--btn-padding-large);
+  border-radius: var(--btn-radius-large);
+}
+.btn-medium {
+  height: var(--btn-medium-height);
+  padding: var(--btn-padding-medium);
+  border-radius: var(--btn-radius-medium);
+}
+.btn-small {
+  height: var(--btn-small-height);
+  padding: var(--btn-padding-small);
+  border-radius: var(--btn-radius-small);
+}
+
+/* 액션 버튼 */
+.btn-action {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-dark);
+  gap: 6px;
+}
+.btn-action:hover {
+  background: var(--color-bg-light);
+}
+
+/* 선택 상태 */
+.btn-action.on {
+  background: rgba(var(--color-main-rgb), 0.08);
+  border-color: var(--color-main);
+  color: var(--color-main);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+.btn-action.on:hover {
+  background: rgba(var(--color-main-rgb), 0.15);
+}
+
+/* 메인 버튼 */
+.btn-main {
+  background: var(--color-main);
+  color: var(--color-white);
+}
+.btn-main:hover {
+  background: var(--color-main-hover);
+}
+
+/* 강조 버튼 */
+.btn-accent {
+  background: var(--color-accent);
+  color: var(--color-white);
+}
+.btn-accent:hover {
+  background: var(--color-accent-hover);
+}
+
+/* 성공 버튼 */
+.btn-green {
+  background: var(--color-green);
+  color: var(--color-white);
+}
+.btn-green:hover {
+  background: var(--color-green-hover);
+}
+
+/* 경고 버튼 */
+.btn-red {
+  background: var(--color-red);
+  color: var(--color-white);
+}
+.btn-red:hover {
+  background: var(--color-red-hover);
+}
+
+/* 비활성 버튼 */
+.btn-disabled {
+  background: var(--color-bg-gray);
+  color: var(--color-text-dark);
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 외곽선 버튼 */
+.btn-outline {
+  background: var(--color-white);
+  border: 1px solid var(--color-main);
+  color: var(--color-main);
+}
+.btn-outline:hover {
+  background: var(--color-main);
+  color: var(--color-white);
+}
