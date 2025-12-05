@@ -28,6 +28,13 @@ function SignUpPage() {
   /* 에러 메시지 */
   const [errorMsg, setErrorMsg] = useState("");
 
+  useEffect(() => {
+    const isLogin = sessionStorage.getItem("isLogin") === "true";
+    if (isLogin) {
+      alert("이미 로그인된 상태입니다.");
+      window.history.back();
+    }
+  })
   /* 비밀번호 일치 체크 */
   useEffect(() => {
     if (passwordCheck.length > 0) {

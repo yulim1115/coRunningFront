@@ -6,6 +6,10 @@ import DaumPostcode from "react-daum-postcode";
 
 function MyPage() {
   const navigate = useNavigate();
+  const [openPostcode, setOpenPostcode] = useState(false);
+  const [detailAddress, setDetailAddress] = useState("");     // 사용자가 입력한 상세주소
+
+
   const [userData, setUserData] = useState(null);
   const [activeContent, setActiveContent] = useState("dashboard");
   const [loading, setLoading] = useState(true);
@@ -82,7 +86,7 @@ function MyPage() {
     birthDate: userData.birthDate,
     hireDate: userData.hireDate,
     phone: phone,
-    userAddress: userAddress
+    userAddress: userAddress + " " + detailAddress
   };
 
   const updateProfile = async (e) => {
@@ -249,7 +253,7 @@ const handleOpenApplications = async (crew) => {
                 <p>총 달린 시간</p>
               </div>
               <div className="stat-card">
-                <h3>{getTotalRecordTime(dashboards)[2]}'{getTotalRecordTime(dashboards)[3]}"</h3>
+                <h3>{getTotalRecordTime(dashboards)[2]}′{getTotalRecordTime(dashboards)[3]}″</h3>
                 <p>내 페이스</p>
               </div>
             </div>
@@ -262,9 +266,7 @@ const handleOpenApplications = async (crew) => {
             <h1 style={{ marginBottom: 30 }}>프로필/계정 정보 수정</h1>
             <div>
               <form method="post">
-                <h2 className="form-section-header">
-                  회원 정보
-                </h2>
+                <h2 className="form-section-header">회원 정보</h2>
                 <div className="form-group">
                   <label htmlFor="name"> 이름 <span></span> </label>
                   <textarea id="name" value={userName} onChange={(e) => setUserName(e.target.value)} />
@@ -287,16 +289,102 @@ const handleOpenApplications = async (crew) => {
                   <textarea id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
                 </div>
 
-                <div className="form-group" style={{ whiteSpace: "pre-wrap" }}>
-                  <label htmlFor="post-code">주소</label>
-                  <textarea id="post-code" value={userAddress} onChange={(e) => setUserAddress(e.target.value)} />
+                {/* Daum Postcode 주소 입력 영역 */}
+                <div className="form-group">
+                  <label>주소</label>
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type="text"
+                      id="post-code"
+                      placeholder="우편번호"
+                      value={userAddress}
+                      readOnly
+                      style={{ width: '300px', marginBottom: 10 }}
+                      onClick={() => setOpenPostcode(true)}
+                    />
+                    <input
+                      type="text"
+                      placeholder="상세 주소 (선택)"
+                      value={detailAddress}
+                      style={{ width: '300px', marginBottom: 10}}
+                      onChange={(e) => setDetailAddress(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="postcode-btn"
+                      onClick={() => setOpenPostcode(true)}
+                      style={{
+                        marginLeft: 10,
+                        padding: '8px 12px',
+                        background: '#4A69BB',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 4,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      주소찾기
+                    </button>
+                  </div>
+                  
                 </div>
+
+                {/* Daum Postcode 모달 */}
+                {openPostcode && (
+                  <div className="postcode-modal-overlay" style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0,0,0,0.5)',
+                    zIndex: 1000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <div className="postcode-modal" style={{
+                      background: 'white',
+                      padding: 20,
+                      borderRadius: 8,
+                      maxWidth: 500,
+                      width: '90%'
+                    }}>
+                      <DaumPostcode
+                        onComplete={(data) => {
+                          const fullAddress = `${data.address}`.trim();
+                          setUserAddress(fullAddress);
+                          setOpenPostcode(false);
+                        }}
+                        autoClose
+                      />
+                      <button
+                        onClick={() => setOpenPostcode(false)}
+                        style={{
+                          marginTop: 15,
+                          padding: '8px 20px',
+                          background: '#ccc',
+                          border: 'none',
+                          borderRadius: 4,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        닫기
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 <div className="action-buttons">
                   <button type="submit" className="register-btn" onClick={updateProfile}>
                     수정 완료
                   </button>
-                  <button type="button" className="cancel-btn" >
+                  <button type="button" className="cancel-btn" onClick={() => {
+                    // 취소 시 원래 데이터로 복원
+                    setUserName(userData.userName ?? "");
+                    setPhone(userData.phone ?? "");
+                    setUserAddress(userData.userAddress ?? "");
+                  }}>
                     취소
                   </button>
                 </div>
@@ -304,6 +392,7 @@ const handleOpenApplications = async (crew) => {
             </div>
           </div>
         );
+
 
       case "myroutes":
         return (
