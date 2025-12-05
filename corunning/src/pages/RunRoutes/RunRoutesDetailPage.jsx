@@ -116,10 +116,19 @@ function RunRoutesDetailPage() {
       return;
     }
 
-    // setTimeout으로 DOM이 렌더링된 후 실행되도록 함
-    const timer = setTimeout(() => {
+    // 컨테이너가 DOM에 마운트될 때까지 대기
+    const initMap = () => {
       if (!mapContainerRef.current) {
-        console.warn("mapContainerRef.current가 여전히 없음");
+        console.warn("mapContainerRef.current 없음, 재시도...");
+        setTimeout(initMap, 100);
+        return;
+      }
+
+      // 컨테이너 크기 확인
+      const { width, height } = mapContainerRef.current.getBoundingClientRect();
+      if (width === 0 || height === 0) {
+        console.warn("컨테이너 크기 0, 재시도...");
+        setTimeout(initMap, 100);
         return;
       }
 
@@ -136,62 +145,94 @@ function RunRoutesDetailPage() {
         return;
       }
 
+      // 기존 맵 정리
       if (mapRef.current) {
-        mapRef.current.remove();
+        try {
+          mapRef.current.remove();
+        } catch (e) {
+          console.warn("기존 맵 제거 중 오류:", e);
+        }
         mapRef.current = null;
       }
 
-      mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+      try {
+        mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
-      const map = new mapboxgl.Map({
-        container: mapContainerRef.current,
-        style: "mapbox://styles/mapbox/streets-v12",
-        center: coords[0],
-        zoom: 14,
-        language: "ko",
-        attributionControl: false,
-      });
-
-      mapRef.current = map;
-
-      map.on("load", () => {
-        console.log("지도 로드 완료");
-        map.addSource("routeLine", {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            geometry: { type: "LineString", coordinates: coords },
-          },
+        const map = new mapboxgl.Map({
+          container: mapContainerRef.current,
+          style: "mapbox://styles/mapbox/streets-v12",
+          center: coords[0],
+          zoom: 14,
+          language: "ko",
+          attributionControl: false,
+          failIfMajorPerformanceCaveat: false,
         });
 
-        map.addLayer({
-          id: "routeLineLayer",
-          type: "line",
-          source: "routeLine",
-          paint: { "line-width": 5, "line-color": "#e5634f" },
+        mapRef.current = map;
+
+        map.on("load", () => {
+          console.log("지도 로드 완료");
+          
+          try {
+            // 기존 소스/레이어 제거 확인
+            if (map.getSource("routeLine")) {
+              map.removeLayer("routeLineLayer");
+              map.removeSource("routeLine");
+            }
+
+            map.addSource("routeLine", {
+              type: "geojson",
+              data: {
+                type: "Feature",
+                geometry: { type: "LineString", coordinates: coords },
+              },
+            });
+
+            map.addLayer({
+              id: "routeLineLayer",
+              type: "line",
+              source: "routeLine",
+              paint: { "line-width": 5, "line-color": "#e5634f" },
+            });
+
+            const bounds = coords.reduce(
+              (b, c) => b.extend(c),
+              new mapboxgl.LngLatBounds()
+            );
+            map.fitBounds(bounds, { padding: 40 });
+            map.resize();
+          } catch (e) {
+            console.error("지도 레이어 추가 오류:", e);
+          }
         });
 
-        const bounds = coords.reduce(
-          (b, c) => b.extend(c),
-          new mapboxgl.LngLatBounds()
-        );
-        map.fitBounds(bounds, { padding: 40 });
-        map.resize();
-      });
+        map.on("error", (e) => {
+          console.error("Mapbox 에러:", e);
+        });
 
-      map.on("error", (e) => {
-        console.error("Mapbox 에러:", e);
-      });
-    }, 0);
+        map.on("styleimagemissing", (e) => {
+          console.warn("이미지 누락:", e);
+        });
+      } catch (e) {
+        console.error("지도 초기화 오류:", e);
+      }
+    };
+
+    // 약간의 지연 후 초기화 (DOM 렌더링 완료 대기)
+    const timer = setTimeout(initMap, 50);
 
     return () => {
       clearTimeout(timer);
       if (mapRef.current) {
-        mapRef.current.remove();
+        try {
+          mapRef.current.remove();
+        } catch (e) {
+          console.warn("지도 정리 중 오류:", e);
+        }
         mapRef.current = null;
       }
     };
-  }, [route]);
+  }, [route, id]);
 
   const handleLike = async () => {
     if (!loginUserId) return alert("로그인 후 추천이 가능합니다.");

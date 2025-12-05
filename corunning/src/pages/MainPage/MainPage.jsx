@@ -1,4 +1,3 @@
-// src/pages/MainPage/MainPage.jsx
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -147,6 +146,7 @@ function MainPage() {
       style: "mapbox://styles/mapbox/streets-v12",
       center: [126.9784, 37.5665],
       zoom: 12,
+      language: "ko",
       attributionControl: false,
     });
 
@@ -170,13 +170,15 @@ function MainPage() {
     };
   }, []);
 
-  // 마커 및 임시 경로 렌더링
+  // 마커 및 임시 경로 렌더링 (routeCoords 변경시)
   useEffect(() => {
     if (!mapRef.current) return;
 
+    // 모든 마커 제거
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
 
+    // routeCoords에만 마커 생성
     routeCoords.forEach((pt, idx) => {
       const el = document.createElement("div");
       el.className = "map-marker";
@@ -198,11 +200,17 @@ function MainPage() {
       markersRef.current.push(marker);
     });
 
-    if (mapRef.current.getLayer("temp-route"))
-      mapRef.current.removeLayer("temp-route");
-    if (mapRef.current.getSource("temp-route"))
-      mapRef.current.removeSource("temp-route");
+    // 모든 기존 레이어 제거 (temp-route, route)
+    ["temp-route", "route"].forEach((layerId) => {
+      if (mapRef.current.getLayer(layerId)) {
+        mapRef.current.removeLayer(layerId);
+      }
+      if (mapRef.current.getSource(layerId)) {
+        mapRef.current.removeSource(layerId);
+      }
+    });
 
+    // routeCoords가 2개 이상이면 임시 경로만 그리기
     if (routeCoords.length > 1) {
       mapRef.current.addSource("temp-route", {
         type: "geojson",
@@ -221,20 +229,17 @@ function MainPage() {
     }
   }, [routeCoords]);
 
-  // 스냅된 경로 렌더링
+  // 스냅 경로 렌더링 (snappedCoords 변경시)
   useEffect(() => {
     if (!mapRef.current || snappedCoords.length === 0) return;
 
-    if (mapRef.current.getLayer("route"))
-      mapRef.current.removeLayer("route");
-    if (mapRef.current.getSource("route"))
-      mapRef.current.removeSource("route");
+    // 기존 레이어들 제거
+    ["temp-route", "route"].forEach((layerId) => {
+      if (mapRef.current.getLayer(layerId)) mapRef.current.removeLayer(layerId);
+      if (mapRef.current.getSource(layerId)) mapRef.current.removeSource(layerId);
+    });
 
-    if (mapRef.current.getLayer("temp-route"))
-      mapRef.current.removeLayer("temp-route");
-    if (mapRef.current.getSource("temp-route"))
-      mapRef.current.removeSource("temp-route");
-
+    // 스냅 경로 추가
     mapRef.current.addSource("route", {
       type: "geojson",
       data: {
@@ -249,7 +254,7 @@ function MainPage() {
       source: "route",
       paint: {
         "line-color": "#FF5500",
-        "line-width": 6,
+        "line-width": 5,
       },
     });
   }, [snappedCoords]);
@@ -265,27 +270,33 @@ function MainPage() {
 
     const url = `https://api.mapbox.com/matching/v5/mapbox/walking/${str}?geometries=geojson&overview=full&access_token=${mapboxgl.accessToken}`;
 
-    const res = await fetch(url);
-    const data = await res.json();
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
 
-    if (!data.matchings?.length) {
-      alert("스냅 실패");
-      return;
+      if (!data.matchings?.length) {
+        alert("스냅 실패");
+        return;
+      }
+
+      const snapped = data.matchings[0].geometry.coordinates;
+      setSnappedCoords(snapped);
+
+      const line = turf.lineString(snapped);
+      const meters = Math.round(
+        turf.length(line, { units: "kilometers" }) * 1000
+      );
+      setDistance(meters);
+    } catch {
+      alert("스냅 요청 오류");
     }
-
-    const snapped = data.matchings[0].geometry.coordinates;
-    setSnappedCoords(snapped);
-
-    const line = turf.lineString(snapped);
-    const meters = Math.round(
-      turf.length(line, { units: "kilometers" }) * 1000
-    );
-    setDistance(meters);
   };
-
-  // 경로 되돌리기
+  // 되돌리기
   const undoLastPoint = () => {
     setRouteCoords((prev) => prev.slice(0, -1));
+    // 되돌리기 시 스냅 상태 초기화
+    setSnappedCoords([]);
+    setDistance(0);
   };
 
   // 경로 초기화
@@ -338,6 +349,8 @@ function MainPage() {
                 type: "LineString",
                 coordinates: simpleCoords,
               },
+              style: "mapbox://styles/mapbox/streets-v12",
+              language: "ko",
             },
           ],
         })
@@ -346,6 +359,7 @@ function MainPage() {
       const url =
         `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/` +
         `geojson(${overlay})/auto/1280x800?padding=50&logo=false&attribution=false` +
+        `&language=ko` +
         `&access_token=${mapboxgl.accessToken}`;
 
       const res = await fetch(url);

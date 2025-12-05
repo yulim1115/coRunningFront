@@ -264,70 +264,68 @@ export default function RunLogPage() {
   return (
     <div className="runlog-wrapper">
       <h2 className="runlog-title">Run Log</h2>
+        <div className="section-box">
+          <h3>저장한 코스 ({savedCourses.length})</h3>
 
-      {/* 저장한 코스 */}
-      <div className="section-box">
-        <h3>저장한 코스 ({savedCourses.length})</h3>
+          {savedCourses.map((course) => (
+            <div key={course.dipId}>
+          <LogCard
+            type="saved"
+            item={course}
+            isOpen={openSavedIds[course.dipId]}
+            onMainButton={() =>
+              setOpenSavedIds((p) => ({
+            ...p,
+            [course.dipId]: !p[course.dipId]
+              }))
+            }
+          />
 
-        {savedCourses.map((course) => (
-          <div key={course.dipId}>
-            <LogCard
-              type="saved"
-              item={course}
-              isOpen={openSavedIds[course.dipId]}
-              onMainButton={() =>
-                setOpenSavedIds((p) => ({
-                  ...p,
-                  [course.dipId]: !p[course.dipId]
-                }))
-              }
-            />
+          {openSavedIds[course.dipId] && (
+            <div className="input-form-large">
+              <p className="form-title">완주 기록 입력</p>
 
-            {openSavedIds[course.dipId] && (
-              <div className="input-form-large">
-                <p className="form-title">완주 기록 입력</p>
-
-                <div className="two-cols">
-                  <div className="form-row">
-                    <label>날짜</label>
-                    <input
-                      type="date"
-                      value={inputValues[course.dipId]?.date || ""}
-                      onChange={(e) =>
-                        updateInput(course.dipId, "date", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="form-row">
-                    <label>시간</label>
-                    <input
-                      type="text"
-                      placeholder="00:45:30"
-                      value={inputValues[course.dipId]?.time || ""}
-                      onChange={(e) =>
-                        updateInput(course.dipId, "time", e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-
-                <button
-                  className="btn-submit"
-                  onClick={() => submitFinish(course)}
-                >
-                  기록 저장
-                </button>
+              <div className="two-cols">
+            <div className="form-row">
+              <label>날짜</label>
+              <input
+                type="date"
+                value={inputValues[course.dipId]?.date || ""}
+                onChange={(e) =>
+              updateInput(course.dipId, "date", e.target.value)
+                }
+              />
+            </div>
+            <div className="form-row">
+              <label>시간</label>
+              <input
+                type="time"
+                step="1"
+                value={inputValues[course.dipId]?.time || ""}
+                onChange={(e) =>
+              updateInput(course.dipId, "time", e.target.value)
+                }
+              />
+            </div>
               </div>
-            )}
-          </div>
-        ))}
 
-        {savedCourses.length === 0 && (
-          <p className="empty">저장한 코스가 없습니다.</p>
-        )}
-      </div>
+              <button
+            className="btn-submit"
+            onClick={() => submitFinish(course)}
+              >
+            기록 저장
+              </button>
+            </div>
+          )}
+            </div>
+          ))}
 
-      {/* 완주 기록 */}
+          {savedCourses.length === 0 && (
+            <p className="empty">저장한 코스가 없습니다.</p>
+          )}
+        </div>
+
+        {/* 완주 기록 */}
       <div className="section-box">
         <h3>완주 기록 ({records.length})</h3>
 
@@ -366,7 +364,8 @@ export default function RunLogPage() {
                   <div className="form-row">
                     <label>시간</label>
                     <input
-                      type="text"
+                      type="time"
+                      step="1"
                       defaultValue={record.time}
                       onChange={(e) =>
                         updateEditInput(record.id, "time", e.target.value)
