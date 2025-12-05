@@ -1,5 +1,5 @@
 /* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap");
 
 /* 초기화 */
 * {
@@ -9,10 +9,11 @@
 }
 
 /* 기본 레이아웃 */
-html, body {
+html,
+body {
   width: 100%;
   min-height: 100%;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text-dark);
   line-height: 1.6;
@@ -22,15 +23,6 @@ html, body {
 a {
   color: inherit;
   text-decoration: none;
-}
-
-/* 버튼 */
-button {
-  font-family: 'Noto Sans KR', sans-serif;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  background: none;
 }
 
 /* 카드 */
@@ -86,28 +78,27 @@ select:focus {
 
 /* 디자인 토큰 */
 :root {
-
   /* 색상 */
-  --color-main: #0F1C2E;
-  --color-main-hover: #0A1624;
-  --color-accent: #2979FF;
-  --color-accent-hover: #1F5ED1;
-  --color-green: #00C853;
-  --color-green-hover: #009D45;
-  --color-red: #E53935;
-  --color-red-hover: #C62828;
+  --color-main: #0f1c2e;
+  --color-main-hover: #0a1624;
+  --color-accent: #2979ff;
+  --color-accent-hover: #1f5ed1;
+  --color-green: #00c853;
+  --color-green-hover: #009d45;
+  --color-red: #e53935;
+  --color-red-hover: #c62828;
 
-  --color-white: #FFFFFF;
+  --color-white: #ffffff;
 
-  --color-bg: #FFFFFF;
-  --color-bg-light: #F6F7FB;
-  --color-bg-gray: #ECEEF2;
-  --color-bg-card: #F2F4F8;
+  --color-bg: #ffffff;
+  --color-bg-light: #f6f7fb;
+  --color-bg-gray: #eceef2;
+  --color-bg-card: #f2f4f8;
 
-  --color-text-dark: #1A1A1A;
-  --color-text-light: #6D6D6D;
+  --color-text-dark: #1a1a1a;
+  --color-text-light: #6d6d6d;
 
-  --color-border: #D3D6DB;
+  --color-border: #d3d6db;
 
   /* RGB */
   --color-main-rgb: 15, 28, 46;
@@ -150,20 +141,20 @@ select:focus {
   --tag-large-font-size: 14px;
   --tag-radius: 999px;
 
-  --tag-bg-regular: #E3EEFF;
-  --tag-color-regular: #2979FF;
+  --tag-bg-regular: #e3eeff;
+  --tag-color-regular: #2979ff;
 
-  --tag-bg-flash: #FFF1DC;
-  --tag-color-flash: #FF9800;
+  --tag-bg-flash: #fff1dc;
+  --tag-color-flash: #ff9800;
 
-  --tag-bg-drawing: #F3E7FF;
-  --tag-color-drawing: #9B51E0;
+  --tag-bg-drawing: #f3e7ff;
+  --tag-color-drawing: #9b51e0;
 
-  --tag-bg-open: #E7F7ED;     /* 모집중 */
-  --tag-color-open: #00A86B;
+  --tag-bg-open: #e7f7ed; /* 모집중 */
+  --tag-color-open: #00a86b;
 
-  --tag-bg-closed: #F6EAEA;   /* 마감 */
-  --tag-color-closed: #D64545;
+  --tag-bg-closed: #f6eaea; /* 마감 */
+  --tag-color-closed: #d64545;
 
   /* 카드 radius */
   --card-radius: 10px;
@@ -172,7 +163,7 @@ select:focus {
   --layout-max-width: 1200px;
 
   /* 그림자 */
-  --shadow-card: 0 4px 12px rgba(0,0,0,0.06);
-  --shadow-medium: 0 4px 16px rgba(0,0,0,0.12);
-  --shadow-strong: 0 8px 24px rgba(0,0,0,0.18);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
