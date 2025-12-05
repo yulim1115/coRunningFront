@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./MyPage.css";
-import { getUserAPI, updateUserAPI, getRouteByIdAPI, deleteRouteAPI, getCrewByIdAPI, deleteCrewAPI, getApplicationsAPI } from "../../api/mypageApi";
+import { getUserAPI, updateUserAPI, getRouteByIdAPI, deleteRouteAPI, getCrewByIdAPI, deleteCrewAPI, getApplicationsAPI, getDashboardAPI } from "../../api/mypageApi";
 import { useNavigate } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
 
@@ -22,8 +22,11 @@ function MyPage() {
   const [openCheck, setOpenCheck] = useState(false);
   const [selectedCrew, setSelectedCrew] = useState(null);
 
+  const [dashboards, setDashboards] = useState([]);
 
-  // 로그인 체크 + 유저 정보 불러오기 + 코스 정보 불러오기 + 크루 정보 불러오기 
+
+
+  // 로그인 체크 + 유저 정보 불러오기 + 코스 정보 불러오기 + 크루 정보 불러오기 + 대시보드 불러오기
   useEffect(() => {
     if (!isLogin) {
       alert("로그인이 필요합니다.");
@@ -39,6 +42,8 @@ function MyPage() {
         setRoutes(route_data);
         const crew_data = await getCrewByIdAPI(sessionStorage.getItem("userEmail"));
         setCrews(crew_data);
+        const dashboard_data = await getDashboardAPI();
+        setDashboards(dashboard_data);
       } catch (error) {
         console.error("정보 불러오기 실패:", error);
       } finally {
@@ -189,6 +194,32 @@ const handleOpenApplications = async (crew) => {
     setCrewApplications([]);
   };
 
+  //대시보드
+ function getTotalRecordTime(dashboards) {
+  if (!Array.isArray(dashboards)) return "00:00:00";
+
+  let totalSeconds = 0;
+  let totalDistance = 0;
+  let myPace = 0;
+
+  dashboards.forEach(d => {
+    const timeStr = d.record.split(" ")[1];
+    const [h, m, s] = timeStr.split(":").map(Number);
+    totalSeconds += h * 3600 + m * 60 + s;
+    totalDistance += d.distance;
+    myPace += h*3600 + m*60+ s;
+  });
+
+  const HH = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+  const MM = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+  const SS = String(totalSeconds % 60).padStart(2, "0");
+  const avgPace = myPace/dashboards.length;
+  const paceM = Math.floor(avgPace/60);
+  const paceS = avgPace%60;
+
+  return [`${HH}:${MM}:${SS}`, totalDistance, paceM, paceS];
+}
+
 
   const renderContent = () => {
     switch (activeContent) {
@@ -206,20 +237,20 @@ const handleOpenApplications = async (crew) => {
             </h2>
             <div className="stats-section-grid">
               <div className="stat-card">
-                <h3>123.4 KM</h3>
-                <p>총 누적 거리</p>
+                <h3>{getTotalRecordTime(dashboards)[1]} KM</h3>
+                <p>총 달린 거리</p>
               </div>
               <div className="stat-card">
-                <h3>45 회</h3>
+                <h3>{dashboards.length} 회</h3>
                 <p>총 완주 횟수</p>
               </div>
               <div className="stat-card">
-                <h3>7.8 KM</h3>
-                <p>평균 러닝 거리</p>
+                <h3>{getTotalRecordTime(dashboards)[0]}</h3>
+                <p>총 달린 시간</p>
               </div>
               <div className="stat-card">
-                <h3>45 분</h3>
-                <p>평균 완주 시간</p>
+                <h3>{getTotalRecordTime(dashboards)[2]}'{getTotalRecordTime(dashboards)[3]}"</h3>
+                <p>내 페이스</p>
               </div>
             </div>
           </div>
