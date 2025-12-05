@@ -440,8 +440,12 @@ const handleOpenApplications = async (crew) => {
                               <ul className="application-list">
                                 {crewApplications.map((app) => (
                                   <li key={app.id} className="application-item">
-                                    <span>{app.applicantName}</span>
+                                    <span>이름 : {app.applicantName}</span><br/>
+                                    <span>번호 : {app.phone}</span><br/><br/>
+                                    <hr/><br/>
                                   </li>
+      
+                                  
                                 ))}
                               </ul>
                             )}
