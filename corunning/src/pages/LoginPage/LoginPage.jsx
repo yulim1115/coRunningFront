@@ -7,7 +7,13 @@ import { getMyInfo, loginAPI } from "../../api/userApi";
 
 function LoginPage() {
   const navigate = useNavigate();
-
+  useEffect(() => {
+    const isLogin = sessionStorage.getItem("isLogin") === "true";
+    if (isLogin) {
+      alert("이미 로그인된 상태입니다.");
+      navigate("/");
+    }
+  }, [navigate]);
   /* 입력값 상태 */
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,7 +41,7 @@ function LoginPage() {
       window.dispatchEvent(new Event("storage"));
 
       alert("로그인 성공!");
-      navigate("/");
+      window.history.back();
 
     } catch (err) {
       console.error(err);
