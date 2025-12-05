@@ -1,91 +1,178 @@
+/* 폰트 */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
-/* RESET */
+/* 초기화 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 기본 폰트 + 전체 레이아웃 */
+/* 기본 레이아웃 */
 html, body {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   font-family: 'Noto Sans KR', sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text-dark);
   line-height: 1.6;
 }
 
-/* 링크 초기화 */
+/* 링크 */
 a {
   color: inherit;
   text-decoration: none;
 }
 
-/* 버튼 기본 */
+/* 버튼 */
 button {
   font-family: 'Noto Sans KR', sans-serif;
   cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
 }
 
+/* 카드 */
+.card-base {
+  background: var(--color-white);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-card);
+  transition: 0.25s;
+  overflow: hidden;
+}
 
+.card-base:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-strong);
+}
+
+.detail-card-base {
+  background: var(--color-white);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--color-border);
+  padding: 20px;
+}
+
+/* form 페이지 input */
+input,
+textarea,
+select {
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: var(--font-caption);
+  background: var(--color-bg);
+  transition: 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* placeholder */
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-light);
+}
+
+/* 포커스 */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(var(--color-accent-rgb), 0.15);
+  outline: none;
+}
+
+/* 디자인 토큰 */
 :root {
-  /* Colors */
-  --color-main: #1A2F4B;
-  --color-main-hover: #15243A;
 
-  --color-sub: #415472;
-  --color-sub-hover: #34455A;
+  /* 색상 */
+  --color-main: #0F1C2E;
+  --color-main-hover: #0A1624;
+  --color-accent: #2979FF;
+  --color-accent-hover: #1F5ED1;
+  --color-green: #00C853;
+  --color-green-hover: #009D45;
+  --color-red: #E53935;
+  --color-red-hover: #C62828;
 
-  --color-accent: #4A69BB;
-  --color-accent-hover: #3C56A0;
-
-  --color-green: #2ECC71;
-  --color-green-hover: #27AE60;
-
-  --color-red: #e5634f;
-  --color-red-hover: #de442d;
-  
   --color-white: #FFFFFF;
 
   --color-bg: #FFFFFF;
-  --color-bg-gray: #F1F3F5;
-  --color-bg-light: #F3F4F6;
-  --color-bg-card: #F4F6F8;
-  --color-bg-green: #E6F7E9;
+  --color-bg-light: #F6F7FB;
+  --color-bg-gray: #ECEEF2;
+  --color-bg-card: #F2F4F8;
 
-  --color-text-dark: #333333;
-  --color-text-light: #666666;
-  --color-border: #E5E7EB;
+  --color-text-dark: #1A1A1A;
+  --color-text-light: #6D6D6D;
 
-  /* Font */
+  --color-border: #D3D6DB;
+
+  /* RGB */
+  --color-main-rgb: 15, 28, 46;
+  --color-accent-rgb: 41, 121, 255;
+  --color-green-rgb: 0, 200, 83;
+  --color-red-rgb: 229, 57, 53;
+
+  /* 글자 크기 */
   --font-h1: 32px;
   --font-h2: 24px;
   --font-h3: 18px;
   --font-body: 16px;
-  --font-caption: 14px;
+  --font-small: 14px;
+  --font-caption: 12px;
 
-  /* Font Weight */
+  /* 굵기 */
   --fw-light: 300;
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-semibold: 600;
   --fw-bold: 700;
 
-  /* Buttons */
-    --btn-large-height: 48px;  /* border-radius: 6px, padding: 0 24px*/
-    --btn-medium-height: 40px;
-    --btn-small-height: 32px;  /* border-radius: 4px, padding: 0 12px*/
-  
-    --btn-radius-small: 16px;
+  /* 버튼 크기 */
+  --btn-large-height: 48px;
+  --btn-medium-height: 40px;
+  --btn-small-height: 32px;
 
-  /* Layout */
+  --btn-radius-large: 24px;
+  --btn-radius-medium: 8px;
+  --btn-radius-small: 16px;
+
+  --btn-padding-large: 0 24px;
+  --btn-padding-medium: 0 18px;
+  --btn-padding-small: 0 12px;
+
+  /* 태그 */
+  --tag-small-padding: 4px 10px;
+  --tag-small-font-size: 12px;
+  --tag-large-padding: 6px 14px;
+  --tag-large-font-size: 14px;
+  --tag-radius: 999px;
+
+  --tag-bg-regular: #E3EEFF;
+  --tag-color-regular: #2979FF;
+
+  --tag-bg-flash: #FFF1DC;
+  --tag-color-flash: #FF9800;
+
+  --tag-bg-drawing: #F3E7FF;
+  --tag-color-drawing: #9B51E0;
+
+  --tag-bg-open: #E7F7ED;     /* 모집중 */
+  --tag-color-open: #00A86B;
+
+  --tag-bg-closed: #F6EAEA;   /* 마감 */
+  --tag-color-closed: #D64545;
+
+  /* 카드 radius */
+  --card-radius: 10px;
+
+  /* 레이아웃 */
   --layout-max-width: 1200px;
 
-
-  /* Shadows */
-  --shadow-card: 0 4px 12px rgba(0,0,0,0.05);
-  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
-  --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.20);
+  /* 그림자 */
+  --shadow-card: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-medium: 0 4px 16px rgba(0,0,0,0.12);
+  --shadow-strong: 0 8px 24px rgba(0,0,0,0.18);
 }

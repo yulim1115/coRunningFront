@@ -1,243 +1,184 @@
-/* 페이지 전체 컨테이너 */
+/* 페이지 컨테이너 */
 .routes-container {
-    width: 100%;
-    max-width: var(--layout-max-width);
-    margin: 60px auto;
-    padding: 0 40px;
-    color: var(--color-text-dark);
+  width: 100%;
+  max-width: var(--layout-max-width);
+  margin: 60px auto;
+  padding: 0 40px;
+  color: var(--color-text-dark);
 }
 
 /* 페이지 헤더 */
 .page-header-area {
-    padding: 20px 0 10px;
+  padding: 20px 0 10px;
 }
 
 .page-header-area h1 {
-    font-size: var(--font-h1);
-    margin: 0;
-    font-weight: var(--fw-bold);
-    color: var(--color-main);
+  font-size: var(--font-h1);
+  font-weight: var(--fw-bold);
+  color: var(--color-main);
 }
 
 /* 등록 안내 박스 */
 .registration-notice {
-    margin-bottom: 30px;
-    background: var(--color-bg-card);
-    border-left: 6px solid var(--color-accent);
-    border-radius: 8px;
-    padding: 30px 40px;
-    box-shadow: var(--shadow-medium);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: var(--font-h3);
-    font-weight: var(--fw-bold);
-    color: var(--color-main);
+  margin-bottom: 30px;
+  background: var(--color-bg-card);
+  border-left: 6px solid var(--color-accent);
+  border-radius: var(--card-radius);
+  padding: 30px 40px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+  color: var(--color-main);
 }
 
-/* 코스 등록 버튼 */
-.register-course-btn {
-    display: inline-flex;
-    height: var(--btn-large-height);
-    padding: 0 24px;
-    align-items: center;
-    background: var(--color-main);
-    color: var(--color-white);
-    font-weight: var(--fw-bold);
-    border-radius: 999px;
-    border: none;
-    transition: 0.2s;
-}
-
-.register-course-btn:hover {
-    background: var(--color-main-hover);
-}
-
-/* 필터 영역 */
+/* 필터 영역 전체 */
 .filter-controls-area {
-    padding-bottom: 30px;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: 30px;
+  padding-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 30px;
 }
 
+/* 필터 그룹 */
 .filter-group-wrapper {
-    display: flex;
-    gap: 20px;
-    align-items: center;
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 
+/* 필터 라벨 */
 .filter-group label {
-    font-size: var(--font-caption);
-    font-weight: var(--fw-medium);
-    margin-right: 6px;
+  font-size: var(--font-caption);
+  font-weight: var(--fw-medium);
+  margin-right: 6px;
 }
 
-/* 커스텀 셀렉트 */
+/* 셀렉트 박스 */
 .custom-select {
-    position: relative;
-    width: 120px;
-    display: inline-block;
+  position: relative;
+  width: 130px;
+  display: inline-block;
 }
 
+/* 셀렉트 박스 선택 */
 .custom-select select {
-    width: 100%;
-    padding: 0 34px 0 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    font-size: var(--font-caption);
-    background: var(--color-white);
-    height: 36px;
-    appearance: none;
-}
-
-.custom-select select::-ms-expand {
-    display: none;
+  width: 100%;
+  padding: 0 34px 0 12px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  font-size: var(--font-caption);
+  background: var(--color-white);
+  appearance: none;
 }
 
 /* 셀렉트 화살표 */
 .select-arrow {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 12px;
-    color: var(--color-sub);
-    pointer-events: none;
-    padding-left: 8px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--color-text-light);
 }
 
-/* 초기화 버튼 */
+/* 초기화 텍스트 버튼 */
 .reset-button {
-  height: 36px;
-  padding: 0 12px;
-  gap: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: none;
   border: none;
-  font-size: 14px;
+  font-size: var(--font-caption);
   color: var(--color-text-light);
-  background-color: var(--color-bg);
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 초기화 버튼 hover */
+.reset-button:hover {
+  color: var(--color-text-dark);
+}
+
+/* 초기화 버튼 아이콘 크기 */
+.reset-button svg {
+  font-size: 11px;
 }
 
 .reset-button:hover {
-    color: var(--color-text-dark);
+  color: var(--color-text-dark);
 }
 
-/* 초기화 아이콘 */
-.reset-button svg {
-    font-size: 12px;
-    color: var(--color-text-light);
-}
-
-.reset-button:hover svg {
-    color: var(--color-text-dark);
-}
-
-/* 총 카드 개수 */
+/* 총 개수 */
 .route-count {
-    color: var(--color-text-light);
-    font-size: var(--font-caption);
-    padding-top: 6px;
+  color: var(--color-text-light);
+  font-size: var(--font-caption);
+  padding-top: 6px;
 }
 
-/* 리스트 카드 */
+/* 카드 간격 */
 .route-item {
-    background: var(--color-white);
-    border-radius: 8px;
-    margin-bottom: 15px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: 0.25s;
-    box-shadow: var(--shadow-medium);
+  margin-bottom: 15px;
 }
 
-.route-item:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-strong);
-}
-
-/* 카드 본문 */
+/* 카드 상단 */
 .route-card-content {
-    padding: 16px 25px 10px 25px;
-    background: var(--color-white);
-    border-radius: 8px 8px 0 0; 
+  padding: 16px 25px 10px 25px;
 }
 
-/* 제목 그룹 */
+/* 제목 + 태그 그룹 */
 .card-title-group {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .card-title-group h3 {
-    margin: 0;
-    line-height: 1.45;
-    font-size: var(--font-h3);
-    color: var(--color-text-dark);
-    font-weight: var(--fw-bold);
+  margin: 0;
+  font-size: var(--font-h3);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-dark);
 }
 
-/* 태그 */
-.course-tag {
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 12px;
-    display: inline-flex;
-    align-items: center;
-    letter-spacing: 0.2px;
-}
-.course-tag.drawing {
-    background: rgba(74, 105, 187, 0.12); /* 연한 파랑 */
-    color: #4A69BB; /* 메인 파랑 */
-}
-
-
-.course-tag.regular {
-    background: rgba(26, 47, 75, 0.10); /* 연한 네이비 */
-    color: #1A2F4B; /* 진한 네이비 */
-}
-
-/* 카드 하단 메타 */
+/* 카드 하단 */
 .card-meta-details-wrapper {
-    background: var(--color-bg-light);
-    padding: 15px 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 0 0 8px 8px;
-    border-top: 1px solid rgba(0,0,0,0.04);
+  background: var(--color-bg-light);
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(0,0,0,0.04);
 }
 
+/* 카드 하단 정보 */
 .card-meta-details {
-    display: flex;
-    gap: 25px;
-    font-size: 14px;
-    color: var(--color-text-light);
+  display: flex;
+  gap: 25px;
+  font-size: var(--font-caption);
+  color: var(--color-text-light);
 }
 
+.card-meta-details span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 아이콘 색 */
 .card-meta-details svg {
-    font-size: 14px;
-    color: var(--color-accent);
+  font-size: 14px;
+  color: var(--color-accent);
 }
 
 /* 좋아요 */
 .likes {
-    font-size: 14px;
-    font-weight: var(--fw-medium);
+  font-size: var(--font-caption);
+  font-weight: var(--fw-medium);
 }
 
 .likes svg {
-    color: var(--color-sub);
-}
-
-.card-meta-details span {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  color: var(--color-main);
 }

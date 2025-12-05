@@ -1,0 +1,46 @@
+/* 태그 기본 */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  border-radius: var(--tag-radius);
+  width: fit-content;
+}
+
+/* 태그 크기 */
+.tag-small {
+  padding: var(--tag-small-padding);
+  font-size: var(--tag-small-font-size);
+}
+
+.tag-large {
+  padding: var(--tag-large-padding);
+  font-size: var(--tag-large-font-size);
+}
+
+/* 태그 색상 */
+.tag-regular {
+  background: var(--tag-bg-regular);
+  color: var(--tag-color-regular);
+}
+
+.tag-flash {
+  background: var(--tag-bg-flash);
+  color: var(--tag-color-flash);
+}
+
+.tag-drawing {
+  background: var(--tag-bg-drawing);
+  color: var(--tag-color-drawing);
+}
+
+.tag-open {
+  background: var(--tag-bg-open);
+  color: var(--tag-color-open);
+}
+
+.tag-closed {
+  background: var(--tag-bg-closed);
+  color: var(--tag-color-closed);
+}
+
