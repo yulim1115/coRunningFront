@@ -1,5 +1,5 @@
 /* CrewCreatePage.jsx */
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import "./CrewCreatePage.css";
 import RegionSelector from "../../components/common/RegionSelector";
@@ -24,7 +24,14 @@ function CrewCreatePage() {
     !boardType ||
     !recruitCount ||
     !deadline;
-
+  // 로그인 상태 확인
+  useEffect(() => {
+    const isLogin = sessionStorage.getItem("isLogin") === "true";
+    if (!isLogin) {
+      alert("코스 등록은 로그인 후 이용 가능합니다.");
+      navigate("/login");
+    }
+  }, [navigate]);
   // 등록 요청
   const handleSubmit = async (e) => {
     e.preventDefault();

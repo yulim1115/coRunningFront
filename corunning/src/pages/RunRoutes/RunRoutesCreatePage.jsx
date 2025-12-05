@@ -4,10 +4,22 @@ import * as turf from "@turf/turf";
 import RegionSelector from "../../components/common/RegionSelector";
 import { FiChevronDown } from "react-icons/fi";
 import "./RunRoutesCreatePage.css";
+import { useNavigate } from "react-router-dom";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
 function RunRoutesCreatePage() {
+  const navigate = useNavigate();
+
+  // 로그인 상태 확인
+  useEffect(() => {
+    const isLogin = sessionStorage.getItem("isLogin") === "true";
+    if (!isLogin) {
+      alert("코스 등록은 로그인 후 이용 가능합니다.");
+      navigate("/login");
+    }
+  }, [navigate]);
+
   // 상태값
   const [routeCoords, setRouteCoords] = useState([]);
   const [snappedCoords, setSnappedCoords] = useState([]);
