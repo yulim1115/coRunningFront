@@ -81,3 +81,15 @@ export const getApplicationsAPI = async(crewId) => {
         throw error;
     }
 }
+
+//대시보드 가져오기
+export const getDashboardAPI = async() => {
+    try{
+        const response = await axios.get(`/api/mypage/dashboard`, {withCredentials: true} )
+        console.log("대시보드 가져오기 API 응답 : ",response.data);
+        return response.data;
+    }catch(error){
+        console.error("대시보드 가져오기 실패 : error");
+        throw error;
+    }
+}
