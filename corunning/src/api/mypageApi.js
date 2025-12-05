@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useState} from "react";
 
 //아이디로 회원정보 가져오기
 export const getUserAPI = async (userId) => {

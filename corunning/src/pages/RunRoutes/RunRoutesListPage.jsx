@@ -1,5 +1,5 @@
 // src/pages/RunRoutes/RunRoutesListPage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./RunRoutesListPage.css";
 
@@ -42,7 +42,7 @@ function RunRoutesListPage() {
     }
   };
 
-  const applyFilter = () => {
+  const applyFilter = useCallback(() => {
     let filtered = [...originRoutes];
 
     if (region !== "전체 지역") {
@@ -66,7 +66,8 @@ function RunRoutesListPage() {
     if (sort === "popular") filtered.sort((a, b) => b.likes - a.likes);
 
     setRoutes(filtered);
-  };
+  }, [originRoutes, region, difficultyFilter, typeFilter, sort]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,7 +108,7 @@ function RunRoutesListPage() {
 
   useEffect(() => {
     applyFilter();
-  }, [region, difficultyFilter, typeFilter, sort, originRoutes]);
+  }, [applyFilter]);
 
   const handleReset = () => {
     setSort("latest");
