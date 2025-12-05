@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
-import "../../styles/Global.css";
 import "./SignUpPage.css";
 import { signUpAPI } from "../../api/userApi";
 

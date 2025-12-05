@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Global Styles
 import "./styles/Global.css";
+import "./styles/components/Buttons.css";
+import "./styles/components/Tags.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import ScrollToTop from "./components/ScrollToTop";
 
