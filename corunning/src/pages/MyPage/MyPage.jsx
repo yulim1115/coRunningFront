@@ -93,6 +93,7 @@ function MyPage() {
     e.preventDefault();
     try {
       await updateUserAPI(userData.userId, updateData);
+      setActiveContent("dashboard");
       alert("프로필/계정 정보 수정이 완료되었습니다.");
     } catch (error) {
       console.error("프로필/계정 정보 수정 실패:", error);
