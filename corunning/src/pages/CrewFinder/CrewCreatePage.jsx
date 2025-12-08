@@ -30,6 +30,7 @@ function CrewCreatePage() {
     if (!isLogin) {
       alert("코스 등록은 로그인 후 이용 가능합니다.");
       navigate("/login");
+      return null;
     }
   }, [navigate]);
   // 등록 요청
