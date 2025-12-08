@@ -11,18 +11,17 @@ import {
   updateDip
 } from "../../api/routesApi";
 
+// 현재 사용자 ID 가져오기
 const getCurrentUserId = () => {
-  return (
-    sessionStorage.getItem("userEmail")
-  );
+  return sessionStorage.getItem("userEmail");
 };
 
 export default function RunLogPage() {
   const navigate = useNavigate();
   const userId = getCurrentUserId();
 
-  const [savedCourses, setSavedCourses] = useState([]); // complete=false
-  const [records, setRecords] = useState([]); // complete=true
+  const [savedCourses, setSavedCourses] = useState([]); // 저장된 코스
+  const [records, setRecords] = useState([]); // 완주 기록
 
   const [loading, setLoading] = useState(true);
 
@@ -32,11 +31,7 @@ export default function RunLogPage() {
   const [inputValues, setInputValues] = useState({});
   const [editValues, setEditValues] = useState({});
 
-  /** -------------------------
-   * 데이터 로딩
-   * -------------------------
-   */
-  
+  // 데이터 로딩
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
@@ -86,6 +81,7 @@ export default function RunLogPage() {
       setLoading(false);
     }
   }, [userId]);
+
   useEffect(() => {
     if (!userId) {
       alert("로그인 후 이용해주세요.");
@@ -95,11 +91,7 @@ export default function RunLogPage() {
     loadData();
   }, [userId, navigate, loadData]);
 
-
-  /** -------------------------
-   * 저장한 코스 입력값
-   * -------------------------
-   */
+  // 저장한 코스 입력값 업데이트
   const updateInput = (dipId, field, value) => {
     setInputValues((prev) => ({
       ...prev,
@@ -107,10 +99,7 @@ export default function RunLogPage() {
     }));
   };
 
-  /** -------------------------
-   * 기록 저장 (complete = true 로 변경)
-   * -------------------------
-   */
+  // 완주 기록 저장
   const submitFinish = async (course) => {
     const { date, time } = inputValues[course.dipId] || {};
     if (!date || !time) return alert("날짜와 시간을 입력해주세요.");
@@ -120,12 +109,10 @@ export default function RunLogPage() {
     try {
       await updateDip(course.dipId, true, record);
 
-      // savedCourses에서 제거
       setSavedCourses((prev) =>
         prev.filter((c) => c.dipId !== course.dipId)
       );
 
-      // records에 추가
       const newRecord = {
         id: course.dipId,
         dipId: course.dipId,
@@ -148,10 +135,7 @@ export default function RunLogPage() {
     }
   };
 
-  /** -------------------------
-   * 기록 수정
-   * -------------------------
-   */
+  // 기록 수정 입력값 업데이트
   const updateEditInput = (id, field, value) => {
     setEditValues((prev) => ({
       ...prev,
@@ -159,6 +143,7 @@ export default function RunLogPage() {
     }));
   };
 
+  // 기록 수정 저장
   const submitEditRecord = async (record) => {
     const date = editValues[record.id]?.date || record.rawDate;
     const time = editValues[record.id]?.time || record.time;
@@ -188,20 +173,15 @@ export default function RunLogPage() {
     }
   };
 
-  /** -------------------------
-   * 기록 삭제 → complete=false 로 되돌리기
-   * -------------------------
-   */
+  // 기록 삭제 후 저장한 코스로 되돌리기
   const deleteRec = async (record) => {
     if (!window.confirm("기록을 삭제하시겠습니까?")) return;
 
     try {
       await updateDip(record.dipId, false, "00:00:00");
 
-      // records에서 제거
       setRecords((prev) => prev.filter((r) => r.id !== record.id));
 
-      // savedCourses에 다시 추가
       const restoredItem = {
         dipId: record.dipId,
         routeId: record.routeId,
@@ -220,10 +200,7 @@ export default function RunLogPage() {
     }
   };
 
-  /** -------------------------
-   * 찜 삭제
-   * -------------------------
-   */
+  // 찜 삭제
   const handleRemoveDip = async (course) => {
     if (!window.confirm("삭제하시겠습니까?")) return;
     try {
@@ -236,155 +213,165 @@ export default function RunLogPage() {
     }
   };
 
-  /** -------------------------
-   * 렌더링
-   * -------------------------
-   */
-
+  // 로딩 화면
   if (loading) {
-      return (
-        <div className="runlog-wrapper">
-          <h2 className="runlog-title">Run Log</h2>
+    return (
+      <div className="runlog-wrapper">
+        <h2 className="runlog-title">Run Log</h2>
 
-          <div className="section-box">
-            <div className="skeleton skeleton-title"></div>
-            <div className="skeleton skeleton-card"></div>
-            <div className="skeleton skeleton-card"></div>
-          </div>
-
-          <div className="section-box">
-            <div className="skeleton skeleton-title"></div>
-            <div className="skeleton skeleton-card"></div>
-            <div className="skeleton skeleton-card"></div>
-          </div>
+        <div className="section-box">
+          <div className="skeleton skeleton-title"></div>
+          <div className="skeleton skeleton-card"></div>
+          <div className="skeleton skeleton-card"></div>
         </div>
-      );
-    }
+
+        <div className="section-box">
+          <div className="skeleton skeleton-title"></div>
+          <div className="skeleton skeleton-card"></div>
+          <div className="skeleton skeleton-card"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="runlog-wrapper">
-      <h2 className="runlog-title">Run Log</h2>
-        <div className="section-box">
-          <h3>저장한 코스 ({savedCourses.length})</h3>
+    <main className="runlog-container">
 
-          {savedCourses.map((course) => (
-            <div key={course.dipId}>
-          <LogCard
-            type="saved"
-            item={course}
-            isOpen={openSavedIds[course.dipId]}
-            onMainButton={() =>
-              setOpenSavedIds((p) => ({
-            ...p,
-            [course.dipId]: !p[course.dipId]
-              }))
-            }
-          />
+      <div className="runlog-wrapper">
 
-          {openSavedIds[course.dipId] && (
-            <div className="input-form-large">
-              <p className="form-title">완주 기록 입력</p>
+        {/* 상단 제목 */}
+        <section className="runlog-title-section">
+          <h1 className="runlog-title">Run Log</h1>
+        </section>
 
-              <div className="two-cols">
-            <div className="form-row">
-              <label>날짜</label>
-              <input
-                type="date"
-                value={inputValues[course.dipId]?.date || ""}
-                onChange={(e) =>
-              updateInput(course.dipId, "date", e.target.value)
-                }
-              />
-            </div>
-            <div className="form-row">
-              <label>시간</label>
-              <input
-                type="time"
-                step="1"
-                value={inputValues[course.dipId]?.time || ""}
-                onChange={(e) =>
-              updateInput(course.dipId, "time", e.target.value)
-                }
-              />
-            </div>
+        {/* 저장한 코스 */}
+        <section className="section-box">
+          <header className="title-section">
+            <h3>
+              저장한 코스 <span>({savedCourses.length})</span>
+            </h3>
+          </header>
+
+          <div className="saved-list">
+            {savedCourses.map((course) => (
+              <div key={course.dipId} className="saved-item">
+                <LogCard
+                  type="saved"
+                  item={course}
+                  isOpen={openSavedIds[course.dipId]}
+                  onMainButton={() =>
+                    setOpenSavedIds((p) => ({
+                      ...p,
+                      [course.dipId]: !p[course.dipId]
+                    }))
+                  }
+                />
+
+                {openSavedIds[course.dipId] && (
+                  <div className="input-form-large">
+                    <p className="form-title">완주 기록 입력</p>
+
+                    <div className="two-cols">
+                      <div className="form-row">
+                        <label>날짜</label>
+                        <input
+                          type="date"
+                          value={inputValues[course.dipId]?.date || ""}
+                          onChange={(e) =>
+                            updateInput(course.dipId, "date", e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div className="form-row">
+                        <label>시간</label>
+                        <input
+                          type="time"
+                          step="1"
+                          value={inputValues[course.dipId]?.time || ""}
+                          onChange={(e) =>
+                            updateInput(course.dipId, "time", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <button className="btn btn-small btn-green" onClick={() => submitFinish(course)}>
+                      기록 저장
+                    </button>
+                  </div>
+                )}
               </div>
+            ))}
 
-              <button
-            className="btn-submit"
-            onClick={() => submitFinish(course)}
-              >
-            기록 저장
-              </button>
-            </div>
-          )}
-            </div>
-          ))}
-
-          {savedCourses.length === 0 && (
-            <p className="empty">저장한 코스가 없습니다.</p>
-          )}
-        </div>
+            {savedCourses.length === 0 && <p className="empty">저장한 코스가 없습니다.</p>}
+          </div>
+        </section>
 
         {/* 완주 기록 */}
-      <div className="section-box">
-        <h3>완주 기록 ({records.length})</h3>
+        <section className="section-box">
+          <header className="title-section">
+            <h3>
+              완주 기록 <span>({records.length})</span>
+            </h3>
+          </header>
 
-        {records.map((record) => (
-          <div key={record.id}>
-            <LogCard
-              type="record"
-              item={record}
-              isOpen={editingRecordIds[record.id]}
-              onMainButton={() =>
-                setEditingRecordIds((p) => ({
-                  ...p,
-                  [record.id]: !p[record.id]
-                }))
-              }
-              onCancel={() => deleteRec(record)}
-              onDelete={() => handleRemoveDip(record)}
-            />
+          <div className="record-list">
+            {records.map((record) => (
+              <div key={record.id} className="record-item">
+                <LogCard
+                  type="record"
+                  item={record}
+                  isOpen={editingRecordIds[record.id]}
+                  onMainButton={() =>
+                    setEditingRecordIds((p) => ({
+                      ...p,
+                      [record.id]: !p[record.id]
+                    }))
+                  }
+                  onCancel={() => deleteRec(record)}
+                  onDelete={() => handleRemoveDip(record)}
+                />
 
-            {editingRecordIds[record.id] && (
-              <div className="input-form-large">
-                <p className="form-title">기록 수정</p>
+                {editingRecordIds[record.id] && (
+                  <div className="input-form-large">
+                    <p className="form-title">기록 수정</p>
 
-                <div className="two-cols">
-                  <div className="form-row">
-                    <label>날짜</label>
-                    <input
-                      type="date"
-                      defaultValue={record.rawDate}
-                      onChange={(e) =>
-                        updateEditInput(record.id, "date", e.target.value)
-                      }
-                    />
+                    <div className="two-cols">
+                      <div className="form-row">
+                        <label>날짜</label>
+                        <input
+                          type="date"
+                          defaultValue={record.rawDate}
+                          onChange={(e) =>
+                            updateEditInput(record.id, "date", e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div className="form-row">
+                        <label>시간</label>
+                        <input
+                          type="time"
+                          step="1"
+                          defaultValue={record.time}
+                          onChange={(e) =>
+                            updateEditInput(record.id, "time", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <button className="btn-submit" onClick={() => submitEditRecord(record)}>
+                      수정 완료
+                    </button>
                   </div>
-
-                  <div className="form-row">
-                    <label>시간</label>
-                    <input
-                      type="time"
-                      step="1"
-                      defaultValue={record.time}
-                      onChange={(e) =>
-                        updateEditInput(record.id, "time", e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-
-                <button
-                  className="btn-submit"
-                  onClick={() => submitEditRecord(record)}
-                >
-                  수정 완료
-                </button>
+                )}
               </div>
-            )}
+            ))}
           </div>
-        ))}
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

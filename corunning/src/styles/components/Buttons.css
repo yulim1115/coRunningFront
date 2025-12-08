@@ -126,3 +126,41 @@
 .btn-outline:hover {
   background: var(--color-bg-light);
 }
+
+/* 위험 아웃라인 */
+.btn-outline-danger {
+  border: 1px solid var(--color-red);
+  background: rgba(255, 82, 82, 0.06);
+  color: var(--color-red);
+}
+
+.btn-outline-danger:hover {
+  background: rgba(255, 82, 82, 0.14);
+}
+
+/* accent 테두리 */
+.btn-outline-accent {
+  border: 1px solid var(--color-accent);
+  background: rgba(41, 121, 255, 0.03);
+  color: var(--color-accent);
+  cursor: pointer;
+}
+
+.btn-outline-accent:hover {
+  background: rgba(41, 121, 255, 0.12);
+  border-color: var(--color-accent);
+}
+
+
+/* 연한 회색 테두리 */
+.btn-outline-soft {
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-text-dark);
+  cursor: pointer;
+}
+
+.btn-outline-soft:hover {
+  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-bg-light);
+}

@@ -1,0 +1,73 @@
+/* 카드 */
+.logcard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: var(--space-sm);
+  color: var(--color-text-dark);
+  border-radius: var(--card-radius);
+  border: 1px solid var(--color-border);
+  transition: 0.25s ease;
+}
+
+/* 카드 왼쪽 영역 */
+.logcard .logcard-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* 제목과 날짜 시간 한 줄 배치 */
+.logcard-top-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* 제목 */
+.logcard .logcard-title {
+  font-size: var(--font-small);
+  font-weight: var(--fw-bold);
+  color: var(--color-main);
+}
+
+/* 완주 날짜 시간 */
+.logcard-run-inline {
+  font-size: var(--font-small);
+  font-weight: var(--fw-medium);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.logcard-run-inline .divider {
+  color: var(--color-border);
+}
+
+/* 메타 정보 영역 */
+.logcard .card-meta-details {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-caption);
+  color: var(--color-text-light);
+}
+
+.logcard .card-meta-details span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.logcard .card-meta-details svg {
+  font-size: 10px;
+  color: var(--color-text-dark);
+}
+
+/* 카드 오른쪽 버튼 영역 */
+.logcard-right button {
+    font-size: var(--font-caption);
+    margin-left: var(--space-sm);
+}
