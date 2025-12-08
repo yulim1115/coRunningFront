@@ -1,159 +1,194 @@
-/* 회원가입 페이지 전체 레이아웃 */
-.signup-wrapper {
+/* 회원가입 레이아웃 */
+.signup-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
   padding: 60px 0;
   background-color: var(--color-bg-light);
+  color: var(--color-text-dark);
 }
 
-/* 회원가입 박스 카드 */
-.signup-box {
-  margin: 40px auto;
+/* 회원가입 카드 */
+.signup-container .signup-wrapper {
   width: 540px;
   background: var(--color-bg);
-  padding: 40px 80px;
-  border-radius: 8px;
+  padding: 40px 60px;
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-card);
-}
-
-/* 내부 요소 기본 그림자 제거 */
-.signup-box * {
-  box-shadow: none !important;
+  margin: var(--space-xl) auto;
 }
 
 /* 제목 */
-.signup-box h2 {
-  font-size: var(--font-h1);
+.signup-container .signup-title {
+  font-size: var(--font-h2);
   text-align: center;
-  color: var(--color-text-dark);
-  margin-bottom: 20px;
   font-weight: var(--fw-bold);
+  color: var(--color-main);
 }
 
-/* 기본 form-group */
-.form-group {
-  margin-bottom: 14px;
+/* 입력 폼 */
+.signup-container .signup-form {
+  margin-top: var(--space-md);
+  display: flex;
+  flex-direction: column;
 }
 
-/* 주소 그룹은 간격을 더 좁게 */
-.address-group .form-group {
+/* 입력 그룹 */
+.signup-container .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-md);
+}
+
+/* 주소 입력 그룹 */
+.signup-container .address-group .form-group {
   margin-bottom: 8px;
 }
 
-/* label */
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: var(--font-caption);
-  color: var(--color-text-light);
+/* 라벨 */
+.signup-container .form-label {
+  font-size: var(--font-small);
   font-weight: var(--fw-medium);
+  margin-bottom: var(--space-xs);
 }
 
-/* input */
-.form-group input {
-  width: 100%;
-  height: 48px;
-  padding: 0 12px;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  font-size: 14px;
-  background: var(--color-bg);
-  box-sizing: border-box;
-  outline: none;
+.signup-container .required {
+  color: var(--color-red);
 }
 
-.form-group input:focus {
-  border-color: var(--color-accent);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(74,105,187,0.15);
+/* date input 스타일 통일 */
+.signup-container input[type="date"] {
+  font-family: 'Noto Sans KR', sans-serif;
+  padding-right: 10px;
+  padding-left: 12px; /* placeholder처럼 보일 텍스트 공간 확보 */
+  position: relative;
 }
 
-/* 주소 입력 행 */
-.address-row {
+/* 입력 영역 폰트 통일 */
+.signup-container input[type="date"]::-webkit-datetime-edit,
+.signup-container input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 달력 아이콘 스타일 */
+.signup-container input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: grayscale(60%);
+  opacity: 0.7;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.signup-container input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* 선택 전 - 흐린 텍스트 */
+.signup-container .date-empty {
+  color: transparent; /* 내부 텍스트를 숨기고 가짜 placeholder로 대체 */
+}
+
+.signup-container .date-empty::-webkit-datetime-edit {
+  color: transparent;
+}
+
+/* 가짜 placeholder (YYYY-MM-DD 표시) */
+.signup-container .date-empty::before {
+  content: "YYYY-MM-DD";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-light);
+  pointer-events: none;
+  font-size: var(--font-caption);
+}
+
+/* 선택 후 - 기존 텍스트 색 */
+.signup-container .date-filled {
+  color: var(--color-text-dark);
+}
+
+.signup-container .date-filled::-webkit-datetime-edit {
+  color: var(--color-text-dark);
+}
+
+
+/* 주소 입력 한 줄 정렬 */
+.signup-container .address-row {
   display: flex;
-  gap: 10px;
-  width: 100%;
+  gap: var(--space-sm);
 }
 
-/* 우편번호 input 크기 */
-.address-row input {
-  width: 70%;
-  min-width: 120px;
+.signup-container .address-row input:first-child {
+  flex: 1;
 }
 
 /* 주소 검색 버튼 */
-.address-search-btn {
-  flex: 1;
-  height: var(--btn-large-height);
-  background: var(--color-sub);
-  color: var(--color-white);
-  border-radius: 6px;
-  border: none;
-  font-size: 14px;
-  font-weight: var(--fw-bold);
-  white-space: nowrap;
-  transition: 0.2s;
+.signup-container .address-row button {
+  width: 120px;
 }
 
-.address-search-btn:hover {
-  background: var(--color-sub-hover);
+/* 주소 그룹 시작은 기본 form 간격 유지 */
+.signup-container .address-group {
+  margin-top: var(--space-md);
+}
+
+/* 주소 입력 영역 간격 조절 */
+.signup-container .address-group .form-group {
+  margin-top: var(--space-xs);
+  margin-bottom: 6px; 
+}
+
+/* 마지막 상세주소는 아래 여백 유지 */
+.signup-container .address-group .form-group:last-child {
+  margin-bottom: var(--space-md);
 }
 
 /* 회원가입 버튼 */
-.signup-submit-btn {
+.signup-container .signup-btn {
   width: 100%;
-  height: var(--btn-large-height);
-  background: var(--color-main);
-  color: var(--color-white);
-  font-size: 16px;
+  margin-top: var(--space-sm);
+  font-size: var(--font-body);
   font-weight: var(--fw-bold);
-  border-radius: 6px;
-  border: none;
-  margin-top: 30px;
 }
 
-.signup-submit-btn:disabled {
-  background: #A8B4D6;
+.signup-container .signup-btn:disabled {
+  background: var(--color-bg-gray);
+  color: var(--color-text-dark);
   cursor: not-allowed;
-}
-
-.signup-submit-btn:hover:not(:disabled) {
-  opacity: 0.9;
+  opacity: 0.6;
 }
 
 /* 로그인 안내 */
-.login-guide {
-  margin-top: 12px;
+.signup-container .login-guide {
+  margin-top: var(--space-sm);
   text-align: center;
-  font-size: 12px;
-  font-weight: var(--fw-regular);
+  font-size: var(--font-caption);
   color: var(--color-text-light);
 }
 
 /* 로그인 링크 */
-.link-text {
+.signup-container .link-text {
   color: var(--color-accent);
-  font-size: 14px;
+  font-size: var(--font-small);
   font-weight: var(--fw-medium);
-  margin-left: 6px;
+  margin-left: var(--space-xs);
 }
 
-.link-text:hover {
+.signup-container .link-text:hover {
   color: var(--color-accent-hover);
   cursor: pointer;
 }
 
-/* 비밀번호 메시지 */
-.valid-msg {
-  font-size: 12px;
-  margin-top: 6px;
+/* 비밀번호 유효 메시지 */
+.signup-container .valid-msg {
+  font-size: var(--font-caption);
+  margin-top: var(--space-xs);
 }
 
-.valid-msg.error {
+.signup-container .valid-msg.error {
   color: var(--color-red);
 }
 
-.valid-msg.success {
+.signup-container .valid-msg.success {
   color: var(--color-green);
 }

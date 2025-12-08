@@ -59,7 +59,7 @@ export default function RegionSelector({ value, onChange }) {
   return (
     <div className="region-selector" style={{ display: "flex", gap: "10px" }}>
       {/* 시/도 */}
-      <div className="select-wrap">
+      <div className="custom-select">
         <select value={sidoCode} onChange={handleSidoChange}>
           <option value="" hidden>시/도 선택</option>
           {sidoList.map((item) => (
@@ -72,7 +72,7 @@ export default function RegionSelector({ value, onChange }) {
       </div>
 
       {/* 구 */}
-      <div className="select-wrap">
+      <div className="custom-select">
         <select
           value={guCode}
           onChange={handleGuChange}

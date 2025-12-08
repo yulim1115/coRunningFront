@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
-import logoImg from "../../assets/images/logo.png";
+import logoImg from "../../assets/images/logo02.png";
 import { logoutAPI } from "../../api/userApi";
 
 function Header() {
@@ -52,30 +52,24 @@ function Header() {
           </Link>
         </nav>
 
-        {/* 로그인 / 로그아웃 버튼 */}
+        {/* 로그인 / 로그아웃 / 회원가입 */}
         <div className="auth-area">
           {!isLogin ? (
             <>
-              <button
-                className="btn btn-login btn-small"
-                onClick={() => navigate("/login")}
-              >
+              <button className="header-link" onClick={() => navigate("/login")}>
                 로그인
               </button>
-
-              <button
-                className="btn btn-signup btn-small"
-                onClick={() => navigate("/signup")}
-              >
+              <button className="header-link" onClick={() => navigate("/signup")}>
                 회원가입
               </button>
             </>
           ) : (
-            <button className="btn btn-logout btn-small" onClick={handleLogout}>
+            <button className="header-link" onClick={handleLogout}>
               로그아웃
             </button>
           )}
         </div>
+        
       </div>
     </header>
   );

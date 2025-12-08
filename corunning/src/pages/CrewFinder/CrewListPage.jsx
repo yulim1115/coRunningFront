@@ -3,17 +3,22 @@ import { useNavigate } from "react-router-dom";
 
 import "./CrewListPage.css";
 
-import { FaUserPlus, FaHeart, FaCommentDots } from "react-icons/fa";
-
+import { FaUserPlus } from "react-icons/fa";
 import { getCrewList } from "../../api/crewApi.js";
 
 function CrewListPage() {
   const navigate = useNavigate();
+
+  // 크루 목록
   const [crewList, setCrewList] = useState([]);
+
+  // 타입 필터 (정기/번개/드로잉)
   const [activeType, setActiveType] = useState("NORMAL");
+
+  // 모집 상태 필터 (전체/모집중/마감)
   const [statusFilter, setStatusFilter] = useState("ALL");
 
-  /* 데이터 로드 */
+  // 크루 데이터 불러오기
   useEffect(() => {
     const fetchCrews = async () => {
       try {
@@ -27,26 +32,23 @@ function CrewListPage() {
     fetchCrews();
   }, []);
 
-  /* 모집 마감 여부 계산 */
+  // 모집 마감 여부 체크
   const isClosed = (recruitCount, currentCount, deadline) => {
     const max = Number(recruitCount);
     const cur = Number(currentCount);
-
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const d = new Date(deadline);
-
     if (!isNaN(d.getTime()) && d < today) return true;
     return cur >= max;
   };
 
-  /* 모집 상태 텍스트 */
-  const recruitStateText = (recruitCount, currentCount, deadline) => {
-    return isClosed(recruitCount, currentCount, deadline) ? "모집마감" : "모집중";
-  };
+  // 모집 상태 텍스트
+  const recruitStateText = (recruitCount, currentCount, deadline) =>
+    isClosed(recruitCount, currentCount, deadline) ? "모집마감" : "모집중";
 
-  /* 타입 상단 색상 */
+  // 카드 상단 색상 스타일
   const getTypeTopClass = (type) => {
     switch (type) {
       case "FLASH":
@@ -59,7 +61,7 @@ function CrewListPage() {
     }
   };
 
-  /* 타입 텍스트 라벨(카드) */
+  // 카드 태그 간단 텍스트
   const getTypeLabel = (type) => {
     switch (type) {
       case "FLASH":
@@ -68,11 +70,11 @@ function CrewListPage() {
         return "드로잉";
       case "NORMAL":
       default:
-        return "일반";
+        return "정기";
     }
   };
 
-  /* 타입 텍스트 라벨(타이틀)*/
+  // 타이틀에 표시되는 풀텍스트
   const getTypeFullLabel = (type) => {
     switch (type) {
       case "FLASH":
@@ -85,8 +87,7 @@ function CrewListPage() {
     }
   };
 
-
-  /* 타입 테두리 스타일 */  // 사용 안함
+  // 타입 태그 스타일 클래스
   const getTypeTagClass = (type) => {
     switch (type) {
       case "FLASH":
@@ -99,35 +100,29 @@ function CrewListPage() {
     }
   };
 
-  /* 필터 통합 적용 */
+  // 필터 조건 적용
   const filteredList = crewList.filter((crew) => {
     if (crew.boardType !== activeType) return false;
-
-    const closed = isClosed(
-      crew.recruitCount,
-      crew.currentCount,
-      crew.deadline
-    );
-
+    const closed = isClosed(crew.recruitCount, crew.currentCount, crew.deadline);
     if (statusFilter === "OPEN" && closed) return false;
     if (statusFilter === "CLOSED" && !closed) return false;
-
     return true;
   });
 
   return (
-    <div className="crew-page-wrapper">
-      {/* 페이지 헤더 */}
+    <main className="crews-container">
+
+      {/* 페이지 상단 헤더 */}
       <section className="page-header-area">
         <h1>Crew Finder</h1>
       </section>
 
-      {/* 등록 안내 */}
+      {/* 크루 등록 안내 */}
       <div className="registration-notice">
         <p>함께 달릴 크루를 모집하고 싶으신가요?</p>
 
         <button
-          className="register-crew-btn"
+          className="btn btn-main btn-large btn-hover-float"
           onClick={() => navigate("/crews/create")}
         >
           <FaUserPlus />
@@ -139,6 +134,7 @@ function CrewListPage() {
       <section className="crew-tabs-area">
         <div className="crew-tabs">
           <button
+            data-type="NORMAL"
             className={`crew-tab ${activeType === "NORMAL" ? "active" : ""}`}
             onClick={() => setActiveType("NORMAL")}
           >
@@ -146,6 +142,7 @@ function CrewListPage() {
           </button>
 
           <button
+            data-type="FLASH"
             className={`crew-tab ${activeType === "FLASH" ? "active" : ""}`}
             onClick={() => setActiveType("FLASH")}
           >
@@ -153,6 +150,7 @@ function CrewListPage() {
           </button>
 
           <button
+            data-type="DRAWING"
             className={`crew-tab ${activeType === "DRAWING" ? "active" : ""}`}
             onClick={() => setActiveType("DRAWING")}
           >
@@ -161,10 +159,11 @@ function CrewListPage() {
         </div>
       </section>
 
-      {/* 상태 필터 */}
+      {/* 모집 상태 필터 */}
       <section className="filter-controls-area">
         <div className="status-filter-group">
           <button
+            data-status="ALL"
             className={`status-chip ${statusFilter === "ALL" ? "active" : ""}`}
             onClick={() => setStatusFilter("ALL")}
           >
@@ -172,6 +171,7 @@ function CrewListPage() {
           </button>
 
           <button
+            data-status="OPEN"
             className={`status-chip ${statusFilter === "OPEN" ? "active" : ""}`}
             onClick={() => setStatusFilter("OPEN")}
           >
@@ -179,48 +179,38 @@ function CrewListPage() {
           </button>
 
           <button
-            className={`status-chip ${
-              statusFilter === "CLOSED" ? "active" : ""
-            }`}
+            data-status="CLOSED"
+            className={`status-chip ${statusFilter === "CLOSED" ? "active" : ""}`}
             onClick={() => setStatusFilter("CLOSED")}
           >
             모집마감
           </button>
         </div>
-
-        <p className="crew-count">총 {filteredList.length}개의 크루</p>
       </section>
 
       {/* 섹션 타이틀 */}
-      <h2 className="crew-section-title">{getTypeFullLabel(activeType)}</h2>
+      <section className="crew-section-header">
+        <h2 className="crew-section-title">{getTypeFullLabel(activeType)}</h2>
+        <p className="crew-section-count">총 {filteredList.length}개의 크루</p>
+      </section>
 
-      {/* 리스트 */}
+      {/* 리스트 영역 */}
       {filteredList.length === 0 ? (
         <div className="crew-empty">조건에 해당하는 크루가 없습니다.</div>
       ) : (
         <section className="crew-list-grid">
           {filteredList.map((crew) => {
-            const closed = isClosed(
-              crew.recruitCount,
-              crew.currentCount,
-              crew.deadline
-            );
+            const closed = isClosed(crew.recruitCount, crew.currentCount, crew.deadline);
 
             return (
               <div
                 key={crew.id}
-                className="crew-card"
+                className="card-base crew-card"
                 onClick={() => navigate(`/crews/${crew.id}`)}
               >
-                <div
-                  className={`card-image-wrapper ${getTypeTopClass(
-                    crew.boardType
-                  )}`}
-                >
+                <div className={`${getTypeTopClass(crew.boardType)}`}>
                   <div
-                    className={`recruitment-tag ${
-                      closed ? "closed" : "recruiting"
-                    }`}
+                    className={`recruitment-tag ${closed ? "closed" : "recruiting"}`}
                   >
                     {recruitStateText(
                       crew.recruitCount,
@@ -232,9 +222,7 @@ function CrewListPage() {
 
                 <div className="crew-content">
                   <div className="crew-tag-row">
-                    <span
-                      className={`tag-type ${getTypeTagClass(crew.boardType)}`}
-                    >
+                    <span className={`tag-type ${getTypeTagClass(crew.boardType)}`}>
                       {getTypeLabel(crew.boardType)}
                     </span>
 
@@ -245,10 +233,10 @@ function CrewListPage() {
 
                   <h3>{crew.title}</h3>
 
-                  <div className="crew-recruitment-status">
-                    모집 인원:&nbsp;
+                  <div className="crew-meta-item">
+                    <strong>모집 인원</strong>
                     <span className="highlight">{crew.currentCount}명</span>
-                    &nbsp;/ {crew.recruitCount}명
+                    / {crew.recruitCount}명
                   </div>
 
                   <div className="crew-meta-item">
@@ -266,7 +254,7 @@ function CrewListPage() {
           })}
         </section>
       )}
-    </div>
+    </main>
   );
 }
 

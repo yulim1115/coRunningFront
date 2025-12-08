@@ -56,7 +56,7 @@ function CrewCreatePage() {
   };
 
   return (
-    <main className="route-create-container">
+    <main className="crew-create-container">
       <div className="create-wrapper">
         <h1 className="create-title">크루 모집 등록</h1>
 
@@ -68,7 +68,6 @@ function CrewCreatePage() {
             </label>
             <input
               type="text"
-              className="input-field"
               placeholder="예 : 서울 야경 명소 크루, '@@@' 모집"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -81,7 +80,6 @@ function CrewCreatePage() {
               모집 글 내용 <span className="required">*</span>
             </label>
             <textarea
-              className="textarea-field"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="크루 소개, 준비물, 시간 등을 작성하세요."
@@ -92,7 +90,6 @@ function CrewCreatePage() {
           <div className="form-group">
             <label className="form-label">추천 코스 데이터 업로드 (선택)</label>
             <textarea
-              className="textarea-field"
               value={routePath}
               onChange={(e) => setRoutePath(e.target.value)}
               placeholder="RunRoutes에서 생성한 경로 JSON을 넣을 수 있습니다."
@@ -116,15 +113,15 @@ function CrewCreatePage() {
               <label className="form-label">
                 타입 <span className="required">*</span>
               </label>
-              <div className="select-wrap">
+              <div className="custom-select">
                 <select
                   value={boardType}
                   onChange={(e) => setBoardType(e.target.value)}
                 >
                   <option value="">선택</option>
-                  <option value="NORMAL">크루 모집</option>
-                  <option value="DRAWING">드로잉런</option>
-                  <option value="FLASH">번개런</option>
+                  <option value="NORMAL">정기 러닝</option>
+                  <option value="DRAWING">드로잉 러닝</option>
+                  <option value="FLASH">번개 러닝</option>
                 </select>
                 <FiChevronDown className="select-arrow" />
               </div>
@@ -137,7 +134,6 @@ function CrewCreatePage() {
               </label>
               <input
                 type="number"
-                className="input-field"
                 placeholder="예: 10"
                 min="1"
                 value={recruitCount}
@@ -152,7 +148,6 @@ function CrewCreatePage() {
               </label>
               <input
                 type="date"
-                className="input-field"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
               />
@@ -163,14 +158,14 @@ function CrewCreatePage() {
           <div className="create-btn-row">
             <button
               type="submit"
-              className="btn-medium main"
+              className="btn btn-medium btn-main btn-hover-float"
               disabled={isDisabled}
             >
-              등록
+              등록하기
             </button>
             <button
               type="button"
-              className="btn-medium"
+              className="btn btn-medium btn-soft"
               onClick={() => navigate("/crews")}
             >
               취소

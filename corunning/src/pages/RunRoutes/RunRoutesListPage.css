@@ -2,25 +2,24 @@
 .routes-container {
   width: 100%;
   max-width: var(--layout-max-width);
-  margin: 60px auto;
+  margin: var(--space-xxl) auto;
   padding: 0 40px;
   color: var(--color-text-dark);
 }
 
-/* 페이지 헤더 */
-.page-header-area {
+/* 상단 제목 */
+.routes-container .page-header-area {
   padding: 20px 0 10px;
 }
 
-.page-header-area h1 {
+.routes-container .page-header-area h1 {
   font-size: var(--font-h1);
   font-weight: var(--fw-bold);
   color: var(--color-main);
 }
 
 /* 등록 안내 박스 */
-.registration-notice {
-  margin-bottom: 30px;
+.routes-container .registration-notice {
   background: var(--color-bg-card);
   border-left: 6px solid var(--color-accent);
   border-radius: var(--card-radius);
@@ -34,8 +33,9 @@
   color: var(--color-main);
 }
 
-/* 필터 영역 전체 */
-.filter-controls-area {
+/* 필터 영역 */
+.routes-container .filter-controls-area {
+  margin-top: var(--space-lg);
   padding-bottom: 30px;
   display: flex;
   justify-content: space-between;
@@ -44,40 +44,42 @@
 }
 
 /* 필터 그룹 */
-.filter-group-wrapper {
+.routes-container .filter-group-wrapper {
   display: flex;
-  gap: 20px;
   align-items: center;
+  gap: 16px;
 }
 
 /* 필터 라벨 */
-.filter-group label {
+.routes-container .filter-group label {
   font-size: var(--font-caption);
   font-weight: var(--fw-medium);
-  margin-right: 6px;
+  margin-right: var(--space-xs);
 }
 
-/* 셀렉트 박스 */
-.custom-select {
+.routes-container .filter-group .custom-select {
   position: relative;
   width: 130px;
   display: inline-block;
 }
 
-/* 셀렉트 박스 선택 */
-.custom-select select {
-  width: 100%;
-  padding: 0 34px 0 12px;
-  height: 36px;
-  border-radius: 6px;
-  border: 1px solid var(--color-border);
-  font-size: var(--font-caption);
-  background: var(--color-white);
+/* 셀렉트 기본 */
+.routes-container .filter-group .custom-select select {
   appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 8px;
+  padding-left: 12px;
+}
+
+/* 셀렉트 작은 사이즈 */
+.routes-container .filter-group .custom-select select.select-small {
+  height: 40px;
+  padding-right: 34px;
 }
 
 /* 셀렉트 화살표 */
-.select-arrow {
+.routes-container .filter-group .select-arrow {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -86,57 +88,57 @@
   color: var(--color-text-light);
 }
 
-/* 초기화 텍스트 버튼 */
-.reset-button {
+/* 선택 시 화살표 색상 */
+.routes-container .filter-group .custom-select select:focus + .select-arrow {
+  color: var(--color-accent);
+}
+
+/* 초기화 버튼 */
+.routes-container .reset-button {
   background: none;
   border: none;
   font-size: var(--font-caption);
   color: var(--color-text-light);
-  padding: 0 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
-/* 초기화 버튼 hover */
-.reset-button:hover {
+.routes-container .reset-button:hover {
   color: var(--color-text-dark);
+  background: rgba(0,0,0,0.05);
 }
 
-/* 초기화 버튼 아이콘 크기 */
-.reset-button svg {
-  font-size: 11px;
+.routes-container .reset-button svg {
+  font-size: 10px;
 }
 
-.reset-button:hover {
-  color: var(--color-text-dark);
-}
-
-/* 총 개수 */
-.route-count {
+/* 필터 코스 개수 */
+.routes-container .route-count {
   color: var(--color-text-light);
   font-size: var(--font-caption);
-  padding-top: 6px;
+  padding-top: 8px;
 }
 
 /* 카드 간격 */
-.route-item {
-  margin-bottom: 15px;
+.routes-container .route-item {
+  margin-top: var(--space-md);
 }
 
 /* 카드 상단 */
-.route-card-content {
+.routes-container .route-card-content {
   padding: 16px 25px 10px 25px;
 }
 
-/* 제목 + 태그 그룹 */
-.card-title-group {
+/* 카드 제목 + 태그 */
+.routes-container .card-title-group {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.card-title-group h3 {
+.routes-container .card-title-group h3 {
   margin: 0;
   font-size: var(--font-h3);
   font-weight: var(--fw-bold);
@@ -144,7 +146,7 @@
 }
 
 /* 카드 하단 */
-.card-meta-details-wrapper {
+.routes-container .card-meta-details-wrapper {
   background: var(--color-bg-light);
   padding: 15px 25px;
   display: flex;
@@ -153,32 +155,73 @@
   border-top: 1px solid rgba(0,0,0,0.04);
 }
 
-/* 카드 하단 정보 */
-.card-meta-details {
+/* 카드 메타정보 */
+.routes-container .card-meta-details {
   display: flex;
-  gap: 25px;
+  gap: var(--space-md);
   font-size: var(--font-caption);
   color: var(--color-text-light);
 }
 
-.card-meta-details span {
+.routes-container .card-meta-details span {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-xs);
 }
 
-/* 아이콘 색 */
-.card-meta-details svg {
-  font-size: 14px;
+/* 카드 아이콘 */
+.routes-container .card-meta-details svg {
+  font-size: var(--font-caption);
   color: var(--color-accent);
 }
 
-/* 좋아요 */
-.likes {
+/* 좋아요 체크 */
+.routes-container .likes {
   font-size: var(--font-caption);
   font-weight: var(--fw-medium);
 }
 
-.likes svg {
+.routes-container .likes svg {
   color: var(--color-main);
+  margin-right: var(--space-xs);
+}
+
+/* 스켈레톤 */
+.routes-container .skeleton {
+  background: #e2e2e2;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.routes-container .skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+.routes-container .skeleton-page-title {
+  width: 200px;
+  height: 32px;
+  margin-bottom: 25px;
+}
+
+.routes-container .skeleton-btn {
+  width: 230px;
+  height: 48px;
+  margin-bottom: 30px;
+}
+
+.routes-container .skeleton-card-item {
+  width: 100%;
+  height: 120px;
+  margin-bottom: 15px;
+  border-radius: var(--card-radius);
 }

@@ -1,4 +1,4 @@
-// src/pages/SignUpPage/SignUpPage.jsx
+// 회원가입 페이지
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
@@ -8,33 +8,34 @@ import { signUpAPI } from "../../api/userApi";
 function SignUpPage() {
   const navigate = useNavigate();
 
-  /* 입력값 상태 */
+  // 입력값 상태
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [isPwMatch, setIsPwMatch] = useState(null);
-
   const [name, setName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [phone, setPhone] = useState("");
 
-  /* 주소 상태 */
+  // 주소 상태
   const [zipcode, setZipcode] = useState("");
   const [address, setAddress] = useState("");
   const [detailAddress, setDetailAddress] = useState("");
   const [showPostcode, setShowPostcode] = useState(false);
 
-  /* 에러 메시지 */
+  // 에러 메시지
   const [errorMsg, setErrorMsg] = useState("");
 
+  // 로그인 상태일 경우 차단
   useEffect(() => {
     const isLogin = sessionStorage.getItem("isLogin") === "true";
     if (isLogin) {
       alert("이미 로그인된 상태입니다.");
       window.history.back();
     }
-  })
-  /* 비밀번호 일치 체크 */
+  });
+
+  // 비밀번호 일치 체크
   useEffect(() => {
     if (passwordCheck.length > 0) {
       setIsPwMatch(password === passwordCheck);
@@ -43,14 +44,14 @@ function SignUpPage() {
     }
   }, [password, passwordCheck]);
 
-  /* 주소 검색 완료 */
+  // 주소 검색 결과 처리
   const onCompleteAddress = (data) => {
     setZipcode(data.zonecode);
     setAddress(data.address);
     setShowPostcode(false);
   };
 
-  /* 회원가입 요청 */
+  // 회원 가입 요청
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg("");
@@ -59,8 +60,8 @@ function SignUpPage() {
       userId: email,
       userPw: password,
       userName: name,
-      birthDate: birthDate,
-      phone: phone,
+      birthDate,
+      phone,
       userAddress: address + " " + detailAddress,
       hireDate: new Date().toISOString().slice(0, 10),
     };
@@ -72,140 +73,102 @@ function SignUpPage() {
     } catch (err) {
       setErrorMsg(
         err.response?.data?.message ||
-          "회원가입 실패! 이미 존재하는 정보일 수 있습니다."
+        "회원가입 실패! 이미 존재하는 정보일 수 있습니다."
       );
     }
   };
 
-  // 화면 진입 시 스크롤 맨 위
+  // 화면 진입 시 화면 상단
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
-  return (
-    <div className="signup-wrapper">
-      <div className="signup-box">
-        <h2>회원 가입</h2>
 
-        <form onSubmit={handleSubmit}>
+  return (
+    <div className="signup-container">
+      <div className="signup-wrapper">
+        <h2 className="signup-title">Sign Up</h2>
+
+        <form onSubmit={handleSubmit} className="signup-form">
 
           {/* 이메일 */}
           <div className="form-group">
-            <label>이메일 (ID) *</label>
-            <input
-              type="email"
-              placeholder="example@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <label className="form-label">이메일 (ID) <span className="required">*</span></label>
+            <input type="email" placeholder="example@email.com"
+              value={email} onChange={(e) => setEmail(e.target.value)}
+              required />
           </div>
 
           {/* 비밀번호 */}
           <div className="form-group">
-            <label>비밀번호 *</label>
-            <input
-              type="password"
-              placeholder="비밀번호를 입력해주세요"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <label className="form-label">비밀번호 <span className="required">*</span></label>
+            <input type="password" placeholder="비밀번호를 입력해주세요"
+              value={password} onChange={(e) => setPassword(e.target.value)}
+              required />
           </div>
 
           {/* 비밀번호 확인 */}
           <div className="form-group">
-            <label>비밀번호 확인 *</label>
-            <input
-              type="password"
-              placeholder="비밀번호를 다시 입력해주세요"
-              value={passwordCheck}
-              onChange={(e) => setPasswordCheck(e.target.value)}
-              required
-            />
-            {isPwMatch === false && (
-              <p className="valid-msg error">✖ 비밀번호가 일치하지 않습니다</p>
-            )}
-            {isPwMatch === true && (
-              <p className="valid-msg success">✔ 비밀번호가 일치합니다</p>
-            )}
+            <label className="form-label">비밀번호 확인 <span className="required">*</span></label>
+            <input type="password" placeholder="비밀번호를 다시 입력해주세요"
+              value={passwordCheck} onChange={(e) => setPasswordCheck(e.target.value)}
+              required />
+            {isPwMatch === false && <p className="valid-msg error">✖ 비밀번호가 일치하지 않습니다</p>}
+            {isPwMatch === true && <p className="valid-msg success">✔ 비밀번호가 일치합니다</p>}
           </div>
 
           {/* 이름 */}
           <div className="form-group">
-            <label>이름 *</label>
-            <input
-              type="text"
-              placeholder="이름을 입력해주세요"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
+            <label className="form-label">이름 <span className="required">*</span></label>
+            <input type="text" placeholder="이름을 입력해주세요"
+              value={name} onChange={(e) => setName(e.target.value)}
+              required />
           </div>
 
           {/* 생년월일 */}
           <div className="form-group">
-            <label>생년월일 *</label>
-            <input
-              type="date"
-              value={birthDate}
+            <label className="form-label">생년월일 <span className="required">*</span></label>
+            <input type="date" value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
-              required
-            />
+              className={birthDate ? "date-filled" : "date-empty"}
+              required />
           </div>
 
           {/* 연락처 */}
           <div className="form-group">
-            <label>연락처</label>
-            <input
-              type="text"
-              placeholder="010-XXXX-XXXX"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+            <label className="form-label">연락처 <span className="required">*</span></label>
+            <input type="text" placeholder="010-XXXX-XXXX"
+              value={phone} onChange={(e) => setPhone(e.target.value)}
+              required />
           </div>
 
-          {/* 우편번호 + 검색 */}
+          {/* 주소 */}
           <div className="address-group">
             <div className="form-group">
-              <label>주소 *</label>
+              <label className="form-label">주소 <span className="required">*</span></label>
               <div className="address-row">
                 <input type="text" placeholder="우편번호" value={zipcode} disabled />
-                <button
-                  type="button"
-                  className="address-search-btn"
-                  onClick={() => setShowPostcode(true)}
-                >
-                  주소 검색
-                </button>
+                <button type="button" className="btn btn-large btn-main"
+                  onClick={() => setShowPostcode(true)}>주소 검색</button>
               </div>
             </div>
-  
-            {/* 기본 주소 */}
+
             <div className="form-group">
               <input type="text" placeholder="기본 주소" value={address} disabled />
             </div>
-  
-            {/* 상세 주소 */}
+
             <div className="form-group">
-              <input
-                type="text"
-                placeholder="상세 주소 (선택)"
-                value={detailAddress}
-                onChange={(e) => setDetailAddress(e.target.value)}
-              />
+              <input type="text" placeholder="상세 주소 (선택)"
+                value={detailAddress} onChange={(e) => setDetailAddress(e.target.value)} />
             </div>
           </div>
 
           {/* 에러 메시지 */}
           {errorMsg && <p className="valid-msg error">{errorMsg}</p>}
 
-          {/* 제출 버튼 */}
-          <button
-            type="submit"
-            className="signup-submit-btn"
-            disabled={isPwMatch === false || !zipcode}
-          >
+          {/* 회원가입 버튼 */}
+          <button type="submit"
+            className="btn btn-main btn-large signup-btn"
+            disabled={isPwMatch === false || !zipcode}>
             회원 가입
           </button>
         </form>
@@ -213,9 +176,7 @@ function SignUpPage() {
         {/* 로그인 안내 */}
         <p className="login-guide">
           이미 회원이신가요?
-          <span className="link-text" onClick={() => navigate("/login")}>
-            로그인
-          </span>
+          <span className="link-text" onClick={() => navigate("/login")}>로그인</span>
         </p>
       </div>
 

@@ -46,15 +46,15 @@ a {
   padding: 20px;
 }
 
-/* form 페이지 input */
+/* input, textarea, select 공통 */
 input,
 textarea,
 select {
   width: 100%;
-  height: 48px;
+  height: 48px;  
   padding: 0 12px;
   border: 1px solid var(--color-border);
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: var(--font-caption);
   background: var(--color-bg);
   transition: 0.2s ease;
@@ -63,8 +63,10 @@ select {
 
 /* placeholder */
 input::placeholder,
-textarea::placeholder {
+textarea::placeholder,
+select::placeholder {
   color: var(--color-text-light);
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 /* 포커스 */
@@ -75,6 +77,7 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(var(--color-accent-rgb), 0.15);
   outline: none;
 }
+
 
 /* 디자인 토큰 */
 :root {
@@ -126,9 +129,9 @@ select:focus {
   --btn-medium-height: 40px;
   --btn-small-height: 32px;
 
-  --btn-radius-large: 24px;
+  --btn-radius-large: 8px;
   --btn-radius-medium: 8px;
-  --btn-radius-small: 16px;
+  --btn-radius-small: 6px;
 
   --btn-padding-large: 0 24px;
   --btn-padding-medium: 0 18px;
@@ -141,14 +144,20 @@ select:focus {
   --tag-large-font-size: 14px;
   --tag-radius: 999px;
 
-  --tag-bg-regular: #e3eeff;
-  --tag-color-regular: #2979ff;
+  /* Regular (정기) */
+  --tag-bg-regular: #EEF3FF;
+  --tag-color-regular: #5C6FA8;
+  --tag-bg-normal: #EEF3FF;
+  --tag-color-normal: #5C6FA8;
 
-  --tag-bg-flash: #fff1dc;
-  --tag-color-flash: #ff9800;
+  /* Flash (번개) */
+  --tag-bg-flash: #F7F4EE; 
+  --tag-color-flash: #8B7655;
 
-  --tag-bg-drawing: #f3e7ff;
-  --tag-color-drawing: #9b51e0;
+  /* Drawing (드로잉) */
+  --tag-bg-drawing: #F5F2F7;
+  --tag-color-drawing: #7A5F8A;
+
 
   --tag-bg-open: #e7f7ed; /* 모집중 */
   --tag-color-open: #00a86b;
@@ -161,6 +170,14 @@ select:focus {
 
   /* 레이아웃 */
   --layout-max-width: 1200px;
+
+  /* margin */
+  --space-xxl: 80px; /* 페이지 최상단 */
+  --space-xl: 60px;  /* 큰 섹션 */
+  --space-lg: 40px;  /* 일반 섹션 */
+  --space-md: 24px;  /* 제목 간격, 카드 간격 */
+  --space-sm: 12px;  /* 텍스트/요소 기본 간격 */
+  --space-xs: 6px;   /* 작은 요소 간격 */
 
   /* 그림자 */
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);

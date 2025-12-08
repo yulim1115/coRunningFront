@@ -1,263 +1,162 @@
-/* 전체 영역 */
+/* 전체 */
 .route-create-container {
   display: flex;
   justify-content: center;
   padding: 60px 0;
   background-color: var(--color-bg-light);
+  color: var(--color-text-dark);
 }
 
-/* 등록 카드 박스 */
-.create-wrapper {
+/* 등록 박스 */
+.route-create-container .create-wrapper {
   width: 900px;
   background: var(--color-bg);
-  padding: 40px 70px;
-  border-radius: 8px;
+  padding: 40px 60px;
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-card);
-  margin: 40px auto;
+  margin: var(--space-xl) auto;
 }
 
-/* 내부 요소 그림자 제거 */
-.create-wrapper * {
-  box-shadow: none !important;
-}
-
-/* 페이지 제목 */
-.create-title {
+/* 제목 */
+.route-create-container .create-title {
   font-size: var(--font-h2);
-  color: var(--color-text-dark);
   text-align: center;
   font-weight: var(--fw-bold);
-  margin-bottom: 26px;
+  color: var(--color-main);
 }
 
 /* 폼 전체 */
-.create-form {
+.route-create-container .create-form {
   display: flex;
   flex-direction: column;
-  gap: 22px;
 }
 
-/* form-group */
-.form-group {
+/* 그룹 */
+.route-create-container .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  margin-top: var(--space-md);
 }
 
 /* 라벨 */
-.form-label {
-  font-size: var(--font-caption);
+.route-create-container .form-label {
+  font-size: var(--font-small);
   font-weight: var(--fw-medium);
-  color: var(--color-text-light);
+  margin-bottom: var(--space-xs);
 }
 
-.required {
+/* 필수 표시 */
+.route-create-container .required {
   color: var(--color-red);
-}
-
-/* input */
-.input-field {
-  height: 48px;
-  padding: 0 12px;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  background: var(--color-bg);
-  font-size: 14px;
-}
-
-.input-field:focus {
-  border-color: var(--color-accent);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(74,105,187,0.15);
 }
 
 /* textarea */
-.textarea-field {
+.route-create-container .form-group textarea {
   min-height: 120px;
   padding: 12px;
-  font-size: 14px;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
   resize: vertical;
-  background: var(--color-bg);
+  font-family: "Noto Sans KR", sans-serif;;
 }
 
-.textarea-field:focus {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgba(74,105,187,0.15);
-  outline: none;
-}
-
-/* 지도 박스 */
-.mapbox-container {
+/* 지도 컨테이너 */
+.route-create-container .mapbox-container {
   width: 100%;
-  height: 280px;
-  border-radius: 8px;
+  height: 360px;
+  border-radius: var(--card-radius);
   border: 1px solid var(--color-border);
   overflow: hidden;
   background: var(--color-bg);
+  margin-top: var(--space-sm);
 }
 
-.map-desc {
-  font-size: 12px;
+/* 지도 위 버튼 */
+.route-create-container .map-btn-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+/* 지도 안내 */
+.route-create-container .map-desc {
+  margin-top: var(--space-xs);
+  font-size: var(--font-caption);
   color: var(--color-text-light);
   text-align: right;
 }
 
-.distance-text {
-  font-size: 13px;
+/* 거리 안내 */
+.route-create-container .distance-text {
+  font-size: var(--font-small);
   font-weight: var(--fw-bold);
-  color: var(--color-red);
+  color: var(--color-accent);
   text-align: right;
 }
 
-/* 지도 컨트롤 줄 */
-.map-control-row {
+/* 입력 필드 라인 */
+.route-create-container .meta-fields {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* 지도 버튼 묶음 */
-.map-btn-group {
-  display: flex;
-  gap: 8px;
-}
-
-/* 작은 버튼 */
-.btn-small {
-  height: var(--btn-small-height);
-  padding: 0 12px;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-light);
-  border-radius: 6px;
-  font-size: 14px;
-  color: var(--color-text-gray);
-  transition: 0.2s;
-}
-
-.btn-small:hover {
-  background: var(--color-border);
-}
-
-/* 작은 버튼 - 메인 */
-.btn-small.main {
-  background: var(--color-accent);
-  color: var(--color-white);
-  border: none;
-  font-weight: var(--fw-bold);
-}
-
-.btn-small.main:hover {
-  background: var(--color-accent-hover);
-}
-
-/* 등록/취소 버튼 줄 */
-.create-btn-row {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 10px;
-}
-
-/* 중간 버튼 */
-.btn-medium {
-  width: 150px;
-  height: var(--btn-medium-height);
-  background: var(--color-bg-light);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  font-size: 14px;
-  color: var(--color-text-gray);
-  transition: 0.2s;
-}
-
-.btn-medium:hover {
-  background: #eceff4;
-}
-
-/* 중간 버튼 - 메인 */
-.btn-medium.main {
-  background: var(--color-main);
-  color: var(--color-white);
-  font-weight: var(--fw-bold);
-  border: none;
-}
-
-.btn-medium.main:hover:not(:disabled) {
-  opacity: 0.9;
-}
-
-.btn-medium.main:disabled {
-  background: #9fb3d1;
-}
-
-/* 3분할 */
-.meta-fields {
-  display: flex;
-  gap: 16px;
+  gap: var(--space-sm);
   width: 100%;
 }
 
-/* 각 요소 동일하게 차지 */
-.meta-fields .form-group {
+.route-create-container .meta-fields .form-group {
   flex: 1;
 }
 
-/* 커스텀 select 래퍼 */
-.select-wrap {
+/* select */
+.route-create-container .custom-select {
   position: relative;
   width: 100%;
 }
 
-/* 커스텀 select */
-.select-wrap select {
-  width: 100%;
-  height: 40px;
-  padding: 0 40px 0 12px;
-  font-size: 14px;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  background: var(--color-bg);
+/* select 기본 */
+.route-create-container .custom-select select {
   appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
-.select-wrap select:hover {
-  border-color: var(--color-accent);
-  background: var(--color-bg-light);
+/* select */
+.route-create-container .custom-select select {
+  padding-right: 40px;
 }
 
-.select-wrap select:focus {
-  border-color: var(--color-accent);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(74,105,187,0.12);
-}
-
-/* 화살표 아이콘 */
-.select-arrow {
+/* 화살표 */
+.route-create-container .select-arrow {
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 18px;
-  color: var(--color-sub);
-  pointer-events: none;
+  font-size: 16px;
+  color: var(--color-text-light);
 }
 
-.select-wrap:hover .select-arrow {
+/* 선택 시 화살표 색상 */
+.route-create-container .custom-select select:focus + .select-arrow {
   color: var(--color-accent);
 }
 
 /* 지도 마커 */
-.map-marker {
-  background: #ff5500;
-  color: white;
-  width: 18px;
-  height: 18px;
+.route-create-container .map-marker {
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  font-size: 10px;
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-white);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* 하단 버튼 */
+.route-create-container .create-btn-row {
   display: flex;
   justify-content: center;
-  align-items: center;
-  font-weight: 700;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
 }
+

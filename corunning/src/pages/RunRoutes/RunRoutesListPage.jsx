@@ -1,4 +1,3 @@
-// src/pages/RunRoutes/RunRoutesListPage.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./RunRoutesListPage.css";
@@ -19,14 +18,17 @@ function RunRoutesListPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  /* 필터 상태 */
   const [sort, setSort] = useState("latest");
   const [region, setRegion] = useState("전체 지역");
   const [difficultyFilter, setDifficultyFilter] = useState("전체 난이도");
   const [typeFilter, setTypeFilter] = useState("전체 타입");
 
+  /* 리스트 상태 */
   const [originRoutes, setOriginRoutes] = useState([]);
   const [routes, setRoutes] = useState([]);
 
+  /* 난이도 텍스트 */
   const getDifficultyInfo = (difficulty) => {
     const diff = difficulty?.toLowerCase();
     switch (diff) {
@@ -42,6 +44,7 @@ function RunRoutesListPage() {
     }
   };
 
+  /* 필터 적용 */
   const applyFilter = useCallback(() => {
     let filtered = [...originRoutes];
 
@@ -68,7 +71,7 @@ function RunRoutesListPage() {
     setRoutes(filtered);
   }, [originRoutes, region, difficultyFilter, typeFilter, sort]);
 
-
+  /* 데이터 로드 */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -94,9 +97,9 @@ function RunRoutesListPage() {
     fetchData();
   }, []);
 
+  /* URL 파라미터 → 필터 상태 반영 */
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-
     const regionQ = params.get("region");
     const diffQ = params.get("difficulty");
     const typeQ = params.get("type");
@@ -106,10 +109,12 @@ function RunRoutesListPage() {
     if (typeQ) setTypeFilter(typeQ);
   }, [location.search]);
 
+  /* 필터 변경 시 리스트 갱신 */
   useEffect(() => {
     applyFilter();
   }, [applyFilter]);
 
+  /* 초기화 */
   const handleReset = () => {
     setSort("latest");
     setRegion("전체 지역");
@@ -120,27 +125,35 @@ function RunRoutesListPage() {
 
   return (
     <main className="routes-container">
+
+      {/* 제목 */}
       <section className="page-header-area">
         <h1>Run Routes</h1>
       </section>
 
+      {/* 등록 안내 박스 */}
       <div className="registration-notice">
         <p>나만의 특별한 러닝 코스를 공유하고 싶으신가요?</p>
         <button
-          className="btn btn-main btn-large"
+          className="btn btn-main btn-large btn-hover-float"
           onClick={() => navigate("/routes/create")}
         >
           <FaRoute /> &nbsp; 코스 등록하기
         </button>
       </div>
 
+      {/* 필터 */}
       <section className="filter-controls-area">
         <div className="filter-group-wrapper">
 
           <div className="filter-group">
             <label>정렬</label>
             <div className="custom-select">
-              <select value={sort} onChange={(e) => setSort(e.target.value)}>
+              <select
+                className="select-small"
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+              >
                 <option value="latest">최신순</option>
                 <option value="oldest">오래된순</option>
                 <option value="popular">인기순</option>
@@ -152,7 +165,11 @@ function RunRoutesListPage() {
           <div className="filter-group">
             <label>지역</label>
             <div className="custom-select">
-              <select value={region} onChange={(e) => setRegion(e.target.value)}>
+              <select
+                className="select-small"
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+              >
                 <option>전체 지역</option>
                 {sidoList.map((sido) => (
                   <option key={sido.code}>{sido.name}</option>
@@ -166,6 +183,7 @@ function RunRoutesListPage() {
             <label>난이도</label>
             <div className="custom-select">
               <select
+                className="select-small"
                 value={difficultyFilter}
                 onChange={(e) => setDifficultyFilter(e.target.value)}
               >
@@ -182,6 +200,7 @@ function RunRoutesListPage() {
             <label>타입</label>
             <div className="custom-select">
               <select
+                className="select-small"
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
               >
@@ -201,6 +220,7 @@ function RunRoutesListPage() {
         <p className="route-count">총 {routes.length}개의 코스</p>
       </section>
 
+      {/* 리스트 */}
       <section className="route-list">
         {routes.map((route) => (
           <div
@@ -211,7 +231,6 @@ function RunRoutesListPage() {
             <div className="route-card-content">
               <div className="card-title-group">
                 <h3>{route.title}</h3>
-
                 <div
                   className={`tag tag-small ${
                     route.type === "drawing" ? "tag-drawing" : "tag-regular"
