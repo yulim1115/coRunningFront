@@ -31,3 +31,8 @@ export const updateUserInfo = async(data) => {
 export const updatePassword = async(data) => {
   return axios.put(`${API_BASE}/update-password`,data,{withCredentials: true});
 };
+
+// 모든 정보 갖고 오기
+export const nameCheckAPI = async(data) =>{
+  return axios.get(`${API_BASE}/name`,  {params: { userName: data},  withCredentials: true});
+}

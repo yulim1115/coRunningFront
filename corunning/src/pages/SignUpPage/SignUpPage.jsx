@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
 import "./SignUpPage.css";
-import { signUpAPI } from "../../api/userApi";
 import axios from "axios";
+import { signUpAPI, nameCheckAPI } from "../../api/userApi";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -29,6 +29,10 @@ function SignUpPage() {
   const [address, setAddress] = useState("");
   const [detailAddress, setDetailAddress] = useState("");
   const [showPostcode, setShowPostcode] = useState(false);
+
+  // 이름 중복 체크
+  const [isNameMatch, setIsNameMatch] = useState(null);
+  const [clickChecked, setClickChecked] = useState(false);
 
   // 에러 메시지
   const [errorMsg, setErrorMsg] = useState("");
@@ -103,6 +107,20 @@ function SignUpPage() {
       }
     } catch (err) {
       alert("인증 요청 중 오류 발생");
+    }
+  }
+  // 이름 중복 체크
+  const nameCheckEvent = async () => {
+    setClickChecked(true);
+    if (name.length > 0) {
+      try {
+        const nameCheck = await nameCheckAPI(name);
+        setIsNameMatch(nameCheck.data);
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      console.error("이름 입력 안됨");
     }
   };
 
@@ -243,11 +261,18 @@ function SignUpPage() {
 
           {/* 이름 */}
           <div className="form-group">
-            <label className="form-label">이름 <span className="required">*</span></label>
-            <input type="text" placeholder="이름을 입력해주세요"
-              value={name} onChange={(e) => setName(e.target.value)}
-              required />
+            <div>
+              <label className="form-label">이름 <span className="required">*</span></label>
+              <input type="text" placeholder="이름을 입력해주세요"
+                value={name} onChange={(e) => setName(e.target.value)}
+                required />
+            </div>
+            <button type="button" onClick={() => nameCheckEvent()}>중복확인</button>
           </div>
+          {clickChecked && (isNameMatch ?
+            <p style={{ color: "green" }}>사용 가능한 이름입니다.</p> : <p style={{ color: "red" }}>이미 사용중인 이름입니다.</p>
+          )}
+
 
           {/* 생년월일 */}
           <div className="form-group">
@@ -293,7 +318,7 @@ function SignUpPage() {
           {/* 회원가입 버튼 */}
           <button type="submit"
             className="btn btn-main btn-large signup-btn"
-            disabled={isPwMatch === false || !zipcode || !isEmailVerified}>
+            disabled={isPwMatch === false || !zipcode || !isEmailVerified || !isNameMatch === true}>
             회원 가입
           </button>
         </form>
