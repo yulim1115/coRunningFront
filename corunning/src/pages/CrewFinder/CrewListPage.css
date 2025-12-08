@@ -80,9 +80,9 @@
 }
 
 .crews-container .crew-tab.active[data-type="DRAWING"] {
-  background: var(--tag-bg-flash);
-  color: var(--tag-color-flash);
-  border-color: var(--tag-color-flash);
+  background: var(--tag-bg-drawing);
+  color: var(--tag-color-drawing);
+  border-color: var(--tag-color-drawing);
 }
 
 /* 모집 상태 필터 */
