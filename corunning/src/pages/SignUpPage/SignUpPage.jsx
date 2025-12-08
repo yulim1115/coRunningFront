@@ -266,9 +266,11 @@ function SignUpPage() {
               <input type="text" placeholder="이름을 입력해주세요"
                 value={name} onChange={(e) => setName(e.target.value)}
                 required />
+                <button type="button" className="btn btn-main" onClick={() => nameCheckEvent()}>중복확인</button>
             </div>
-            <button type="button" onClick={() => nameCheckEvent()}>중복확인</button>
-          </div>
+            </div>
+            
+          
           {clickChecked && (isNameMatch ?
             <p style={{ color: "green" }}>사용 가능한 이름입니다.</p> : <p style={{ color: "red" }}>이미 사용중인 이름입니다.</p>
           )}

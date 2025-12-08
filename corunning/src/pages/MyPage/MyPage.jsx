@@ -40,11 +40,11 @@ function MyPage() {
 
     const fetchData = async () => {
       try {
-        const user_data = await getUserAPI(sessionStorage.getItem("userEmail"));
+        const user_data = await getUserAPI();
         setUserData(user_data);
-        const route_data = await getRouteByIdAPI(sessionStorage.getItem("userEmail"));
+        const route_data = await getRouteByIdAPI();
         setRoutes(route_data);
-        const crew_data = await getCrewByIdAPI(sessionStorage.getItem("userEmail"));
+        const crew_data = await getCrewByIdAPI();
         setCrews(crew_data);
         const dashboard_data = await getDashboardAPI();
         setDashboards(dashboard_data);
@@ -136,7 +136,7 @@ function MyPage() {
   const updateProfile = async (e) => {
     e.preventDefault();
     try {
-      await updateUserAPI(userData.userId, updateData);
+      await updateUserAPI( updateData);
       setActiveContent("dashboard");
       alert("프로필/계정 정보 수정이 완료되었습니다.");
     } catch (error) {
@@ -215,7 +215,7 @@ function MyPage() {
     try {
       await deleteCrewAPI(crewId);
       alert("크루 모집 글이 삭제되었습니다.");
-      const data = await getCrewByIdAPI(sessionStorage.getItem("userEmail"));
+      const data = await getCrewByIdAPI();
       setCrews(data);
     } catch (error) {
       console.error("크루 모집 글 삭제 실패:", error);
@@ -324,7 +324,7 @@ const handleOpenApplications = async (crew) => {
 
                 <div className="form-group">
                   <label htmlFor="email">이메일 (ID)<span>(수정 불가)</span></label>
-                  <textarea type="email" id="email" value={sessionStorage.getItem("userEmail")} disabled />
+                  <textarea type="email" id="email" value={userData.userId} disabled />
                 </div>
 
                 <h2 className="form-section-header">연락처 및 주소 수정</h2>

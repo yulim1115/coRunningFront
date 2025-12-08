@@ -296,7 +296,7 @@ export default function RunLogPage() {
                       </div>
                     </div>
 
-                    <button className="btn btn-small btn-green" onClick={() => submitFinish(course)}>
+                    <button className="btn btn-main btn-large btn-hover-float" onClick={() => submitFinish(course)}>
                       기록 저장
                     </button>
                   </div>

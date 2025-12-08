@@ -1,9 +1,9 @@
 import axios from "axios";
 
 //아이디로 회원정보 가져오기
-export const getUserAPI = async (userId) => {
+export const getUserAPI = async () => {
     try {
-        const response = await axios.get(`/api/users/${userId}`, {withCredentials: true});          
+        const response = await axios.get(`/api/users/info`, {withCredentials: true});          
         console.log("회원정보 조회 API 응답:", response.data);
         return response.data;
     } catch (error) {
@@ -13,9 +13,9 @@ export const getUserAPI = async (userId) => {
 }
 
 //회원정보 수정하기
-export const updateUserAPI = async (userId, userData) => {
+export const updateUserAPI = async (userData) => {
     try {
-        const response = await axios.put(`/api/users/${userId}`, userData, {withCredentials: true})
+        const response = await axios.put(`/api/users`, userData, {withCredentials: true})
         console.log("프로필/계정 정보 수정 API 응답:", response.data);
         return response.data;
     } catch (error) {
@@ -25,9 +25,9 @@ export const updateUserAPI = async (userId, userData) => {
 }
 
 //id로 코스 정보 가져오기
-export const getRouteByIdAPI = async (userId) => {
+export const getRouteByIdAPI = async () => {
     try {
-        const response = await axios.get(`/api/routes/user/${userId}`, {withCredentials: true});          
+        const response = await axios.get(`/api/routes/user`, {withCredentials: true});          
         console.log("코스 정보 조회 API 응답:", response.data);
         return response.data;
     } catch (error) {
@@ -48,9 +48,9 @@ export const deleteRouteAPI = async (routeId) => {
 }
 
 //id로 크루 정보 가져오기
-export const getCrewByIdAPI = async (userId) => {
+export const getCrewByIdAPI = async () => {
     try {
-        const response = await axios.get(`/api/crew-board/user/${userId}`, {withCredentials: true});
+        const response = await axios.get(`/api/crew-board/user`, {withCredentials: true});
         console.log("크루 정보 조회 API 응답:", response.data);
         return response.data;
     } catch (error) {
