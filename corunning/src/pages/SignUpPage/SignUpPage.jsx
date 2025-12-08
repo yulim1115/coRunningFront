@@ -4,9 +4,16 @@ import { useNavigate } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
 import "./SignUpPage.css";
 import { signUpAPI } from "../../api/userApi";
+import axios from "axios";
 
 function SignUpPage() {
   const navigate = useNavigate();
+  // 이메일 인증 상태
+  const [isEmailVerified, setIsEmailVerified] = useState(false); // 인증 완료 여부
+  const [verificationCode, setVerificationCode] = useState(""); // 사용자가 입력한 코드
+  const [showCodeInput, setShowCodeInput] = useState(false); // 인증창 표시 여부
+  const [timer, setTimer] = useState(0); // 3분 타이머 (초 단위)
+  const [isCodeSent, setIsCodeSent] = useState(false); // 코드 발송 여부
 
   // 입력값 상태
   const [email, setEmail] = useState("");
@@ -25,6 +32,14 @@ function SignUpPage() {
 
   // 에러 메시지
   const [errorMsg, setErrorMsg] = useState("");
+  // 인증 3분 타이머
+  useEffect(() => {
+    if (timer <= 0) return;
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timer]);
 
   // 로그인 상태일 경우 차단
   useEffect(() => {
@@ -43,6 +58,54 @@ function SignUpPage() {
       setIsPwMatch(null);
     }
   }, [password, passwordCheck]);
+
+
+  // 1) 이메일 중복 체크 + 인증번호 전송
+  const handleSendCode = async () => {
+    if (!email) return alert("이메일을 입력해주세요.");
+
+    try {
+      // 이메일 중복 체크 API
+      const res = await axios.get(`/api/users/check-email?email=${email}`);
+      if (res.data === true) {
+        alert("이미 사용 중인 이메일입니다.");
+        return;
+      }
+
+      // 인증번호 전송 API
+      await axios.post("/api/auth/send-code", { email });
+
+      alert("인증번호가 이메일로 전송되었습니다!");
+      setIsCodeSent(true);
+      setShowCodeInput(true);
+      setTimer(180); // 3분 타이머 시작
+    } catch (err) {
+      console.error(err);
+      alert("인증번호 전송 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (!verificationCode) return alert("인증번호를 입력해주세요.");
+
+    try {
+      const res = await axios.post("/api/auth/verify-code", {
+        email,
+        code: verificationCode,
+      });
+
+      if (res.data.valid) {
+        alert("인증 완료되었습니다!");
+        setIsEmailVerified(true);
+        setTimer(0);
+      } else {
+        alert("인증 실패! 인증번호가 올바르지 않습니다.");
+      }
+    } catch (err) {
+      alert("인증 요청 중 오류 발생");
+    }
+  };
+
 
   // 주소 검색 결과 처리
   const onCompleteAddress = (data) => {
@@ -65,7 +128,9 @@ function SignUpPage() {
       userAddress: address + " " + detailAddress,
       hireDate: new Date().toISOString().slice(0, 10),
     };
-
+    if (!isEmailVerified) {
+      return alert("이메일 인증을 완료해야 회원가입이 가능합니다!");
+    }
     try {
       await signUpAPI(data);
       alert("회원가입 성공!");
@@ -89,14 +154,74 @@ function SignUpPage() {
         <h2 className="signup-title">Sign Up</h2>
 
         <form onSubmit={handleSubmit} className="signup-form">
-
           {/* 이메일 */}
           <div className="form-group">
-            <label className="form-label">이메일 (ID) <span className="required">*</span></label>
-            <input type="email" placeholder="example@email.com"
-              value={email} onChange={(e) => setEmail(e.target.value)}
-              required />
+            <label className="form-label">
+              이메일 (ID) <span className="required">*</span>
+            </label>
+
+            <div style={{ display: "flex", gap: "8px" }}>
+              <input
+                type="email"
+                placeholder="example@email.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setIsEmailVerified(false); // 이메일 변경 시 인증 초기화
+                  setIsCodeSent(false);
+                  setShowCodeInput(false);
+                }}
+                required
+                style={{ flex: 1 }}
+              />
+
+              <button
+                type="button"
+                className="btn btn-main"
+                onClick={handleSendCode}
+                disabled={isEmailVerified}
+              >
+                {isCodeSent ? "재전송" : "인증번호"}
+              </button>
+            </div>
+
+            {/* 인증번호 입력창 */}
+            {showCodeInput && !isEmailVerified && (
+              <div style={{ marginTop: "8px" }}>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <input
+                    type="text"
+                    placeholder="인증번호 6자리"
+                    value={verificationCode}
+                    onChange={(e) => setVerificationCode(e.target.value)}
+                  />
+
+                  <button
+                    type="button"
+                    className="btn btn-sub"
+                    onClick={handleVerifyCode}
+                  >
+                    인증확인
+                  </button>
+                </div>
+
+                {/* 타이머 표시 */}
+                <p style={{ fontSize: "12px", marginTop: "4px", color: "#555" }}>
+                  {timer > 0
+                    ? `남은 시간: ${Math.floor(timer / 60)}:${String(
+                        timer % 60
+                      ).padStart(2, "0")}`
+                    : "인증 시간이 만료되었습니다."}
+                </p>
+              </div>
+            )}
+
+            {/* 인증 완료 메시지 */}
+            {isEmailVerified && (
+              <p className="valid-msg success">✔ 이메일 인증이 완료되었습니다</p>
+            )}
           </div>
+
 
           {/* 비밀번호 */}
           <div className="form-group">
@@ -168,7 +293,7 @@ function SignUpPage() {
           {/* 회원가입 버튼 */}
           <button type="submit"
             className="btn btn-main btn-large signup-btn"
-            disabled={isPwMatch === false || !zipcode}>
+            disabled={isPwMatch === false || !zipcode || !isEmailVerified}>
             회원 가입
           </button>
         </form>

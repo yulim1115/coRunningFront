@@ -269,7 +269,7 @@ function RunRoutesDetailPage() {
   // 로딩 화면
   if (loading) {
     return (
-      <main className="rout-detail-container">
+      <main className="route-detail-container">
         <div className="skeleton-title-section">
           <div className="skeleton skeleton-title"></div>
           <div className="skeleton skeleton-tag"></div>

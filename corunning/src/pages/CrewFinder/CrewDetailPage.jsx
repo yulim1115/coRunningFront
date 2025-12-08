@@ -181,7 +181,7 @@ function CrewDetailPage() {
   // 스켈레톤
   if (loading) {
     return (
-      <main className="detail-page">
+      <main className="crew-detail-container">
         <div className="skeleton-title-section">
           <div className="skeleton skeleton-title"></div>
           <div className="skeleton skeleton-tag"></div>
