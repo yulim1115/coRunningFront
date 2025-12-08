@@ -260,6 +260,11 @@
   font-weight: var(--fw-bold);
 }
 
+.crews-container .crew-meta-item .highlight {
+  color: var(--color-accent);
+  font-weight: var(--fw-bold);
+}
+
 /* 빈 화면 메시지 */
 .crews-container .crew-empty {
   margin: 40px 0 60px;
