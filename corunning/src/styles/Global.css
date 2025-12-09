@@ -17,6 +17,17 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text-dark);
   line-height: 1.6;
+  overflow-y: scroll;
+}
+
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
 }
 
 /* 링크 */
@@ -51,7 +62,7 @@ input,
 textarea,
 select {
   width: 100%;
-  height: 48px;  
+  height: 48px;
   padding: 0 12px;
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -77,7 +88,6 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(var(--color-accent-rgb), 0.15);
   outline: none;
 }
-
 
 /* 디자인 토큰 */
 :root {
@@ -144,25 +154,21 @@ select:focus {
   --tag-large-font-size: 14px;
   --tag-radius: 999px;
 
-  /* Regular (정기) */
-  --tag-bg-regular: #EEF3FF;
-  --tag-color-regular: #5C6FA8;
-  --tag-bg-normal: #EEF3FF;
-  --tag-color-normal: #5C6FA8;
+  --tag-bg-regular: #eef3ff;
+  --tag-color-regular: #5c6fa8;
+  --tag-bg-normal: #eef3ff;
+  --tag-color-normal: #5c6fa8;
 
-  /* Flash (번개) */
-  --tag-bg-flash: #F7F4EE; 
-  --tag-color-flash: #8B7655;
+  --tag-bg-flash: #f7f4ee;
+  --tag-color-flash: #8b7655;
 
-  /* Drawing (드로잉) */
-  --tag-bg-drawing: #F5F2F7;
-  --tag-color-drawing: #7A5F8A;
+  --tag-bg-drawing: #f5f2f7;
+  --tag-color-drawing: #7a5f8a;
 
-
-  --tag-bg-open: #e7f7ed; /* 모집중 */
+  --tag-bg-open: #e7f7ed;
   --tag-color-open: #00a86b;
 
-  --tag-bg-closed: #f6eaea; /* 마감 */
+  --tag-bg-closed: #f6eaea;
   --tag-color-closed: #d64545;
 
   /* 카드 radius */
@@ -172,15 +178,31 @@ select:focus {
   --layout-max-width: 1200px;
 
   /* margin */
-  --space-xxl: 80px; /* 페이지 최상단 */
-  --space-xl: 60px;  /* 큰 섹션 */
-  --space-lg: 40px;  /* 일반 섹션 */
-  --space-md: 24px;  /* 제목 간격, 카드 간격 */
-  --space-sm: 12px;  /* 텍스트/요소 기본 간격 */
-  --space-xs: 6px;   /* 작은 요소 간격 */
+  --space-xxl: 80px;
+  --space-xl: 60px;
+  --space-lg: 40px;
+  --space-md: 24px;
+  --space-sm: 12px;
+  --space-xs: 6px;
 
   /* 그림자 */
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
   --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
   --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
 }
