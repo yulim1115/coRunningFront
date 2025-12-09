@@ -26,51 +26,54 @@ import RunRoutesCreatePage from "./pages/RunRoutes/RunRoutesCreatePage";
 import CrewListPage from "./pages/CrewFinder/CrewListPage";
 import CrewDetailPage from "./pages/CrewFinder/CrewDetailPage";
 import CrewCreatePage from "./pages/CrewFinder/CrewCreatePage";
-import CrewModifyPage from "./pages/CrewFinder/CrewModifyPage";
+// import CrewModifyPage from "./pages/CrewFinder/CrewModifyPage";
 
 import RunLogPage from "./pages/RunLog/RunLogPage";
-import MyPage from "./pages/MyPage/MyPage";
+// import MyPage from "./pages/MyPage/MyPage";
 
 function App() {
-    return (
-       <div className="page-container">
-            <Router>
-            <ScrollToTop />
-                {/* 공통 Header */}
-                <Header />
-    
-                {/* Page Routing */}
-                <Routes>
-                    {/* 메인 */}
-                    <Route path="/" element={<MainPage />} />
-    
-                    {/* 인증 */}
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/signup" element={<SignUpPage />} />
-    
-                    {/* Run Routes */}
-                    <Route path="/routes" element={<RunRoutesListPage />} />
-                    <Route path="/routes/:id" element={<RunRoutesDetailPage />} />
-                    <Route path="/routes/create" element={<RunRoutesCreatePage />} />
-    
-                    {/* Crew Finder */}
-                    <Route path="/crews" element={<CrewListPage />} />
-                    <Route path="/crews/:id" element={<CrewDetailPage />} />
-                    <Route path="/crews/create" element={<CrewCreatePage />} />
-                    <Route path="/crews/modify/:id" element={<CrewModifyPage />} />
-    
-                    {/* Run Log */}
-                    <Route path="/runlog" element={<RunLogPage />} />
-    
-                    {/* My Page */}
-                    <Route path="/mypage" element={<MyPage />} />
-                </Routes>
-    
-                {/* 공통 Footer */}
-                <Footer />
-            </Router>
-       </div>
-    );
+  return (
+    <Router>
+      <div className="page-container">
+        <ScrollToTop />
+
+        {/* 공통 Header */}
+        <Header />
+
+        {/* Page Routing */}
+        <div className="main-content">
+          <Routes>
+            {/* 메인 */}
+            <Route path="/" element={<MainPage />} />
+
+            {/* 인증 */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+
+            {/* Run Routes */}
+            <Route path="/routes" element={<RunRoutesListPage />} />
+            <Route path="/routes/:id" element={<RunRoutesDetailPage />} />
+            <Route path="/routes/create" element={<RunRoutesCreatePage />} />
+
+            {/* Crew Finder */}
+            <Route path="/crews" element={<CrewListPage />} />
+            <Route path="/crews/:id" element={<CrewDetailPage />} />
+            <Route path="/crews/create" element={<CrewCreatePage />} />
+            {/* <Route path="/crews/modify/:id" element={<CrewModifyPage />} /> */}
+
+            {/* Run Log */}
+            <Route path="/runlog" element={<RunLogPage />} />
+
+            {/* My Page */}
+            {/* <Route path="/mypage" element={<MyPage />} /> */}
+          </Routes>
+        </div>
+
+        {/* 공통 Footer */}
+        <Footer />
+      </div>
+    </Router>
+  );
 }
 
 export default App;
