@@ -289,10 +289,12 @@ function SignUpPage() {
           </div>
 
           <div className="address-group">
+            {/* 우편번호 + 검색 */}
             <div className="form-group">
               <label className="form-label">
                 주소 <span className="required">*</span>
               </label>
+
               <div className="flex-row">
                 <input
                   type="text"
@@ -310,6 +312,7 @@ function SignUpPage() {
               </div>
             </div>
 
+            {/* 기본 주소 */}
             <div className="form-group">
               <input
                 type="text"
@@ -319,6 +322,7 @@ function SignUpPage() {
               />
             </div>
 
+            {/* 상세 주소 */}
             <div className="form-group">
               <input
                 type="text"
@@ -328,6 +332,22 @@ function SignUpPage() {
               />
             </div>
           </div>
+
+          {/* 주소 모달 */}
+          {showPostcode && (
+            <div className="postcode-modal-overlay">
+              <div className="postcode-modal">
+                <DaumPostcode autoClose onComplete={onCompleteAddress} />
+                <button
+                  className="btn btn-secondary btn-small"
+                  onClick={() => setShowPostcode(false)}
+                  style={{ marginTop: "10px" }}
+                >
+                  닫기
+                </button>
+              </div>
+            </div>
+          )}
 
           {errorMsg && <p className="valid-msg error">{errorMsg}</p>}
 
@@ -352,22 +372,6 @@ function SignUpPage() {
           </span>
         </p>
       </div>
-
-      {showPostcode && (
-        <DaumPostcode
-          onComplete={onCompleteAddress}
-          autoClose
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            width: "400px",
-            height: "500px",
-            transform: "translate(-50%, -50%)",
-            zIndex: 2000,
-          }}
-        />
-      )}
     </div>
   );
 }

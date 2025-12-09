@@ -102,6 +102,27 @@
   cursor: pointer;
 }
 
+/* 주소 검색 모달 배경 */
+.postcode-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 주소 검색 모달 박스 */
+.postcode-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: var(--shadow-card);
+}
+
 /* Validation */
 .signup-container .valid-msg {
   font-size: var(--font-caption);
