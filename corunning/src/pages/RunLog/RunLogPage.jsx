@@ -45,7 +45,6 @@ export default function RunLogPage() {
       const dips = await getDipList(userId);
 
       const fullList = await Promise.all(
-<<<<<<< Updated upstream
       dips.map(async (dip) => {
         let route = null;
 
@@ -73,25 +72,6 @@ export default function RunLogPage() {
         };
       })
     );
-=======
-        dips.map(async (dip) => {
-          const route = await getRouteById(dip.routeId);
-          return {
-            dipId: dip.dipId,
-            routeId: dip.routeId,
-            title: route?.title || dip.title || `코스 #${dip.routeId}`,
-            location: route?.location || dip.location || "미상",
-            distance:
-              typeof route?.distance === "number"
-                ? route.distance
-                : dip.distance || 5.0,
-            level: route?.difficulty || dip.difficulty || "중급",
-            complete: dip.complete === true,
-            record: dip.record || "",
-          };
-        })
-      );
->>>>>>> Stashed changes
 
       setSavedCourses(fullList.filter((c) => !c.complete));
       setRecords(
@@ -239,13 +219,8 @@ export default function RunLogPage() {
   const handleRemoveDip = async (course) => {
     if (!window.confirm("삭제하시겠습니까?")) return;
     try {
-<<<<<<< Updated upstream
       await removeDip(course.dipId); // dipId로 바로 삭제!
       setSavedCourses(prev => prev.filter(c => c.dipId !== course.dipId));
-=======
-      await removeDip(course.routeId, userId);
-      setSavedCourses((prev) => prev.filter((c) => c.dipId !== course.dipId));
->>>>>>> Stashed changes
     } catch (err) {
       alert("실패: " + err.message);
     }
