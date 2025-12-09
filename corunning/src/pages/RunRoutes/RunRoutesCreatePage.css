@@ -69,12 +69,43 @@
   margin-top: var(--space-sm);
 }
 
-/* 지도 위 버튼 */
-.route-create-container .map-btn-group {
+
+/* 지도 위 버튼 전체 라인 */
+.route-create-container .map-btn-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xs);
+}
+
+/* 왼쪽 탭 버튼 */
+.route-create-container .left-controls {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.route-create-container .left-controls button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: var(--font-small);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+}
+
+/* 활성화 탭 */
+.route-create-container .left-controls button.active {
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+}
+
+/* 오른쪽 기존 버튼들 */
+.route-create-container .right-controls {
+  display: flex;
   gap: var(--space-sm);
 }
+
 
 /* 지도 안내 */
 .route-create-container .map-desc {
@@ -160,3 +191,11 @@
   margin-top: var(--space-lg);
 }
 
+.array-input-box {
+  margin-top: 12px;
+}
+.array-textarea {
+  width: 100%;
+  height: 140px;
+  padding: 10px;
+}
