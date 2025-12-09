@@ -10,7 +10,29 @@ import {
   removeDip,
   updateDip,
 } from "../../api/routesApi";
+export const formatToTime = (value) => {
+  // 숫자만 남기기
+  const numeric = value.replace(/\D/g, "").slice(0, 6);
 
+  // 자리수에 따라 포맷팅
+  const padded = numeric.padStart(6, "0");
+  const hh = padded.slice(0, 2);
+  const mm = padded.slice(2, 4);
+  const ss = padded.slice(4, 6);
+
+  return `${hh}:${mm}:${ss}`;
+};
+export const isValidTime = (t) => {
+  if (!/^\d{2}:\d{2}:\d{2}$/.test(t)) return false;
+
+  const [hh, mm, ss] = t.split(":").map(Number);
+
+  return (
+    hh >= 0 &&
+    mm >= 0 && mm < 60 &&
+    ss >= 0 && ss < 60
+  );
+};
 // 현재 사용자 ID 가져오기
 const getCurrentUserId = () => {
   return sessionStorage.getItem("userEmail");
@@ -27,7 +49,8 @@ export default function RunLogPage() {
 
   const [openSavedIds, setOpenSavedIds] = useState({});
   const [editingRecordIds, setEditingRecordIds] = useState({});
-
+  const [timeValue, setTimeValue] = useState("");
+  const [editTimeValue, setEditTimeValue] = useState("");
   const [inputValues, setInputValues] = useState({});
   const [editValues, setEditValues] = useState({});
 
@@ -61,12 +84,12 @@ export default function RunLogPage() {
           dipId: dip.dipId,
           routeId: dip.routeId,   // null 일 수 있음
           title: route?.title || dip.title || "커스텀 코스",
-          location: route?.location || dip.location || "직접 입력",
+          location: route?.location || dip.location || "자율기록",
           distance:
             typeof route?.distance === "number"
               ? route.distance
               : dip.distance || 0,
-          level: route?.difficulty || dip.difficulty || "커스텀",
+          level: route?.difficulty || dip.difficulty || "자율기록",
           complete: dip.complete === true,
           record: dip.record || ""
         };
@@ -86,6 +109,7 @@ export default function RunLogPage() {
               title: c.title,
               location: c.location,
               distance: c.distance,
+              level: c.level,
               rawDate: yymmdd,
               date: yymmdd?.replace(/-/g, ".") || "",
               time: hhmmss || "",
@@ -120,7 +144,9 @@ export default function RunLogPage() {
   const submitFinish = async (course) => {
     const { date, time } = inputValues[course.dipId] || {};
     if (!date || !time) return alert("날짜와 시간을 입력해주세요.");
-
+    if (!isValidTime(time)) {
+      return alert("시간은 HH:MM:SS 형식이며 MM/SS는 0~59여야 합니다.");
+    }
     const record = `${date} ${time}`;
 
     try {
@@ -143,7 +169,7 @@ export default function RunLogPage() {
       setRecords((prev) => [...prev, newRecord]);
 
       alert("기록이 저장되었습니다!");
-
+      setTimeValue("");
       setOpenSavedIds((prev) => ({ ...prev, [course.dipId]: false }));
     } catch (err) {
       alert("저장 실패: " + err.message);
@@ -181,7 +207,7 @@ export default function RunLogPage() {
       );
 
       alert("기록이 수정되었습니다!");
-
+      setEditTimeValue("");
       setEditingRecordIds((prev) => ({ ...prev, [record.id]: false }));
     } catch (err) {
       alert("수정 실패: " + err.message);
@@ -225,7 +251,7 @@ export default function RunLogPage() {
       alert("실패: " + err.message);
     }
   };
-
+  
 
   // 로딩 화면
   if (loading) {
@@ -302,12 +328,32 @@ export default function RunLogPage() {
                         <label>시간</label>
                         <input
                           className="input-small"
-                          type="time"
-                          step="1"
-                          value={inputValues[course.dipId]?.time || ""}
-                          onChange={(e) =>
-                            updateInput(course.dipId, "time", e.target.value)
-                          }
+                          type="text"
+                          placeholder="HH:MM:SS (1234입력 -> 00:12:34)"
+                          value = {timeValue}
+                          onChange={(e) => {
+                            const onlyNums = e.target.value.replace(/\D/g, "");
+                            setTimeValue(onlyNums);
+                            const formatted = formatToTime(e.target.value);
+                            updateInput(course.dipId, "time", formatted);
+                          }}
+                          onKeyDown={(e) => {
+                            // 숫자, 백스페이스, 탭 등만 허용
+                            const allowed = [
+                              "Backspace",
+                              "Delete",
+                              "Tab",
+                              "ArrowLeft",
+                              "ArrowRight",
+                            ];
+                            if (allowed.includes(e.key)) return;
+
+                            // 숫자가 아니면 입력 막기
+                            if (!/^[0-9]$/.test(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
+                          maxLength={6}
                         />
                       </div>
 
@@ -373,13 +419,36 @@ export default function RunLogPage() {
                       <div className="form-row">
                         <label>시간</label>
                         <input
+                          inputMode="numeric"
                           className="input-small"
-                          type="time"
-                          step="1"
-                          defaultValue={record.time}
-                          onChange={(e) =>
-                            updateEditInput(record.id, "time", e.target.value)
-                          }
+                          type="text"
+                          placeholder="HH:MM:SS"
+                          defaultvalue={""}
+                          value = {editTimeValue}
+                          onChange={(e) => {
+                            const onlyNums = e.target.value.replace(/\D/g, "");
+                            setEditTimeValue(onlyNums);
+                            const formatted = formatToTime(e.target.value);
+                            updateEditInput(record.id, "time", formatted);
+                          }}
+                          onKeyDown={(e) => {
+                            // 숫자, 백스페이스, 탭 등만 허용
+                            const allowed = [
+                              "Backspace",
+                              "Delete",
+                              "Tab",
+                              "ArrowLeft",
+                              "ArrowRight",
+                            ];
+                            if (allowed.includes(e.key)) return;
+
+                            // 숫자가 아니면 입력 막기
+                            if (!/^[0-9]$/.test(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
+                          maxLength={6}
+                          
                         />
                       </div>
 

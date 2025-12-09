@@ -29,7 +29,7 @@ import CrewCreatePage from "./pages/CrewFinder/CrewCreatePage";
 // import CrewModifyPage from "./pages/CrewFinder/CrewModifyPage";
 
 import RunLogPage from "./pages/RunLog/RunLogPage";
-// import MyPage from "./pages/MyPage/MyPage";
+import MyPage from "./pages/MyPage/MyPage";
 
 function App() {
   return (
@@ -65,7 +65,7 @@ function App() {
             <Route path="/runlog" element={<RunLogPage />} />
 
             {/* My Page */}
-            {/* <Route path="/mypage" element={<MyPage />} /> */}
+            <Route path="/mypage" element={<MyPage />} />
           </Routes>
         </div>
 
