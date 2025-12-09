@@ -8,7 +8,7 @@ import {
   getDipList,
   getRouteById,
   removeDip,
-  updateDip
+  updateDip,
 } from "../../api/routesApi";
 
 // 현재 사용자 ID 가져오기
@@ -31,6 +31,13 @@ export default function RunLogPage() {
   const [inputValues, setInputValues] = useState({});
   const [editValues, setEditValues] = useState({});
 
+  useEffect(() => {
+    document.body.style.backgroundColor = "var(--color-bg-light)";
+    return () => {
+      document.body.style.backgroundColor = "var(--color-bg)";
+    };
+  }, []);
+
   // 데이터 로딩
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -38,6 +45,7 @@ export default function RunLogPage() {
       const dips = await getDipList(userId);
 
       const fullList = await Promise.all(
+<<<<<<< Updated upstream
       dips.map(async (dip) => {
         let route = null;
 
@@ -65,6 +73,25 @@ export default function RunLogPage() {
         };
       })
     );
+=======
+        dips.map(async (dip) => {
+          const route = await getRouteById(dip.routeId);
+          return {
+            dipId: dip.dipId,
+            routeId: dip.routeId,
+            title: route?.title || dip.title || `코스 #${dip.routeId}`,
+            location: route?.location || dip.location || "미상",
+            distance:
+              typeof route?.distance === "number"
+                ? route.distance
+                : dip.distance || 5.0,
+            level: route?.difficulty || dip.difficulty || "중급",
+            complete: dip.complete === true,
+            record: dip.record || "",
+          };
+        })
+      );
+>>>>>>> Stashed changes
 
       setSavedCourses(fullList.filter((c) => !c.complete));
       setRecords(
@@ -81,7 +108,7 @@ export default function RunLogPage() {
               distance: c.distance,
               rawDate: yymmdd,
               date: yymmdd?.replace(/-/g, ".") || "",
-              time: hhmmss || ""
+              time: hhmmss || "",
             };
           })
       );
@@ -105,7 +132,7 @@ export default function RunLogPage() {
   const updateInput = (dipId, field, value) => {
     setInputValues((prev) => ({
       ...prev,
-      [dipId]: { ...prev[dipId], [field]: value }
+      [dipId]: { ...prev[dipId], [field]: value },
     }));
   };
 
@@ -119,9 +146,7 @@ export default function RunLogPage() {
     try {
       await updateDip(course.dipId, true, record);
 
-      setSavedCourses((prev) =>
-        prev.filter((c) => c.dipId !== course.dipId)
-      );
+      setSavedCourses((prev) => prev.filter((c) => c.dipId !== course.dipId));
 
       const newRecord = {
         id: course.dipId,
@@ -132,7 +157,7 @@ export default function RunLogPage() {
         distance: course.distance,
         rawDate: date,
         date: date.replace(/-/g, "."),
-        time
+        time,
       };
 
       setRecords((prev) => [...prev, newRecord]);
@@ -149,7 +174,7 @@ export default function RunLogPage() {
   const updateEditInput = (id, field, value) => {
     setEditValues((prev) => ({
       ...prev,
-      [id]: { ...prev[id], [field]: value }
+      [id]: { ...prev[id], [field]: value },
     }));
   };
 
@@ -169,7 +194,7 @@ export default function RunLogPage() {
                 ...r,
                 rawDate: date,
                 date: date.replace(/-/g, "."),
-                time
+                time,
               }
             : r
         )
@@ -199,7 +224,7 @@ export default function RunLogPage() {
         location: record.location,
         distance: record.distance,
         complete: false,
-        record: " "
+        record: " ",
       };
 
       setSavedCourses((prev) => [...prev, restoredItem]);
@@ -214,8 +239,13 @@ export default function RunLogPage() {
   const handleRemoveDip = async (course) => {
     if (!window.confirm("삭제하시겠습니까?")) return;
     try {
+<<<<<<< Updated upstream
       await removeDip(course.dipId); // dipId로 바로 삭제!
       setSavedCourses(prev => prev.filter(c => c.dipId !== course.dipId));
+=======
+      await removeDip(course.routeId, userId);
+      setSavedCourses((prev) => prev.filter((c) => c.dipId !== course.dipId));
+>>>>>>> Stashed changes
     } catch (err) {
       alert("실패: " + err.message);
     }
@@ -245,9 +275,7 @@ export default function RunLogPage() {
 
   return (
     <main className="runlog-container">
-
       <div className="runlog-wrapper">
-
         {/* 상단 제목 */}
         <section className="runlog-title-section">
           <h1 className="runlog-title">Run Log</h1>
@@ -271,7 +299,7 @@ export default function RunLogPage() {
                   onMainButton={() =>
                     setOpenSavedIds((p) => ({
                       ...p,
-                      [course.dipId]: !p[course.dipId]
+                      [course.dipId]: !p[course.dipId],
                     }))
                   }
                   
@@ -282,10 +310,11 @@ export default function RunLogPage() {
                   <div className="input-form-large">
                     <p className="form-title">완주 기록 입력</p>
 
-                    <div className="two-cols">
+                    <div className="runlog-inline-row">
                       <div className="form-row">
                         <label>날짜</label>
                         <input
+                          className="input-small"
                           type="date"
                           value={inputValues[course.dipId]?.date || ""}
                           onChange={(e) =>
@@ -297,6 +326,7 @@ export default function RunLogPage() {
                       <div className="form-row">
                         <label>시간</label>
                         <input
+                          className="input-small"
                           type="time"
                           step="1"
                           value={inputValues[course.dipId]?.time || ""}
@@ -305,17 +335,22 @@ export default function RunLogPage() {
                           }
                         />
                       </div>
-                    </div>
 
-                    <button className="btn btn-main btn-large btn-hover-float" onClick={() => submitFinish(course)}>
-                      기록 저장
-                    </button>
+                      <button
+                        className="btn btn-main btn-medium btn-hover-float"
+                        onClick={() => submitFinish(course)}
+                      >
+                        저장
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
             ))}
 
-            {savedCourses.length === 0 && <p className="empty">저장한 코스가 없습니다.</p>}
+            {savedCourses.length === 0 && (
+              <p className="empty">저장한 코스가 없습니다.</p>
+            )}
           </div>
         </section>
 
@@ -337,7 +372,7 @@ export default function RunLogPage() {
                   onMainButton={() =>
                     setEditingRecordIds((p) => ({
                       ...p,
-                      [record.id]: !p[record.id]
+                      [record.id]: !p[record.id],
                     }))
                   }
                   onCancel={() => deleteRec(record)}
@@ -347,10 +382,11 @@ export default function RunLogPage() {
                   <div className="input-form-large">
                     <p className="form-title">기록 수정</p>
 
-                    <div className="two-cols">
+                    <div className="runlog-inline-row">
                       <div className="form-row">
                         <label>날짜</label>
                         <input
+                          className="input-small"
                           type="date"
                           defaultValue={record.rawDate}
                           onChange={(e) =>
@@ -362,6 +398,7 @@ export default function RunLogPage() {
                       <div className="form-row">
                         <label>시간</label>
                         <input
+                          className="input-small"
                           type="time"
                           step="1"
                           defaultValue={record.time}
@@ -370,11 +407,14 @@ export default function RunLogPage() {
                           }
                         />
                       </div>
-                    </div>
 
-                    <button className="btn-submit" onClick={() => submitEditRecord(record)}>
-                      수정 완료
-                    </button>
+                      <button
+                        className="btn btn-accent btn-medium btn-hover-float"
+                        onClick={() => submitEditRecord(record)}
+                      >
+                        수정 완료
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
