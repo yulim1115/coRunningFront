@@ -281,7 +281,8 @@ function MainPage() {
 
       const snapped = data.matchings[0].geometry.coordinates;
       setSnappedCoords(snapped);
-
+      markersRef.current.forEach((m) => m.remove());
+      markersRef.current = [];
       const line = turf.lineString(snapped);
       const meters = Math.round(
         turf.length(line, { units: "kilometers" }) * 1000

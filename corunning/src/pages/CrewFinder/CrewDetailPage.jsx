@@ -104,6 +104,7 @@ function CrewDetailPage() {
       style: "mapbox://styles/mapbox/streets-v12",
       center: coords[0],
       zoom: 14,
+      language: "ko",
       attributionControl: false,
     });
 
