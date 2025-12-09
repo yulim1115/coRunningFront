@@ -161,6 +161,7 @@ export default function RunLogPage() {
         title: course.title,
         location: course.location,
         distance: course.distance,
+        level: course.level,
         rawDate: date,
         date: date.replace(/-/g, "."),
         time,
@@ -229,6 +230,7 @@ export default function RunLogPage() {
         title: record.title,
         location: record.location,
         distance: record.distance,
+        level: record.level,
         complete: false,
         record: " ",
       };
