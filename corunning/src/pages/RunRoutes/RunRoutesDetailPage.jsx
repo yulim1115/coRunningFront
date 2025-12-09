@@ -25,10 +25,10 @@ import {
   deleteRouteComment,
   getDipList,
   addDip,
-  removeDip,
   addLike,
   removeLike,
   checkLiked,
+  removeDipByRoute,
 } from "../../api/routesApi";
 
 function RunRoutesDetailPage() {
@@ -232,7 +232,7 @@ function RunRoutesDetailPage() {
         await addDip(route.id, loginUserId);
         setIsBookmarked(true);
       } else {
-        await removeDip(route.id, loginUserId);
+        await removeDipByRoute(route.id);
         setIsBookmarked(false);
       }
     } catch {
