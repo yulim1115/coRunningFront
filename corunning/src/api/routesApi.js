@@ -1,3 +1,5 @@
+import axios from "axios";
+
 // 코스 전체 목록 조회
 export const getRoutes = async () => {
   const res = await fetch("/api/routes");
@@ -128,3 +130,14 @@ export const updateDip = async (id, complete, record) => {
   if (!res.ok) throw new Error(text);
   return text;
 };
+
+export const deleteRouteAPI = async (routeId) => {
+    try {   
+        const response = await axios.delete(`/api/routes/${routeId}/remove`, {withCredentials: true})
+        console.log("코스 삭제 API 응답:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("코스 삭제 실패:", error);
+        throw error;
+    }       
+}

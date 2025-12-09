@@ -122,3 +122,15 @@ export const updateCrewAPI = async(id, updateData) =>{
     throw error;
   }
 }
+
+//크루 삭제하기
+export const deleteCrewAPI = async (crewId) => {
+    try {   
+        const response = await axios.delete(`/api/crew-board/${crewId}`, {withCredentials: true}) 
+        console.log("크루 삭제 API 응답:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("크루 삭제 실패:", error);
+        throw error;
+    }   
+}

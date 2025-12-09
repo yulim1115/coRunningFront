@@ -37,6 +37,7 @@ function RunRoutesCreatePage() {
   const [region, setRegion] = useState({ sido: "", gu: "" });
   const [difficulty, setDifficulty] = useState("");
   const [type, setType] = useState("");
+  const [mode, setMode] = useState("draw");
 
   const mapContainer = useRef(null);
   const mapRef = useRef(null);
@@ -44,6 +45,7 @@ function RunRoutesCreatePage() {
 
   // 지도 생성
   useEffect(() => {
+    if (mode !== "draw") return;
     if (mapRef.current) return;
 
     mapRef.current = new mapboxgl.Map({
@@ -63,8 +65,13 @@ function RunRoutesCreatePage() {
     // 지도 클릭 좌표 저장
     mapRef.current.on("load", () => {
       mapRef.current.on("click", (e) => {
+        setSnappedCoords([]);
         const pos = e.lngLat;
         setRouteCoords((prev) => [...prev, [pos.lng, pos.lat]]);
+        if (mapRef.current?.getSource("route")) {
+          mapRef.current.removeLayer("route");
+          mapRef.current.removeSource("route");
+        }
       });
     });
 
@@ -74,7 +81,7 @@ function RunRoutesCreatePage() {
         mapRef.current = null;
       }
     };
-  }, []);
+  }, [mode]);
 
   // 마커 표시
   useEffect(() => {
@@ -159,7 +166,12 @@ function RunRoutesCreatePage() {
 
   // 한 점 되돌리기
   const undoLastPoint = () => {
+    setSnappedCoords([]);
     setRouteCoords((prev) => prev.slice(0, -1));
+    if (mapRef.current?.getSource("route")) {
+      mapRef.current.removeLayer("route");
+      mapRef.current.removeSource("route");
+    }
   };
 
   // 전체 초기화
@@ -201,7 +213,8 @@ function RunRoutesCreatePage() {
 
       const snapped = data.matchings[0].geometry.coordinates;
       setSnappedCoords(snapped);
-
+      markersRef.current.forEach((m) => m.remove());
+      markersRef.current = [];
       const line = turf.lineString(snapped);
       const meters = Math.round(
         turf.length(line, { units: "kilometers" }) * 1000
@@ -257,38 +270,69 @@ function RunRoutesCreatePage() {
         <form onSubmit={handleSubmit} className="create-form">
           {/* 지도 */}
           <div className="form-group">
-            <div className="map-btn-group">
-              <button
-                type="button"
-                className="btn btn-small btn-soft"
-                onClick={undoLastPoint}
-              >
-                되돌리기
-              </button>
-              <button
-                type="button"
-                className="btn btn-small btn-soft"
-                onClick={resetRoute}
-              >
-                초기화
-              </button>
-              <button
-                type="button"
-                className="btn btn-small btn-accent"
-                onClick={finishRoute}
-              >
-                경로 생성
-              </button>
+            <div className="map-btn-row">
+              <div className="left-controls">
+                <button type="button" className={mode === "draw" ? "active" : ""} onClick={() => {setMode("draw"); resetRoute()}}>
+                  지도에 그리기
+                </button>
+                <button type="button" className={mode === "array" ? "active" : ""} onClick={() => setMode("array")}>
+                  경로 배열 입력
+                </button>
+              </div>
+              <div className="right-controls">
+                <button
+                  type="button"
+                  className="btn btn-small btn-soft"
+                  onClick={undoLastPoint}
+                >
+                  되돌리기
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-small btn-soft"
+                  onClick={resetRoute}
+                >
+                  초기화
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-small btn-accent"
+                  onClick={finishRoute}
+                >
+                  경로 생성
+                </button>
+                </div>
             </div>
+            {mode === "draw" && (
+              <>
+                <div ref={mapContainer} className="mapbox-container" />
+                <p className="map-desc">지도를 클릭하여 경로를 그릴 수 있습니다.</p>
 
-            <div ref={mapContainer} className="mapbox-container" />
-            <p className="map-desc">지도를 클릭하여 경로를 그릴 수 있습니다.</p>
-
-            {distance > 0 && (
-              <p className="distance-text">
-                예상 거리: {(distance / 1000).toFixed(1)} km
-              </p>
+                {distance > 0 && (
+                  <p className="distance-text">
+                    예상 거리: {(distance / 1000).toFixed(1)} km
+                  </p>
+                )}
+              </>
             )}
+            {mode === "array" && (
+              <div className="array-input-box">
+                <textarea
+                  className="array-textarea"
+                  placeholder="[[126.93,37.52],[126.92,37.53],...]"
+                  onChange={(e) => {
+                    try {
+                      const parsed = JSON.parse(e.target.value);
+                      setSnappedCoords(parsed);
+                    } catch {
+                      setSnappedCoords([]);
+                    }
+                  }
+                }  
+                />
+              </div>
+            )}
+
           </div>
 
           {/* 제목 입력 */}
