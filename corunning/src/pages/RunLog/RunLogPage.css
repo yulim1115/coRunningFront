@@ -73,7 +73,18 @@
   gap: var(--space-sm);
   width: 100%;
 }
+/* 시간 분리 input 그룹 */
+.time-split-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 40px;
+}
 
+.input-tiny {
+  width: 100px;
+  text-align: center;
+}
 /* 날짜 + 시간 input 그룹 */
 .runlog-container .runlog-inline-row .form-row {
   display: flex;

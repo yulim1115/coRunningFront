@@ -49,8 +49,6 @@ export default function RunLogPage() {
 
   const [openSavedIds, setOpenSavedIds] = useState({});
   const [editingRecordIds, setEditingRecordIds] = useState({});
-  const [timeValue, setTimeValue] = useState("");
-  const [editTimeValue, setEditTimeValue] = useState("");
   const [inputValues, setInputValues] = useState({});
   const [editValues, setEditValues] = useState({});
 
@@ -142,17 +140,23 @@ export default function RunLogPage() {
 
   // 완주 기록 저장
   const submitFinish = async (course) => {
-    const { date, time } = inputValues[course.dipId] || {};
-    if (!date || !time) return alert("날짜와 시간을 입력해주세요.");
-    if (!isValidTime(time)) {
-      return alert("시간은 HH:MM:SS 형식이며 MM/SS는 0~59여야 합니다.");
-    }
+    const { date, hh, mm, ss } = inputValues[course.dipId] || {};
+
+    if (!date || !hh || !mm || !ss)
+      return alert("날짜와 시간을 모두 입력해주세요.");
+
+    if (Number(mm) > 59 || Number(ss) > 59)
+      return alert("분과 초는 0~59여야 합니다.");
+
+    const time = `${hh.padStart(2, "0")}:${mm.padStart(2,"0")}:${ss.padStart(2,"0")}`;
     const record = `${date} ${time}`;
 
     try {
       await updateDip(course.dipId, true, record);
 
-      setSavedCourses((prev) => prev.filter((c) => c.dipId !== course.dipId));
+      setSavedCourses((prev) =>
+        prev.filter((c) => c.dipId !== course.dipId)
+      );
 
       const newRecord = {
         id: course.dipId,
@@ -168,14 +172,14 @@ export default function RunLogPage() {
       };
 
       setRecords((prev) => [...prev, newRecord]);
-
       alert("기록이 저장되었습니다!");
-      setTimeValue("");
+
       setOpenSavedIds((prev) => ({ ...prev, [course.dipId]: false }));
     } catch (err) {
       alert("저장 실패: " + err.message);
     }
   };
+
 
   // 기록 수정 입력값 업데이트
   const updateEditInput = (id, field, value) => {
@@ -187,9 +191,17 @@ export default function RunLogPage() {
 
   // 기록 수정 저장
   const submitEditRecord = async (record) => {
+    const hh = editValues[record.id]?.hh || record.time.split(":")[0];
+    const mm = editValues[record.id]?.mm || record.time.split(":")[1];
+    const ss = editValues[record.id]?.ss || record.time.split(":")[2];
+
     const date = editValues[record.id]?.date || record.rawDate;
-    const time = editValues[record.id]?.time || record.time;
-    const newRecordStr = `${date} ${time}`;
+
+    if (Number(mm) > 59 || Number(ss) > 59)
+      return alert("분과 초는 0~59여야 합니다.");
+
+    const newTime = `${hh.padStart(2, "0")}:${mm.padStart(2,"0")}:${ss.padStart(2,"0")}`;
+    const newRecordStr = `${date} ${newTime}`;
 
     try {
       await updateDip(record.id, true, newRecordStr);
@@ -197,23 +209,18 @@ export default function RunLogPage() {
       setRecords((prev) =>
         prev.map((r) =>
           r.id === record.id
-            ? {
-                ...r,
-                rawDate: date,
-                date: date.replace(/-/g, "."),
-                time,
-              }
+            ? { ...r, rawDate: date, date: date.replace(/-/g, "."), time: newTime }
             : r
         )
       );
 
       alert("기록이 수정되었습니다!");
-      setEditTimeValue("");
-      setEditingRecordIds((prev) => ({ ...prev, [record.id]: false }));
+      setEditingRecordIds((p) => ({ ...p, [record.id]: false }));
     } catch (err) {
       alert("수정 실패: " + err.message);
     }
   };
+
 
   // 기록 삭제 후 저장한 코스로 되돌리기
   const deleteRec = async (record) => {
@@ -328,36 +335,45 @@ export default function RunLogPage() {
 
                       <div className="form-row">
                         <label>시간</label>
-                        <input
-                          className="input-small"
-                          type="text"
-                          placeholder="HH:MM:SS (1234입력 -> 00:12:34)"
-                          value = {timeValue}
-                          onChange={(e) => {
-                            const onlyNums = e.target.value.replace(/\D/g, "");
-                            setTimeValue(onlyNums);
-                            const formatted = formatToTime(e.target.value);
-                            updateInput(course.dipId, "time", formatted);
-                          }}
-                          onKeyDown={(e) => {
-                            // 숫자, 백스페이스, 탭 등만 허용
-                            const allowed = [
-                              "Backspace",
-                              "Delete",
-                              "Tab",
-                              "ArrowLeft",
-                              "ArrowRight",
-                            ];
-                            if (allowed.includes(e.key)) return;
-
-                            // 숫자가 아니면 입력 막기
-                            if (!/^[0-9]$/.test(e.key)) {
-                              e.preventDefault();
-                            }
-                          }}
-                          maxLength={6}
-                        />
+                        <div className="time-split-row">
+                          <input
+                            className="input-tiny"
+                            type="text"
+                            placeholder="HH"
+                            maxLength={2}
+                            value={inputValues[course.dipId]?.hh || ""}
+                            onChange={(e) => {
+                              const v = e.target.value.replace(/\D/g, "");
+                              updateInput(course.dipId, "hh", v);
+                            }}
+                          />
+                          <span>:</span>
+                          <input
+                            className="input-tiny"
+                            type="text"
+                            placeholder="MM"
+                            maxLength={2}
+                            value={inputValues[course.dipId]?.mm || ""}
+                            onChange={(e) => {
+                              const v = e.target.value.replace(/\D/g, "");
+                              updateInput(course.dipId, "mm", v);
+                            }}
+                          />
+                          <span>:</span>
+                          <input
+                            className="input-tiny"
+                            type="text"
+                            placeholder="SS"
+                            maxLength={2}
+                            value={inputValues[course.dipId]?.ss || ""}
+                            onChange={(e) => {
+                              const v = e.target.value.replace(/\D/g, "");
+                              updateInput(course.dipId, "ss", v);
+                            }}
+                          />
+                        </div>
                       </div>
+
 
                       <button
                         className="btn btn-main btn-medium btn-hover-float"
@@ -420,39 +436,38 @@ export default function RunLogPage() {
 
                       <div className="form-row">
                         <label>시간</label>
-                        <input
-                          inputMode="numeric"
-                          className="input-small"
-                          type="text"
-                          placeholder="HH:MM:SS"
-                          defaultvalue={""}
-                          value = {editTimeValue}
-                          onChange={(e) => {
-                            const onlyNums = e.target.value.replace(/\D/g, "");
-                            setEditTimeValue(onlyNums);
-                            const formatted = formatToTime(e.target.value);
-                            updateEditInput(record.id, "time", formatted);
-                          }}
-                          onKeyDown={(e) => {
-                            // 숫자, 백스페이스, 탭 등만 허용
-                            const allowed = [
-                              "Backspace",
-                              "Delete",
-                              "Tab",
-                              "ArrowLeft",
-                              "ArrowRight",
-                            ];
-                            if (allowed.includes(e.key)) return;
+                        <div className="time-split-row">
+                          <input
+                            className="input-tiny"
+                            type="text"
+                            placeholder="HH"
+                            maxLength={2}
+                            defaultValue={record.time?.split(":")[0]}
+                            onChange={(e) => updateEditInput(record.id, "hh", e.target.value.replace(/\D/g, ""))}
+                          />
+                          <span>:</span>
 
-                            // 숫자가 아니면 입력 막기
-                            if (!/^[0-9]$/.test(e.key)) {
-                              e.preventDefault();
-                            }
-                          }}
-                          maxLength={6}
-                          
-                        />
+                          <input
+                            className="input-tiny"
+                            type="text"
+                            placeholder="MM"
+                            maxLength={2}
+                            defaultValue={record.time?.split(":")[1]}
+                            onChange={(e) => updateEditInput(record.id, "mm", e.target.value.replace(/\D/g, ""))}
+                          />
+                          <span>:</span>
+
+                          <input
+                            className="input-tiny"
+                            type="text"
+                            placeholder="SS"
+                            maxLength={2}
+                            defaultValue={record.time?.split(":")[2]}
+                            onChange={(e) => updateEditInput(record.id, "ss", e.target.value.replace(/\D/g, ""))}
+                          />
+                        </div>
                       </div>
+
 
                       <button
                         className="btn btn-accent btn-medium btn-hover-float"
