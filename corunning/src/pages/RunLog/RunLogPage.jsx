@@ -38,23 +38,33 @@ export default function RunLogPage() {
       const dips = await getDipList(userId);
 
       const fullList = await Promise.all(
-        dips.map(async (dip) => {
-          const route = await getRouteById(dip.routeId);
-          return {
-            dipId: dip.dipId,
-            routeId: dip.routeId,
-            title: route?.title || dip.title || `코스 #${dip.routeId}`,
-            location: route?.location || dip.location || "미상",
-            distance:
-              typeof route?.distance === "number"
-                ? route.distance
-                : dip.distance || 5.0,
-            level: route?.difficulty || dip.difficulty || "중급",
-            complete: dip.complete === true,
-            record: dip.record || ""
-          };
-        })
-      );
+      dips.map(async (dip) => {
+        let route = null;
+
+        // ⭐ routeId가 있는 경우에만 API 호출
+        if (dip.routeId) {
+          try {
+            route = await getRouteById(dip.routeId);
+          } catch (e) {
+            console.warn("route 조회 실패:", dip.routeId, e);
+          }
+        }
+
+        return {
+          dipId: dip.dipId,
+          routeId: dip.routeId,   // null 일 수 있음
+          title: route?.title || dip.title || "커스텀 코스",
+          location: route?.location || dip.location || "직접 입력",
+          distance:
+            typeof route?.distance === "number"
+              ? route.distance
+              : dip.distance || 0,
+          level: route?.difficulty || dip.difficulty || "커스텀",
+          complete: dip.complete === true,
+          record: dip.record || ""
+        };
+      })
+    );
 
       setSavedCourses(fullList.filter((c) => !c.complete));
       setRecords(
@@ -204,14 +214,13 @@ export default function RunLogPage() {
   const handleRemoveDip = async (course) => {
     if (!window.confirm("삭제하시겠습니까?")) return;
     try {
-      await removeDip(course.routeId, userId);
-      setSavedCourses((prev) =>
-        prev.filter((c) => c.dipId !== course.dipId)
-      );
+      await removeDip(course.dipId); // dipId로 바로 삭제!
+      setSavedCourses(prev => prev.filter(c => c.dipId !== course.dipId));
     } catch (err) {
       alert("실패: " + err.message);
     }
   };
+
 
   // 로딩 화면
   if (loading) {
@@ -265,6 +274,8 @@ export default function RunLogPage() {
                       [course.dipId]: !p[course.dipId]
                     }))
                   }
+                  
+                  onDelete={() => handleRemoveDip(course)}
                 />
 
                 {openSavedIds[course.dipId] && (
@@ -330,7 +341,6 @@ export default function RunLogPage() {
                     }))
                   }
                   onCancel={() => deleteRec(record)}
-                  onDelete={() => handleRemoveDip(record)}
                 />
 
                 {editingRecordIds[record.id] && (
