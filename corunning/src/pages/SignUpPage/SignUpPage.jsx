@@ -33,6 +33,13 @@ function SignUpPage() {
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
+    document.body.style.backgroundColor = "var(--color-bg-light)";
+    return () => {
+      document.body.style.backgroundColor = "var(--color-bg)";
+    };
+  }, []);
+
+  useEffect(() => {
     if (timer <= 0) return;
     const interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
     return () => clearInterval(interval);

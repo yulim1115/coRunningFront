@@ -6,6 +6,13 @@ import { getMyInfo, loginAPI } from "../../api/userApi";
 function LoginPage() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.body.style.backgroundColor = "var(--color-bg-light)";
+    return () => {
+      document.body.style.backgroundColor = "var(--color-bg)";
+    };
+  }, []);
+
   // 로그인 상태 확인
   useEffect(() => {
     const isLogin = sessionStorage.getItem("isLogin") === "true";
@@ -58,7 +65,6 @@ function LoginPage() {
 
         {/* 입력폼 */}
         <form onSubmit={handleLogin} className="login-form">
-
           {/* 이메일 */}
           <div className="form-group">
             <label className="form-label">이메일 (ID)</label>

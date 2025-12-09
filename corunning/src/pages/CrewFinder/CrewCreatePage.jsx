@@ -1,5 +1,5 @@
 /* CrewCreatePage.jsx */
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CrewCreatePage.css";
 import RegionSelector from "../../components/common/RegionSelector";
@@ -16,6 +16,13 @@ function CrewCreatePage() {
   const [boardType, setBoardType] = useState("");
   const [recruitCount, setRecruitCount] = useState("");
   const [deadline, setDeadline] = useState("");
+
+  useEffect(() => {
+    document.body.style.backgroundColor = "var(--color-bg-light)";
+    return () => {
+      document.body.style.backgroundColor = "var(--color-bg)";
+    };
+  }, []);
 
   const isDisabled =
     !title.trim() ||

@@ -11,6 +11,13 @@ mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 function RunRoutesCreatePage() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.body.style.backgroundColor = "var(--color-bg-light)";
+    return () => {
+      document.body.style.backgroundColor = "var(--color-bg)";
+    };
+  }, []);
+
   // 로그인 확인
   useEffect(() => {
     const isLogin = sessionStorage.getItem("isLogin") === "true";
@@ -45,7 +52,7 @@ function RunRoutesCreatePage() {
       center: [126.9784, 37.5665],
       zoom: 12,
       attributionControl: false,
-      language: "ko"
+      language: "ko",
     });
 
     mapRef.current.addControl(
@@ -106,14 +113,17 @@ function RunRoutesCreatePage() {
     if (routeCoords.length > 1) {
       mapRef.current.addSource("temp-route", {
         type: "geojson",
-        data: { type: "Feature", geometry: { type: "LineString", coordinates: routeCoords } }
+        data: {
+          type: "Feature",
+          geometry: { type: "LineString", coordinates: routeCoords },
+        },
       });
 
       mapRef.current.addLayer({
         id: "temp-route",
         type: "line",
         source: "temp-route",
-        paint: { "line-color": "#4A69BB", "line-width": 4 }
+        paint: { "line-color": "#4A69BB", "line-width": 4 },
       });
     }
   }, [routeCoords]);
@@ -133,14 +143,17 @@ function RunRoutesCreatePage() {
 
     mapRef.current.addSource("route", {
       type: "geojson",
-      data: { type: "Feature", geometry: { type: "LineString", coordinates: snappedCoords } }
+      data: {
+        type: "Feature",
+        geometry: { type: "LineString", coordinates: snappedCoords },
+      },
     });
 
     mapRef.current.addLayer({
       id: "route",
       type: "line",
       source: "route",
-      paint: { "line-color": "#FF5500", "line-width": 5 }
+      paint: { "line-color": "#FF5500", "line-width": 5 },
     });
   }, [snappedCoords]);
 
@@ -190,7 +203,9 @@ function RunRoutesCreatePage() {
       setSnappedCoords(snapped);
 
       const line = turf.lineString(snapped);
-      const meters = Math.round(turf.length(line, { units: "kilometers" }) * 1000);
+      const meters = Math.round(
+        turf.length(line, { units: "kilometers" }) * 1000
+      );
       setDistance(meters);
     } catch {
       alert("스냅 요청 오류");
@@ -202,7 +217,8 @@ function RunRoutesCreatePage() {
     e.preventDefault();
 
     if (!snappedCoords.length) return alert("경로를 완성해주세요.");
-    if (!title.trim() || !region.sido || !difficulty) return alert("필수 항목을 입력해주세요.");
+    if (!title.trim() || !region.sido || !difficulty)
+      return alert("필수 항목을 입력해주세요.");
 
     const data = {
       route: JSON.stringify(snappedCoords),
@@ -212,14 +228,14 @@ function RunRoutesCreatePage() {
       distance: Math.round((distance / 1000) * 10) / 10,
       location: `${region.sido}${region.gu ? " " + region.gu : ""}`,
       difficulty,
-      type
+      type,
     };
 
     try {
       const res = await fetch("/api/routes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       const out = await res.json();
@@ -235,22 +251,32 @@ function RunRoutesCreatePage() {
   return (
     <main className="route-create-container">
       <div className="create-wrapper">
-
         {/* 제목 */}
         <h2 className="create-title">코스 등록하기</h2>
 
         <form onSubmit={handleSubmit} className="create-form">
-
           {/* 지도 */}
           <div className="form-group">
             <div className="map-btn-group">
-              <button type="button" className="btn btn-small btn-soft" onClick={undoLastPoint}>
+              <button
+                type="button"
+                className="btn btn-small btn-soft"
+                onClick={undoLastPoint}
+              >
                 되돌리기
               </button>
-              <button type="button" className="btn btn-small btn-soft" onClick={resetRoute}>
+              <button
+                type="button"
+                className="btn btn-small btn-soft"
+                onClick={resetRoute}
+              >
                 초기화
               </button>
-              <button type="button" className="btn btn-small btn-accent" onClick={finishRoute}>
+              <button
+                type="button"
+                className="btn btn-small btn-accent"
+                onClick={finishRoute}
+              >
                 경로 생성
               </button>
             </div>
@@ -258,7 +284,11 @@ function RunRoutesCreatePage() {
             <div ref={mapContainer} className="mapbox-container" />
             <p className="map-desc">지도를 클릭하여 경로를 그릴 수 있습니다.</p>
 
-            {distance > 0 && <p className="distance-text">예상 거리: {(distance / 1000).toFixed(1)} km</p>}
+            {distance > 0 && (
+              <p className="distance-text">
+                예상 거리: {(distance / 1000).toFixed(1)} km
+              </p>
+            )}
           </div>
 
           {/* 제목 입력 */}
@@ -277,12 +307,16 @@ function RunRoutesCreatePage() {
           {/* 입력 필드 */}
           <div className="meta-fields">
             <div className="form-group">
-              <label className="form-label">지역 <span className="required">*</span></label>
+              <label className="form-label">
+                지역 <span className="required">*</span>
+              </label>
               <RegionSelector onChange={(v) => setRegion(v)} />
             </div>
 
             <div className="form-group">
-              <label className="form-label">난이도 <span className="required">*</span></label>
+              <label className="form-label">
+                난이도 <span className="required">*</span>
+              </label>
               <div className="custom-select">
                 <select onChange={(e) => setDifficulty(e.target.value)}>
                   <option value="">선택</option>
@@ -295,7 +329,9 @@ function RunRoutesCreatePage() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">유형 <span className="required">*</span></label>
+              <label className="form-label">
+                유형 <span className="required">*</span>
+              </label>
               <div className="custom-select">
                 <select onChange={(e) => setType(e.target.value)}>
                   <option value="">선택</option>
@@ -318,10 +354,18 @@ function RunRoutesCreatePage() {
 
           {/* 버튼 */}
           <div className="create-btn-row">
-            <button type="submit" className="btn btn-medium btn-main btn-hover-float" disabled={!snappedCoords.length}>
+            <button
+              type="submit"
+              className="btn btn-medium btn-main btn-hover-float"
+              disabled={!snappedCoords.length}
+            >
               등록하기
             </button>
-            <button type="button" className="btn btn-medium btn-soft" onClick={resetRoute}>
+            <button
+              type="button"
+              className="btn btn-medium btn-soft"
+              onClick={resetRoute}
+            >
               취소
             </button>
           </div>
