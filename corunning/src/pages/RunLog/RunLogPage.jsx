@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import LogCard from "../../components/cards/LogCard";
 import "./RunLogPage.css";
+import Skeleton from "./RunLogSkeleton";
 
 import {
   getDipList,
@@ -263,25 +264,7 @@ export default function RunLogPage() {
   
 
   // 로딩 화면
-  if (loading) {
-    return (
-      <div className="runlog-wrapper">
-        <h2 className="runlog-title">Run Log</h2>
-
-        <div className="section-box">
-          <div className="skeleton skeleton-title"></div>
-          <div className="skeleton skeleton-card"></div>
-          <div className="skeleton skeleton-card"></div>
-        </div>
-
-        <div className="section-box">
-          <div className="skeleton skeleton-title"></div>
-          <div className="skeleton skeleton-card"></div>
-          <div className="skeleton skeleton-card"></div>
-        </div>
-      </div>
-    );
-  }
+  if (!loading) return <Skeleton />;
 
   return (
     <main className="runlog-container">

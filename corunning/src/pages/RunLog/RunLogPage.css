@@ -113,40 +113,102 @@
   font-size: var(--font-small);
 }
 
-/* 스켈레톤 */
-.runlog-container .skeleton {
-  background: #e2e2e2;
+/* 공통 스켈레톤 베이스 */
+.skeleton {
+  position: relative;
+  overflow: hidden;
   border-radius: 6px;
-  margin-bottom: 12px;
-  animation: pulse 1.5s infinite ease-in-out;
 }
 
-.runlog-container .skeleton-title {
-  width: 160px;
-  height: 20px;
-  margin-bottom: 20px;
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: skeleton-shimmer 1.2s infinite;
 }
 
-.runlog-container .skeleton-card {
-  height: 80px;
-  width: 100%;
-  margin-bottom: 14px;
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
-.runlog-container .skeleton-small {
-  width: 80px;
+/* 제목 자리 */
+.skeleton-title {
+  width: 180px;
+  height: 24px;
+}
+
+/* 서브타이틀 (폼 제목) */
+.skeleton-subtitle {
+  width: 120px;
+  height: 18px;
+  margin-bottom: 10px;
+}
+
+/* 카드(로그 카드) 영역 */
+.skeleton-card {
+  border-radius: var(--card-radius);
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  margin-bottom: 10px;
+}
+
+/* 카드 안 텍스트 라인 */
+.skeleton-line {
   height: 14px;
   margin-bottom: 8px;
 }
 
-@keyframes pulse {
-  0% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.6;
-  }
+.skeleton-line.short {
+  width: 40%;
+}
+
+/* 라벨 자리 */
+.skeleton-label {
+  width: 50px;
+  height: 12px;
+}
+
+/* 날짜 input 자리 */
+.skeleton-input-small {
+  width: 140px;
+  height: 40px;
+}
+
+/* 시간 input(HH/MM/SS) 자리 */
+.skeleton-input-tiny {
+  width: 60px;
+  height: 40px;
+}
+
+/* 버튼 자리 */
+.skeleton-button {
+  width: 100px;
+  height: 40px;
+  border-radius: 999px;
+}
+
+/* 입력폼 전체를 스켈레톤 스타일로 */
+.skeleton-form {
+  border-style: dashed;
+}
+.tiny {
+  display: inline-block;
+  width: 60px;
+  height: 14px;
+  margin-right: 8px;
+  margin-bottom: 0px;
+}
+/* 기존 구조와 자연스럽게 맞추기 (필요시 조정 가능) */
+.runlog-container .saved-list .saved-item,
+.runlog-container .record-list .record-item {
+  margin-bottom: var(--space-sm);
 }
