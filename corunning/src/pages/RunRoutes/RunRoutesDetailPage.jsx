@@ -29,6 +29,7 @@ import {
   removeLike,
   checkLiked,
   removeDipByRoute,
+  deleteRouteAPI
 } from "../../api/routesApi";
 
 function RunRoutesDetailPage() {
@@ -266,6 +267,17 @@ function RunRoutesDetailPage() {
     }
   };
 
+  //루트 삭제
+  const handleDeleteroute = async (writerId) => {
+    try {
+      await deleteRouteAPI(writerId);
+      navigate("/routes");
+    } catch {
+      alert("경로 삭제 실패");
+    }
+
+  }
+
   // 로딩 화면
   if (loading) {
     return (
@@ -353,6 +365,15 @@ function RunRoutesDetailPage() {
           <span><FaRunning /> {difficultyLabel}</span>
           <span><FaRoute /> {route.distance} km</span>
           <span><FaUser /> 작성자 {route.writerName}</span>
+          {loginUserId === route.writer && (
+            <div style={{display: "flex",  marginLeft: "auto", gap: "6px",}}>
+            <button className="btn-inline-action" onClick={() => handleDeleteroute(route.id)} 
+            style={{ height: "32px", padding: "0 10px", fontSize: "13px", 
+            fontWeight: "500", borderRadius: "4px", background: "none", border: "1px solid #D9534F", color: "#D9534F" }}>
+              삭제
+            </button>
+            </div>
+          )}
         </div>
       </section>
 

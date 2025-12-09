@@ -11,6 +11,7 @@ import {
   postCrewCommentAPI,
   deleteCrewCommentAPI,
   checkApplicationAPI,
+  deleteCrewAPI
 } from "../../api/crewApi";
 
 function CrewDetailPage() {
@@ -178,6 +179,16 @@ function CrewDetailPage() {
     }
   };
 
+  // 게시물 삭제
+  const handleDeleteboard = async (crewId) => {
+    try {
+      await deleteCrewAPI(crewId);
+      navigate("/crews");
+    } catch {
+      alert("게시물 삭제 실패");
+    }
+  }
+
   // 스켈레톤
   if (loading) {
     return (
@@ -246,6 +257,19 @@ function CrewDetailPage() {
         <div className="meta-row">
           <span><FaUser />작성자 {crew.writer_name}</span>
           <span><FaClock />작성일 {formatDate(crew.createdAt)}</span>
+          {loginUserId === crew.writerId && (
+            <div  style={{ display: "flex",  marginLeft: "auto", gap: "6px" }}>
+            <button className="btn-inline-action" onClick={() => navigate(`/crews/modify/${crew.id}`)} 
+              style={{ height: 32, padding: "0 10px", fontSize: 13, fontWeight: 500, borderRadius: 4, 
+              background: "none", border: "1px solid #DDDDDD", color: "#666666"}}>
+              수정
+            </button>
+            <button className="btn-inline-action" onClick={() => handleDeleteboard(crew.id)} 
+            style={{ height: "32px", padding: "0 10px", fontSize: "13px", fontWeight: "500", borderRadius: "4px", background: "none", border: "1px solid #D9534F", color: "#D9534F" }}>
+              삭제
+            </button>
+            </div>
+          )}
         </div>
       </section>
 

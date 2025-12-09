@@ -24,7 +24,7 @@ function CrewModifyPage() {
           console.log("내 크루 정보:", data);
           setTitle(data.title?? "");
           setContent(data.content?? "");
-          setRoutePath(data.routePath);
+          setRoutePath(data.routePathJson??"");
           const [sido, gu] = (data.region?? "").split(" ");
           setRegion({ sido, gu });
           setBoardType(data.boardType);
@@ -52,7 +52,7 @@ function CrewModifyPage() {
     const data = {
       title,
       content,
-      routePathJson: routePath,
+      routePathJson: routePath??null,
       region: `${region.sido} ${region.gu}`,
       boardType,
       recruitCount,
