@@ -23,36 +23,10 @@ function RunLogSkeleton() {
                 {/* LogCard 자리 스켈레톤 */}
                 <div className="skeleton-card">
                   <div className="skeleton skeleton-line short"></div>
-                  <div className="skeleton skeleton-line"></div>
                   <div className="card-row">
                     <div className="skeleton skeleton-line tiny"></div>
                     <div className="skeleton skeleton-line tiny"></div>
                     <div className="skeleton skeleton-line tiny"></div>
-                  </div>
-                </div>
-
-                {/* 펼쳐진 입력폼 스켈레톤 (1~2개 정도만 보이고 싶으면 조건부로 렌더링해도 됨) */}
-                <div className="input-form-large skeleton-form">
-                  <div className="skeleton skeleton-subtitle"></div>
-
-                  <div className="runlog-inline-row">
-                    <div className="form-row">
-                      <div className="skeleton skeleton-label"></div>
-                      <div className="skeleton skeleton-input-small"></div>
-                    </div>
-
-                    <div className="form-row">
-                      <div className="skeleton skeleton-label"></div>
-                      <div className="time-split-row">
-                        <div className="skeleton skeleton-input-tiny"></div>
-                        <span>:</span>
-                        <div className="skeleton skeleton-input-tiny"></div>
-                        <span>:</span>
-                        <div className="skeleton skeleton-input-tiny"></div>
-                      </div>
-                    </div>
-
-                    <div className="skeleton skeleton-button"></div>
                   </div>
                 </div>
               </div>
@@ -71,35 +45,10 @@ function RunLogSkeleton() {
               <div key={idx} className="record-item">
                 <div className="skeleton-card">
                   <div className="skeleton skeleton-line short"></div>
-                  <div className="skeleton skeleton-line"></div>
                   <div className="card-row">
                     <div className="skeleton skeleton-line tiny"></div>
                     <div className="skeleton skeleton-line tiny"></div>
                     <div className="skeleton skeleton-line tiny"></div>
-                  </div>
-                </div>
-
-                <div className="input-form-large skeleton-form">
-                  <div className="skeleton skeleton-subtitle"></div>
-
-                  <div className="runlog-inline-row">
-                    <div className="form-row">
-                      <div className="skeleton skeleton-label"></div>
-                      <div className="skeleton skeleton-input-small"></div>
-                    </div>
-
-                    <div className="form-row">
-                      <div className="skeleton skeleton-label"></div>
-                      <div className="time-split-row">
-                        <div className="skeleton skeleton-input-tiny"></div>
-                        <span>:</span>
-                        <div className="skeleton skeleton-input-tiny"></div>
-                        <span>:</span>
-                        <div className="skeleton skeleton-input-tiny"></div>
-                      </div>
-                    </div>
-
-                    <div className="skeleton skeleton-button"></div>
                   </div>
                 </div>
               </div>
