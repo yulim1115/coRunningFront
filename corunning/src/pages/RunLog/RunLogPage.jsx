@@ -264,7 +264,7 @@ export default function RunLogPage() {
   
 
   // 로딩 화면
-  if (!loading) return <Skeleton />;
+  if (loading) return <Skeleton />;
 
   return (
     <main className="runlog-container">
