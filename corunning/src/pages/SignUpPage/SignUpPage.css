@@ -1,4 +1,4 @@
-/* 회원가입 레이아웃 */
+/* 레이아웃 */
 .signup-container {
   display: flex;
   justify-content: center;
@@ -7,7 +7,6 @@
   color: var(--color-text-dark);
 }
 
-/* 회원가입 카드 */
 .signup-container .signup-wrapper {
   width: 540px;
   background: var(--color-bg);
@@ -17,7 +16,6 @@
   margin: var(--space-xl) auto;
 }
 
-/* 제목 */
 .signup-container .signup-title {
   font-size: var(--font-h2);
   text-align: center;
@@ -25,106 +23,31 @@
   color: var(--color-main);
 }
 
-/* 입력 폼 */
+/* form */
 .signup-container .signup-form {
   margin-top: var(--space-md);
   display: flex;
   flex-direction: column;
 }
 
-/* 입력 그룹 */
 .signup-container .form-group {
   display: flex;
   flex-direction: column;
   margin-top: var(--space-md);
 }
 
-/* 주소 입력 그룹 */
-.signup-container .address-group .form-group {
-  margin-bottom: 8px;
-}
-
-/* 라벨 */
+/* 입력 라벨 */
 .signup-container .form-label {
   font-size: var(--font-small);
   font-weight: var(--fw-medium);
   margin-bottom: var(--space-xs);
 }
 
-.signup-container .required {
-  color: var(--color-red);
-}
-
-/* date input 스타일 통일 */
-.signup-container input[type="date"] {
-  font-family: 'Noto Sans KR', sans-serif;
-  padding-right: 10px;
-  padding-left: 12px; /* placeholder처럼 보일 텍스트 공간 확보 */
-  position: relative;
-}
-
-/* 입력 영역 폰트 통일 */
-.signup-container input[type="date"]::-webkit-datetime-edit,
-.signup-container input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-  font-family: 'Noto Sans KR', sans-serif;
-}
-
-/* 달력 아이콘 스타일 */
-.signup-container input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: grayscale(60%);
-  opacity: 0.7;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.signup-container input[type="date"]::-webkit-calendar-picker-indicator:hover {
-  opacity: 1;
-}
-
-/* 선택 전 - 흐린 텍스트 */
-.signup-container .date-empty {
-  color: transparent; /* 내부 텍스트를 숨기고 가짜 placeholder로 대체 */
-}
-
-.signup-container .date-empty::-webkit-datetime-edit {
-  color: transparent;
-}
-
-/* 가짜 placeholder (YYYY-MM-DD 표시) */
-.signup-container .date-empty::before {
-  content: "YYYY-MM-DD";
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-text-light);
-  pointer-events: none;
-  font-size: var(--font-caption);
-}
-
-/* 선택 후 - 기존 텍스트 색 */
-.signup-container .date-filled {
-  color: var(--color-text-dark);
-}
-
-.signup-container .date-filled::-webkit-datetime-edit {
-  color: var(--color-text-dark);
-}
-
-
-/* 주소 입력 한 줄 정렬 */
-.signup-container .address-row {
+/* 플렉스 정렬 (이메일 / 이름 공용 / 우편번호) */
+.signup-container .flex-row {
   display: flex;
   gap: var(--space-sm);
-}
-
-.signup-container .address-row input:first-child {
-  flex: 1;
-}
-
-/* 주소 검색 버튼 */
-.signup-container .address-row button {
-  width: 120px;
+  align-items: center;
 }
 
 /* 주소 그룹 시작은 기본 form 간격 유지 */
@@ -135,7 +58,7 @@
 /* 주소 입력 영역 간격 조절 */
 .signup-container .address-group .form-group {
   margin-top: var(--space-xs);
-  margin-bottom: 6px; 
+  margin-bottom: var(--space-xs);
 }
 
 /* 마지막 상세주소는 아래 여백 유지 */
@@ -143,7 +66,7 @@
   margin-bottom: var(--space-md);
 }
 
-/* 회원가입 버튼 */
+/* 회원가입 Button */
 .signup-container .signup-btn {
   width: 100%;
   margin-top: var(--space-sm);
@@ -158,15 +81,15 @@
   opacity: 0.6;
 }
 
-/* 로그인 안내 */
+/* 안내 */
 .signup-container .login-guide {
   margin-top: var(--space-sm);
   text-align: center;
   font-size: var(--font-caption);
   color: var(--color-text-light);
+  font-weight: var(--fw-regular);
 }
 
-/* 로그인 링크 */
 .signup-container .link-text {
   color: var(--color-accent);
   font-size: var(--font-small);
@@ -179,7 +102,7 @@
   cursor: pointer;
 }
 
-/* 비밀번호 유효 메시지 */
+/* Validation */
 .signup-container .valid-msg {
   font-size: var(--font-caption);
   margin-top: var(--space-xs);
@@ -191,4 +114,8 @@
 
 .signup-container .valid-msg.success {
   color: var(--color-green);
+}
+
+.signup-container .required {
+  color: var(--color-red);
 }
