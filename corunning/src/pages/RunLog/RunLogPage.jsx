@@ -339,6 +339,7 @@ export default function RunLogPage() {
     try {
       await removeDip(course.dipId); // dipId로 바로 삭제!
       setSavedCourses(prev => prev.filter(c => c.dipId !== course.dipId));
+      await loadData();
     } catch (err) {
       alert("실패: " + err.message);
     }
