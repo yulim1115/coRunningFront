@@ -6,6 +6,11 @@ import {
   FaRoute,
   FaRunning,
   FaThumbsUp,
+  FaUndo,
+  FaEraser,
+  FaFlagCheckered,
+  FaUsers,
+  FaRegCalendarCheck,
 } from "react-icons/fa";
 
 import "./MainPage.css";
@@ -236,7 +241,8 @@ function MainPage() {
     // 기존 레이어들 제거
     ["temp-route", "route"].forEach((layerId) => {
       if (mapRef.current.getLayer(layerId)) mapRef.current.removeLayer(layerId);
-      if (mapRef.current.getSource(layerId)) mapRef.current.removeSource(layerId);
+      if (mapRef.current.getSource(layerId))
+        mapRef.current.removeSource(layerId);
     });
 
     // 스냅 경로 추가
@@ -313,8 +319,7 @@ function MainPage() {
       mapRef.current.removeLayer("temp-route");
     if (mapRef.current?.getSource("temp-route"))
       mapRef.current.removeSource("temp-route");
-    if (mapRef.current?.getLayer("route"))
-      mapRef.current.removeLayer("route");
+    if (mapRef.current?.getLayer("route")) mapRef.current.removeLayer("route");
     if (mapRef.current?.getSource("route"))
       mapRef.current.removeSource("route");
   };
@@ -408,24 +413,15 @@ function MainPage() {
         <div className="banner-inner">
           <div className="banner-text">
             <h1>
-              직접 코스를 만들고,
+              나만의 러닝 코스를 만들고,
               <br />
-              함께 달릴 크루를 모집하세요.
+              함께 달릴 크루를 찾아보세요.
             </h1>
-            <p>
-              러닝 코스를 생성하고 공유하며,
+            <h3>
+              러너들이 직접 코스를 공유하고
               <br />
-              러너들과 함께하는 크루를 만들 수 있는 플랫폼입니다.
-            </p>
-          </div>
-
-          <div className="banner-actions">
-            <Link to="/routes/create" className="banner-btn primary">
-              코스 생성하기
-            </Link>
-            <Link to="/crews/create" className="banner-btn secondary">
-              크루 모집하기
-            </Link>
+              같은 목표를 가진 사람들과 연결되는 공간입니다.
+            </h3>
           </div>
         </div>
       </section>
@@ -434,9 +430,10 @@ function MainPage() {
       <section className="course-map-section">
         <div className="container">
           <div className="course-map-header">
-            <h2>러닝 코스 그리기 및 생성</h2>
+            <h1>러닝 코스 그리기 및 생성</h1>
             <p>
-              지도 위에서 클릭하여 나만의 러닝 경로를 직접 드로잉하고, 코스를 생성해보세요.
+              지도 위에서 클릭하여 나만의 러닝 경로를 직접 드로잉하고, 코스를
+              생성해보세요.
             </p>
           </div>
 
@@ -447,27 +444,42 @@ function MainPage() {
               <div className="panel-block">
                 <h3>드로잉 컨트롤</h3>
                 <div className="panel-btn-group">
-                  <button className="panel-btn" onClick={undoLastPoint}>
+                  <button
+                    className="btn btn-medium btn-soft"
+                    onClick={undoLastPoint}
+                  >
+                    <FaUndo />
                     되돌리기
                   </button>
-                  <button className="panel-btn" onClick={resetRoute}>
+                  <button
+                    className="btn btn-medium btn-soft"
+                    onClick={resetRoute}
+                  >
+                    <FaEraser />
                     초기화
                   </button>
-                  <button className="panel-btn primary" onClick={finishRoute}>
+                  <button
+                    className="btn btn-medium btn-accent btn-hover-float"
+                    onClick={finishRoute}
+                  >
+                    <FaFlagCheckered />
                     코스 생성
                   </button>
                 </div>
               </div>
 
-              <div className="panel-block">
+              <div className="panel-block distance-block">
                 <h3>총 거리</h3>
                 <p className="panel-distance">
                   {(distance / 1000).toFixed(1)} km
                 </p>
               </div>
 
-              <div className="panel-block">
-                <button className="panel-btn download" onClick={downloadImage}>
+              <div className="panel-block img-down">
+                <button
+                  className="btn btn-medium btn-main btn-hover-float"
+                  onClick={downloadImage}
+                >
                   이미지 다운로드
                 </button>
               </div>
@@ -481,7 +493,10 @@ function MainPage() {
                     snappedCoords.length ? snappedCoords : routeCoords
                   )}
                 />
-                <button className="panel-btn outline" onClick={copyRoute}>
+                <button
+                  className="btn btn-medium btn-main btn-hover-float"
+                  onClick={copyRoute}
+                >
                   경로 복사
                 </button>
               </div>
@@ -523,17 +538,17 @@ function MainPage() {
                   <option>고급</option>
                 </select>
 
-                <select
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
-                >
+                <select value={type} onChange={(e) => setType(e.target.value)}>
                   <option>전체 타입</option>
                   <option>드로잉런</option>
                   <option>레귤러런</option>
                 </select>
 
-                <button className="filter-btn" onClick={handleFilterSearch}>
-                  조회하기
+                <button
+                  className="btn btn-accent btn-large btn-hover-float"
+                  onClick={handleFilterSearch}
+                >
+                  조회
                 </button>
               </div>
             </div>
@@ -549,9 +564,7 @@ function MainPage() {
               <div className="section-header-split">
                 <div>
                   <h2>인기 코스 TOP 3</h2>
-                  <p className="section-subtitle">
-                    러너들이 가장 많이 추천한 코스를 만나보세요.
-                  </p>
+                  <p>러너들이 가장 많이 추천한 코스를 만나보세요.</p>
                 </div>
                 <Link to="/routes" className="section-link">
                   전체 코스 보기 <FaChevronRight />
@@ -565,34 +578,39 @@ function MainPage() {
 
                   return (
                     <div
-                      className="list-card"
+                      className="card-base list-card"
                       key={route.id}
                       onClick={() => navigate(`/routes/${route.id}`)}
                     >
                       <div className="list-card-main">
-                        <div className="card-top-row">
-                          <span className="badge-type">{typeLabel}</span>
+                        <div className="title-row">
+                          <h3>{route.title}</h3>
+                          <div
+                            className={`tag tag-small ${
+                              route.type === "drawing"
+                                ? "tag-drawing"
+                                : "tag-regular"
+                            }`}
+                          >
+                            {route.type === "drawing" ? "드로잉런" : "레귤러런"}
+                          </div>
                         </div>
 
-                        <div className="list-info">
-                          <h3>{route.title}</h3>
-
-                          <div className="list-meta">
-                            <span>
-                              <FaMapMarkerAlt /> {route.region}
-                            </span>
-                            <span>
-                              <FaRunning /> {diff.label}
-                            </span>
-                            <span>
-                              <FaRoute /> {route.distance}km
-                            </span>
-                          </div>
+                        <div className="list-meta">
+                          <span>
+                            <FaMapMarkerAlt /> {route.region}
+                          </span>
+                          <span>
+                            <FaRunning /> {diff.label}
+                          </span>
+                          <span>
+                            <FaRoute /> {route.distance}km
+                          </span>
                         </div>
                       </div>
 
                       <div className="likes">
-                        <FaThumbsUp /> {route.likes}
+                        <FaThumbsUp /> <span>{route.likes}</span>
                       </div>
                     </div>
                   );
@@ -604,9 +622,7 @@ function MainPage() {
               <div className="section-header-split">
                 <div>
                   <h2>모집중 번개런</h2>
-                  <p className="section-subtitle">
-                    지금 바로 합류할 수 있는 번개런이에요.
-                  </p>
+                  <p>지금 바로 합류할 수 있는 번개런이에요.</p>
                 </div>
                 <Link to="/crews" className="section-link">
                   전체 크루 보기 <FaChevronRight />
@@ -616,29 +632,33 @@ function MainPage() {
               <div className="card-list">
                 {flashCrews.map((crew) => (
                   <div
-                    className="list-card"
+                    className="card-base list-card"
                     key={crew.id}
                     onClick={() => navigate(`/crews/${crew.id}`)}
                   >
                     <div className="list-card-main">
-                      <div className="card-top-row">
-                        <span className="badge-type badge-flash">
-                          번개런
-                        </span>
+                      {/* 제목 + 태그 */}
+                      <div className="title-row">
+                        <h3>{crew.title}</h3>
+                        <div className="tag tag-small tag-flash">번개</div>
                       </div>
 
-                      <div className="list-info">
-                        <h3>{crew.title}</h3>
-
-                        <div className="list-meta">
-                          <span>
-                            <FaMapMarkerAlt /> {crew.region}
-                          </span>
-                          <span>{crew.deadline} 모집 종료</span>
-                        </div>
+                      {/* 정보 */}
+                      <div className="list-meta">
+                        <span>
+                          <FaMapMarkerAlt /> {crew.region || "지역 미정"}
+                        </span>
+                        <span>
+                          <FaUsers /> {crew.currentCount} / {crew.recruitCount}{" "}
+                          명
+                        </span>
+                        <span>
+                          <FaRegCalendarCheck /> {crew.deadline} 까지
+                        </span>
                       </div>
                     </div>
 
+                    {/* 모집 상태 */}
                     <span className="crew-status recruiting">모집중</span>
                   </div>
                 ))}
