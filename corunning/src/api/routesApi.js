@@ -83,6 +83,22 @@ export const getDipList = async (userId) => {
   return res.json();
 };
 
+export const addCustomDip = async (title, distance, location, record) => {
+  const body = {
+    title: title,
+    distance: distance,
+    location: location,
+    record: record
+  };
+  const res = await fetch("/api/dip/addCustom", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(text);
+  return text;
+};
 // 저장 추가
 export const addDip = async (routeId, userId) => {
   const res = await fetch(
@@ -116,16 +132,22 @@ export const removeDipByRoute = async (routeId, userId) => {
   if (!res.ok) throw new Error(text);
   return text;
 };
-export const updateDip = async (id, complete, record) => {
-  // ✅ 숫자 ID를 문자열로 변환하지 않음
-  const qId = String(id);  // Long -> String 변환만
-  const qComplete = complete.toString();  // boolean -> "true"/"false"
-  const qRecord = record == null ? "" : encodeURIComponent(record);
+export const updateDip = async (id, complete, record, title, distance, location) => {
+  const body = {
+    id: id,
+    complete: complete,
+    record: record,
+    title: title,
+    distance: distance,
+    location: location
+  };
 
-  const url = `/api/dip/update?id=${qId}&complete=${qComplete}&record=${qRecord}`;
-  console.log("UpdateDip URL:", url);  // ✅ 디버깅용 로그
-  
-  const res = await fetch(url, { method: "PUT" });
+  const res = await fetch("/api/dip/update", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+
   const text = await res.text();
   if (!res.ok) throw new Error(text);
   return text;

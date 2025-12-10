@@ -279,7 +279,7 @@ function RunRoutesCreatePage() {
                   경로 배열 입력
                 </button>
               </div>
-              <div className="right-controls">
+              <div className="right-controls" style={{ display: mode === "draw" ? "inline-block" : "none" }}>
                 <button
                   type="button"
                   className="btn btn-small btn-soft"
@@ -324,11 +324,21 @@ function RunRoutesCreatePage() {
                     try {
                       const parsed = JSON.parse(e.target.value);
                       setSnappedCoords(parsed);
+                      setRouteCoords(parsed); // 🚀 routeCoords에도 반영
+                      // 거리 계산
+                      if (parsed.length > 1) {
+                        const line = turf.lineString(parsed);
+                        const meters = Math.round(turf.length(line, { units: "kilometers" }) * 1000);
+                        setDistance(meters);
+                      } else {
+                        setDistance(0);
+                      }
                     } catch {
                       setSnappedCoords([]);
+                      setRouteCoords([]);
+                      setDistance(0);
                     }
-                  }
-                }  
+                  }}
                 />
               </div>
             )}
