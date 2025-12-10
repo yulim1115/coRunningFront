@@ -28,9 +28,11 @@ export const updateUserInfo = async(data) => {
 };
 
 // 비밀번호 수정하기
-export const updatePassword = async(data) => {
-  return axios.put(`${API_BASE}/update-password`,data,{withCredentials: true});
+export const updatePassword = async(userId, newPw) => {
+  return axios.put(`${API_BASE}/pw`,null, {params: { userId, newPw }});
 };
+
+
 
 // 모든 정보 갖고 오기
 export const nameCheckAPI = async(data) =>{
