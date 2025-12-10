@@ -14,8 +14,9 @@ import {
   updateDip,
 } from "../../api/routesApi";
 export const formatToTime = (value) => {
+  const str = String(value ?? "");
   // 숫자만 남기기
-  const numeric = value.replace(/\D/g, "").slice(0, 6);
+  const numeric = str.replace(/\D/g, "").slice(0, 6);
 
   // 자리수에 따라 포맷팅
   const padded = numeric.padStart(6, "0");
@@ -257,9 +258,14 @@ export default function RunLogPage() {
 
   // 기록 수정 저장
   const submitEditRecord = async (record) => {
-    const hh = editValues[record.id]?.hh ?? 0;
-    const mm = editValues[record.id]?.mm ?? 0;
-    const ss = editValues[record.id]?.ss ?? 0;
+    const rawH = editValues[record.id]?.hh;
+    const rawM = editValues[record.id]?.mm;
+    const rawS = editValues[record.id]?.ss;
+
+    // 숫자든 빈 문자열이든 상관없이 → 문자열로 강제 변환
+    const hh = String(rawH ?? "0");
+    const mm = String(rawM ?? "0");
+    const ss = String(rawS ?? "0");
 
     const date = editValues[record.id]?.date || record.rawDate;
     if (Number(mm) > 59 || Number(ss) > 59)
