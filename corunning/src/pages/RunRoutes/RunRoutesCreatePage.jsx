@@ -265,17 +265,28 @@ function RunRoutesCreatePage() {
     <main className="route-create-container">
       <div className="create-wrapper">
         {/* 제목 */}
-        <h2 className="create-title">코스 등록하기</h2>
+        <h1 className="create-title">코스 등록하기</h1>
 
         <form onSubmit={handleSubmit} className="create-form">
           {/* 지도 */}
           <div className="form-group">
             <div className="map-btn-row">
               <div className="left-controls">
-                <button type="button" className={mode === "draw" ? "active" : ""} onClick={() => {setMode("draw"); resetRoute()}}>
+                <button
+                  type="button"
+                  className={mode === "draw" ? "active" : ""}
+                  onClick={() => {
+                    setMode("draw");
+                    resetRoute();
+                  }}
+                >
                   지도에 그리기
                 </button>
-                <button type="button" className={mode === "array" ? "active" : ""} onClick={() => setMode("array")}>
+                <button
+                  type="button"
+                  className={mode === "array" ? "active" : ""}
+                  onClick={() => setMode("array")}
+                >
                   경로 배열 입력
                 </button>
               </div>
@@ -301,12 +312,14 @@ function RunRoutesCreatePage() {
                 >
                   경로 생성
                 </button>
-                </div>
+              </div>
             </div>
             {mode === "draw" && (
               <>
                 <div ref={mapContainer} className="mapbox-container" />
-                <p className="map-desc">지도를 클릭하여 경로를 그릴 수 있습니다.</p>
+                <p className="map-desc">
+                  지도를 클릭하여 경로를 그릴 수 있습니다.
+                </p>
 
                 {distance > 0 && (
                   <p className="distance-text">
@@ -327,12 +340,10 @@ function RunRoutesCreatePage() {
                     } catch {
                       setSnappedCoords([]);
                     }
-                  }
-                }  
+                  }}
                 />
               </div>
             )}
-
           </div>
 
           {/* 제목 입력 */}
