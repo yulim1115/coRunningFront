@@ -180,6 +180,7 @@ function CrewModifyPage() {
             <button
               type="button"
               className="btn-medium"
+              onClick={()=>navigate(window.history.back())}
             >
               취소
             </button>

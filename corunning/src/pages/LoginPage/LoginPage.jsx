@@ -100,6 +100,10 @@ function LoginPage() {
           아직 회원이 아니신가요?
           <span className="link-text" onClick={() => navigate("/signup")}>
             회원가입
+          </span><br/>
+          비밀번호를 잊으셨나요?
+          <span className="link-text" onClick={() => navigate("/pwreset")}>
+            비밀번호 재설정
           </span>
         </p>
       </div>

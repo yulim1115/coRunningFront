@@ -18,6 +18,7 @@ import Footer from "./components/layout/Footer";
 import MainPage from "./pages/MainPage/MainPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
+import PwResetPage from "./pages/LoginPage/PwResetPage";
 
 // Feature Pages
 import RunRoutesListPage from "./pages/RunRoutes/RunRoutesListPage";
@@ -49,6 +50,7 @@ function App() {
             {/* 인증 */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/pwreset" element={<PwResetPage />} />
 
             {/* Run Routes */}
             <Route path="/routes" element={<RunRoutesListPage />} />
