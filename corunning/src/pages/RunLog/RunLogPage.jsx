@@ -56,6 +56,7 @@ export default function RunLogPage() {
   const [editValues, setEditValues] = useState({});
   const [editTitle, setEditTitle] = useState({});
   const [editDistance, setEditDistance] = useState({});
+  const [editLocation , setEditLocation] = useState({});
   const [newCustomOpen, setNewCustomOpen] = useState(false);
   const [newCustom, setNewCustom] = useState({
     title: "",
@@ -122,7 +123,7 @@ export default function RunLogPage() {
           dipId: dip.dipId,
           routeId: dip.routeId,   // null 일 수 있음
           title: route?.title || dip.title || "커스텀 코스",
-          location: route?.location || dip.location || "자율기록",
+          location: parseLocation(route?.location || dip.location || "자율기록"),
           distance:
             typeof route?.distance === "number"
               ? route.distance
@@ -145,7 +146,7 @@ export default function RunLogPage() {
               dipId: c.dipId,
               routeId: c.routeId,
               title: c.title,
-              location: c.location,
+              location: parseLocation(c.location),
               distance: c.distance,
               level: c.level,
               rawDate: yymmdd,
@@ -160,6 +161,20 @@ export default function RunLogPage() {
       setLoading(false);
     }
   }, [userId]);
+  const parseLocation = (locStr) => {
+    // 이미 객체라면 그대로 반환
+    if (typeof locStr === "object" && locStr !== null) return locStr;
+
+    // 문자열이 아닐 경우 기본값 반환
+    if (typeof locStr !== "string") return { sido: "", gu: "" };
+
+    // 문자열이지만 "자율기록" 같은 경우 단일 존재 → gu 없이 반환
+    const parts = locStr.split(" ");
+    return {
+      sido: parts[0] || "",
+      gu: parts[1] || "",
+    };
+  };
 
   useEffect(() => {
     if (!userId) {
@@ -239,7 +254,6 @@ export default function RunLogPage() {
     const ss = editValues[record.id]?.ss || record.time.split(":")[2];
 
     const date = editValues[record.id]?.date || record.rawDate;
-
     if (Number(mm) > 59 || Number(ss) > 59)
       return alert("분과 초는 0~59여야 합니다.");
 
@@ -249,10 +263,17 @@ export default function RunLogPage() {
       editTitle[record.id] !== undefined
         ? editTitle[record.id]
         : record.title;
-
+    const distance = editDistance[record.id] !== undefined
+        ? editDistance[record.id]
+        : record.distance;
+    const locationObj = editLocation[record.id]; 
+    const resolvedLocation =
+      typeof locationObj === "string"
+        ? locationObj
+        : `${locationObj?.sido ?? ""} ${locationObj?.gu ?? ""}`.trim();
 
     try {
-      await updateDip(record.id, true, newRecordStr, newTitle);
+      await updateDip(record.id, true, newRecordStr, newTitle, distance, resolvedLocation);
 
       setRecords((prev) =>
         prev.map((r) =>
@@ -263,6 +284,7 @@ export default function RunLogPage() {
       );
 
       alert("기록이 수정되었습니다!");
+      await loadData();
       setEditingRecordIds((p) => ({ ...p, [record.id]: false }));
     } catch (err) {
       alert("수정 실패: " + err.message);
@@ -273,9 +295,14 @@ export default function RunLogPage() {
   // 기록 삭제 후 저장한 코스로 되돌리기
   const deleteRec = async (record) => {
     if (!window.confirm("기록을 삭제하시겠습니까?")) return;
+    const location = record.location;
+    const resolvedLocation =
+      typeof location === "string"
+        ? location
+        : `${location.sido ?? ""} ${location.gu ?? ""}`.trim();
 
     try {
-      await updateDip(record.dipId, false, "", record.title, record.distance, record.location);
+      await updateDip(record.dipId, false, "", record.title, record.distance, resolvedLocation);
 
       setRecords((prev) => prev.filter((r) => r.id !== record.id));
 
@@ -511,49 +538,80 @@ export default function RunLogPage() {
             </h3>
           </header>
 
-          <div className="record-list">
+          <div className="record-list ">
             {records.map((record) => (
-              <div key={record.id} className="record-item">
+              <div key={record.dipId} className="record-item">
                 <LogCard
-                  type="record"
+                  type= {record.routeId ? "record" : "custom"}
                   item={record}
-                  isOpen={editingRecordIds[record.id]}
+                  isOpen={editingRecordIds[record.dipId]}
                   onMainButton={() =>
                     setEditingRecordIds((p) => ({
                       ...p,
-                      [record.id]: !p[record.id],
+                      [record.dipId]: !p[record.dipId],
                     }))
                   }
                   onCancel={() => deleteRec(record)}
                 />
 
-                {editingRecordIds[record.id] && (
+                {editingRecordIds[record.dipId] && (
                   <div className="input-form-large">
                     <p className="form-title">기록 수정</p>
-
+                      {record.routeId === null && (
+                        <>
+                          <div className="runlog-inline-row">
+                            <div className="form-row">
+                              <label>제목</label>
+                              <input className="input-small"
+                                value={editTitle[record.dipId] ?? record.title}
+                                onChange={(e) =>
+                                  setEditTitle((prev) => ({
+                                    ...prev,
+                                    [record.dipId]: e.target.value
+                                  }))
+                                }
+                              />
+                            </div>
+                            <div className="form-row">
+                              <label>거리</label>
+                              <input className="input-small"
+                                value={editDistance[record.dipId] ?? record.distance}
+                                onChange={(e) =>
+                                  setEditDistance((prev) => ({
+                                    ...prev,
+                                    [record.dipId]: e.target.value
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="runlog-inline-row">
+                            <div className="runlog-inline-row">
+                              <div className="form-row">
+                                <label>지역</label>
+                                <RegionSelector
+                                  value={record.location}
+                                  onChange={value => setEditLocation((prev) => ({
+                                    ...prev,
+                                    [record.dipId]: value
+                                  }))}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     <div className="runlog-inline-row">
                       <div className="form-row">
-                        {record.routeId === null && (
-                          <>
-                            <label>제목</label>
-                            <input className="input-small"
-                              value={editTitle[record.id] ?? record.title}
-                              onChange={(e) =>
-                                setEditTitle((prev) => ({
-                                  ...prev,
-                                  [record.id]: e.target.value
-                                }))
-                              }
-                            />
-                          </>
-                        )}
+                        <div className="runlog-inline-row">
+                        </div>
                         <label>날짜</label>
                         <input
                           className="input-small"
                           type="date"
                           defaultValue={record.rawDate}
                           onChange={(e) =>
-                            updateEditInput(record.id, "date", e.target.value)
+                            updateEditInput(record.dipId, "date", e.target.value)
                           }
                         />
                       </div>
@@ -567,7 +625,7 @@ export default function RunLogPage() {
                             placeholder="HH"
                             maxLength={2}
                             defaultValue={record.time?.split(":")[0]}
-                            onChange={(e) => updateEditInput(record.id, "hh", e.target.value.replace(/\D/g, ""))}
+                            onChange={(e) => updateEditInput(record.dipId, "hh", e.target.value.replace(/\D/g, ""))}
                           />
                           <span>:</span>
 

@@ -46,7 +46,7 @@ export default function LogCard({
         <div className="card-meta-details-wrapper">
           <div className="card-meta-details">
             <span>
-              <FaMapMarkerAlt /> {item.location}
+              <FaMapMarkerAlt /> {item.location?.sido} {item.location?.gu}
             </span>
 
             {item.level && (
@@ -85,6 +85,14 @@ export default function LogCard({
           완주 취소
         </button>
       )}
+      {type === "custom" && (
+        <button
+          className="btn btn-outline-danger btn-small btn-hover-float"
+          onClick={onDelete}
+        >
+          삭제
+        </button>
+      )}
 
       {/* 저장한 코스일 때만 저장 해제 */}
       {type === "saved" && (
@@ -95,6 +103,7 @@ export default function LogCard({
           저장 해제
         </button>
       )}
+      
     </div>
 
     </div>
