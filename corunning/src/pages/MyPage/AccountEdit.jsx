@@ -28,12 +28,12 @@ export default function AccountEdit({
         {/* 이름 */}
         <div className="form-group">
           <label className="form-label">
-            이름 <span className="required">*</span>
+            이름 <span className="required">수정 불가</span>
           </label>
           <input
             type="text"
             value={userName}
-            onChange={(e) => setUserName(e.target.value)}
+            disabled
           />
         </div>
 
