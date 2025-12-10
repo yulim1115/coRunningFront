@@ -1,14 +1,30 @@
+// My Page 메인 컴포넌트
 import React, { useState, useEffect } from "react";
 import "./MyPage.css";
-import { getUserAPI, updateUserAPI, getRouteByIdAPI, deleteRouteAPI, getCrewByIdAPI, deleteCrewAPI, getApplicationsAPI, getDashboardAPI } from "../../api/mypageApi";
+import {
+  getUserAPI,
+  updateUserAPI,
+  getRouteByIdAPI,
+  deleteRouteAPI,
+  getCrewByIdAPI,
+  deleteCrewAPI,
+  getApplicationsAPI,
+  getDashboardAPI,
+} from "../../api/mypageApi";
 import { useNavigate } from "react-router-dom";
 import DaumPostcode from "react-daum-postcode";
+
+// 분리 컴포넌트
+import Dashboard from "./Dashboard";
+import AccountEdit from "./AccountEdit";
+import MyRoutes from "./MyRoutes";
+import MyCrew from "./MyCrew";
+import Skeleton from "./Skeleton";
 
 function MyPage() {
   const navigate = useNavigate();
   const [openPostcode, setOpenPostcode] = useState(false);
-  const [detailAddress, setDetailAddress] = useState("");     // 사용자가 입력한 상세주소
-
+  const [detailAddress, setDetailAddress] = useState("");
 
   const [userData, setUserData] = useState(null);
   const [activeContent, setActiveContent] = useState("dashboard");
@@ -28,9 +44,14 @@ function MyPage() {
 
   const [dashboards, setDashboards] = useState([]);
 
+  useEffect(() => {
+    document.body.style.backgroundColor = "var(--color-bg-light)";
+    return () => {
+      document.body.style.backgroundColor = "var(--color-bg)";
+    };
+  }, []);
 
-
-  // 로그인 체크 + 유저 정보 불러오기 + 코스 정보 불러오기 + 크루 정보 불러오기 + 대시보드 불러오기
+  // 데이터 불러오기
   useEffect(() => {
     if (!isLogin) {
       alert("로그인이 필요합니다.");
@@ -42,22 +63,26 @@ function MyPage() {
       try {
         const user_data = await getUserAPI();
         setUserData(user_data);
+
         const route_data = await getRouteByIdAPI();
         setRoutes(route_data);
+
         const crew_data = await getCrewByIdAPI();
         setCrews(crew_data);
+
         const dashboard_data = await getDashboardAPI();
         setDashboards(dashboard_data);
       } catch (error) {
-        console.error("정보 불러오기 실패:", error);
+        console.error("마이페이지 정보 로드 실패:", error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [isLogin, navigate]);
 
-
+  // 사용자 기본 정보 세팅
   useEffect(() => {
     if (userData) {
       setUserName(userData.userName ?? "");
@@ -66,100 +91,44 @@ function MyPage() {
     }
   }, [userData]);
 
-  // 여기 스켈레톤?? 넣음 돼여
-  if (loading) {
-    return(
-      <div>
-        <main className="container mypage-wrapper">
-          {/* 좌측 사이드바 */}
-          <div className="sidebar">
-            <div className="profile-section">
-              <div className="skeleton skeleton-profile" />
-              <div className="skeleton skeleton-profile-small" />
-            </div>
+  // 로딩 상태
+  if (loading) return <Skeleton />;
+  if (!isLogin) return null;
+  if (!userData) return <div>사용자 정보를 불러오지 못했습니다.</div>;
 
-            <ul className="menu-list">
-              {Array(4)
-                .fill(0)
-                .map((_, i) => (
-                  <li key={i}>
-                    <div className="skeleton skeleton-menu-item"></div>
-                  </li>
-                ))}
-            </ul>
-          </div>
-
-          {/* 우측 메인 콘텐츠 */}
-          <div className="main-content">
-            <div className="dashboard-title-group">
-              <div className="skeleton skeleton-title-large" />
-              <div className="skeleton skeleton-title-medium" />
-            </div>
-
-            <h2 style={{ marginBottom: 15, marginTop: 30 }}>
-              <div className="skeleton" style={{ width: "140px", height: "24px" }} />
-            </h2>
-
-            <div className="stats-section-grid">
-              {Array(4)
-                .fill(0)
-                .map((_, i) => (
-                  <div key={i}>
-                    <div className="skeleton skeleton-stat-card" />
-                  </div>
-                ))}
-            </div>
-          </div>
-        </main>
-      </div>
-    )
-  }
-  if (!isLogin) {
-    return null;
-  }
-  if (!userData) {
-    // 사용자 정보 못 불러온 경우 처리
-    return <div>사용자 정보를 불러오지 못했습니다. 다시 로그인해 주세요.</div>;
-  }
-
-  // 수정한 프로필/계정 정보
+  // 프로필 수정 데이터
   const updateData = {
     userId: userData.userId,
     userPw: userData.userPw,
-    userName: userName,
+    userName,
     birthDate: userData.birthDate,
     hireDate: userData.hireDate,
-    phone: phone,
-    userAddress: userAddress + " " + detailAddress
+    phone,
+    userAddress: userAddress + " " + detailAddress,
   };
 
   const updateProfile = async (e) => {
     e.preventDefault();
     try {
-      await updateUserAPI( updateData);
+      await updateUserAPI(updateData);
       setActiveContent("dashboard");
-      alert("프로필/계정 정보 수정이 완료되었습니다.");
-    } catch (error) {
-      console.error("프로필/계정 정보 수정 실패:", error);
-      alert("프로필/계정 정보 수정에 실패했습니다. 다시 시도해주세요.");
+      alert("수정 완료");
+    } catch {
+      alert("수정 실패");
     }
   };
 
-  //누적 가입일자 구하기
+  // 가입일 계산
   const DayDiff = () => {
     if (!userData?.hireDate) return 0;
     const joinedDate = new Date(userData.hireDate);
     const currentDate = new Date();
-    const timeDiff = currentDate.getTime() - joinedDate.getTime();
-    const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-
-    return daysDiff;
+    return Math.floor((currentDate - joinedDate) / (1000 * 60 * 60 * 24));
   };
 
   // 난이도 매핑
   const getDifficultyInfo = (difficulty) => {
     const diff = difficulty?.toLowerCase();
-
     switch (diff) {
       case "easy":
         return { label: "초급", className: "difficulty-low" };
@@ -173,70 +142,43 @@ function MyPage() {
     }
   };
 
-  //코스 삭제
+  // 코스 삭제
   const deleteRoute = async (routeId) => {
     try {
       await deleteRouteAPI(routeId);
-      alert("코스가 삭제되었습니다.");
-      const data = await getRouteByIdAPI(userData.userId);
+      const data = await getRouteByIdAPI();
       setRoutes(data);
-    } catch (error) {
-      console.error("코스 삭제 실패:", error);
-      alert("코스 삭제에 실패했습니다. 다시 시도해주세요.");
+      alert("코스 삭제 완료");
+    } catch {
+      alert("코스 삭제 실패");
     }
   };
 
-  //모집 상태 확인
-  const isClosed = (recruitCount, currentCount, deadline) => {
-    const max = Number(recruitCount);
-    const cur = Number(currentCount);
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const d = new Date(deadline);
-
-    if (!isNaN(d.getTime()) && d < today) return true;
-    return cur >= max;
-  };
-
-  //모집 상태 텍스트 
-  const recruitStateText = (recruitCount, currentCount, deadline) => {
-    return isClosed(recruitCount, currentCount, deadline) ? "모집마감" : "모집중";
-  };
-
-  const handleMenuClick = (e, targetId) => {
-    e.preventDefault();
-    setActiveContent(targetId);
-  };
-
-  //크루 삭제
+  // 크루 삭제
   const deleteCrew = async (crewId) => {
     try {
       await deleteCrewAPI(crewId);
-      alert("크루 모집 글이 삭제되었습니다.");
       const data = await getCrewByIdAPI();
       setCrews(data);
-    } catch (error) {
-      console.error("크루 모집 글 삭제 실패:", error);
-      alert("크루 모집 글 삭제에 실패했습니다. 다시 시도해주세요.");
+      alert("크루 삭제 완료");
+    } catch {
+      alert("크루 삭제 실패");
     }
   };
 
-  
-// 신청자 명단 열기
-const handleOpenApplications = async (crew) => {
-  try {
-    const data = await getApplicationsAPI(crew.id);
-    setCrewApplications(data);
-    setSelectedCrew(crew);
-    setOpenCheck(true);
-  } catch (error) {
-    console.error("신청자 명단 불러오기 실패:", error);
-  }
-};
+  // 신청자 모달 열기
+  const handleOpenApplications = async (crew) => {
+    try {
+      const data = await getApplicationsAPI(crew.id);
+      setCrewApplications(data);
+      setSelectedCrew(crew);
+      setOpenCheck(true);
+    } catch {
+      console.error("신청자 명단 로딩 실패");
+    }
+  };
 
-  // 닫기
+  // 모달 닫기
   const handleCloseApplications = () => {
     setOpenCheck(false);
     setSelectedCrew(null);
@@ -598,71 +540,133 @@ const handleOpenApplications = async (crew) => {
           </div>
         );
 
+    dashboards.forEach((d) => {
+      const timeStr = d.record.split(" ")[1];
+      const [h, m, s] = timeStr.split(":").map(Number);
+      totalSeconds += h * 3600 + m * 60 + s;
+      totalDistance += d.distance;
+    });
 
+    const HH = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+    const MM = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+    const SS = String(totalSeconds % 60).padStart(2, "0");
 
+    const avgPaceSec = totalSeconds / (totalDistance || 1);
+    const paceM = Math.floor(avgPaceSec / 60);
+    const paceS = String(Math.floor(avgPaceSec % 60)).padStart(2, "0");
 
-    }
-  };
+    return [`${HH}:${MM}:${SS}`, totalDistance, paceM, paceS];
+  }
 
   return (
-    <div>
-      <main className="container mypage-wrapper">
+    <div className="mypage-container">
+      <main className="mypage-wrapper">
+        {/* 좌측 메뉴 */}
         <div className="sidebar">
           <div className="profile-section">
             <div className="profile-info">
-              <h3 style={{ fontSize: 24 }}>{userData.userName}님</h3>
-              <p>coRunning과 {DayDiff()}일째</p>
+              <h2>{userData.userName} 님</h2>
+              <p>
+                coRunning과 <strong>{DayDiff()}</strong>일째
+              </p>
             </div>
           </div>
 
           <ul className="menu-list">
             <li>
-              <a href="#dashboard" className={`menu-item ${activeContent === "dashboard" ? "active" : ""
+              <a
+                className={`menu-item ${
+                  activeContent === "dashboard" ? "active" : ""
                 }`}
-                data-content-id="dashboard"
-                onClick={(e) => handleMenuClick(e, "dashboard")}
+                onClick={(e) => setActiveContent("dashboard")}
               >
-                <i className="fas fa-chart-line" /> 러닝 통계 대시보드
+                러닝 통계 대시보드
               </a>
             </li>
+
             <li>
               <a
-                href="#account"
-                className={`menu-item ${activeContent === "account" ? "active" : ""
-                  }`}
-                data-content-id="account"
-                onClick={(e) => handleMenuClick(e, "account")}
+                className={`menu-item ${
+                  activeContent === "account" ? "active" : ""
+                }`}
+                onClick={(e) => setActiveContent("account")}
               >
-                <i className="fas fa-user-cog" /> 프로필/계정 정보 수정
+                프로필/계정 정보 수정
               </a>
             </li>
+
             <li>
               <a
-                href="#myroutes"
-                className={`menu-item ${activeContent === "myroutes" ? "active" : ""
-                  }`}
-                data-content-id="myroutes"
-                onClick={(e) => handleMenuClick(e, "myroutes")}
+                className={`menu-item ${
+                  activeContent === "myroutes" ? "active" : ""
+                }`}
+                onClick={(e) => setActiveContent("myroutes")}
               >
-                <i className="fas fa-route" /> 코스 관리
+                코스 관리
               </a>
             </li>
+
             <li>
               <a
-                href="#mycrew"
-                className={`menu-item ${activeContent === "mycrew" ? "active" : ""
-                  }`}
-                data-content-id="mycrew"
-                onClick={(e) => handleMenuClick(e, "mycrew")}
+                className={`menu-item ${
+                  activeContent === "mycrew" ? "active" : ""
+                }`}
+                onClick={(e) => setActiveContent("mycrew")}
               >
-                <i className="fas fa-users" /> 크루 모집 관리
+                크루 모집 관리
               </a>
             </li>
           </ul>
         </div>
 
-        <div className="main-content" id="main-content-area">
-          {renderContent()}
+        {/* 콘텐츠 영역 */}
+        <div className="right-content">
+          {activeContent === "dashboard" && (
+            <Dashboard
+              dashboards={dashboards}
+              userName={userData.userName}
+              getTotalRecordTime={getTotalRecordTime}
+            />
+          )}
+
+          {activeContent === "account" && (
+            <AccountEdit
+              userData={userData}
+              userName={userName}
+              phone={phone}
+              userAddress={userAddress}
+              setUserName={setUserName}
+              setPhone={setPhone}
+              setUserAddress={setUserAddress}
+              detailAddress={detailAddress}
+              setDetailAddress={setDetailAddress}
+              openPostcode={openPostcode}
+              setOpenPostcode={setOpenPostcode}
+              updateProfile={updateProfile}
+            />
+          )}
+
+          {activeContent === "myroutes" && (
+            <MyRoutes
+              routes={routes}
+              getDifficultyInfo={getDifficultyInfo}
+              deleteRoute={deleteRoute}
+              navigate={navigate}
+            />
+          )}
+
+          {activeContent === "mycrew" && (
+            <MyCrew
+              crews={crews}
+              navigate={navigate}
+              openApplicants={handleOpenApplications}
+              deleteCrew={deleteCrew}
+              openCheck={openCheck}
+              selectedCrew={selectedCrew}
+              crewApplications={crewApplications}
+              handleCloseApplications={handleCloseApplications}
+            />
+          )}
         </div>
       </main>
     </div>
