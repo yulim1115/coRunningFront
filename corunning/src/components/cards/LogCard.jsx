@@ -34,7 +34,7 @@ export default function LogCard({
         <div className="logcard-top-row">
           <div className="logcard-title">{item.title}</div>
 
-          {type === "record" && (
+          {(type === "record" || type==="custom") && (
             <div className="logcard-run-inline">
               <span>{item.date}</span>
               <span className="divider"> | </span>

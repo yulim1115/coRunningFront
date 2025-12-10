@@ -74,7 +74,7 @@ export default function RunLogPage() {
 
   const submitNewCustom = async () => {
     const { title, distance, location, date, hh, mm, ss } = newCustom;
-    if (!title || !distance || !location || !date || !hh || !mm || !ss) 
+    if (!title || !distance || !location || !date) 
       return alert("모든 값을 입력해주세요.");
     if (Number(mm) > 59 || Number(ss) > 59)
       return alert("분과 초는 0~59여야 합니다.");
@@ -86,6 +86,14 @@ export default function RunLogPage() {
     const recordStr = `${date} ${time}`;
     try {
       alert("자율 기록이 추가되었습니다!");
+      newCustom.title = "";
+      newCustom.distance = "";
+      newCustom.location = "";
+      newCustom.date = "";
+      newCustom.hh = "";
+      newCustom.mm = "";
+      newCustom.ss = "";
+      setNewCustomOpen(false);
       await addCustomDip(title, distance, resolvedLocation, recordStr);
       await loadData();
     } catch (err) {
@@ -249,9 +257,9 @@ export default function RunLogPage() {
 
   // 기록 수정 저장
   const submitEditRecord = async (record) => {
-    const hh = editValues[record.id]?.hh || record.time.split(":")[0];
-    const mm = editValues[record.id]?.mm || record.time.split(":")[1];
-    const ss = editValues[record.id]?.ss || record.time.split(":")[2];
+    const hh = editValues[record.id]?.hh ?? 0;
+    const mm = editValues[record.id]?.mm ?? 0;
+    const ss = editValues[record.id]?.ss ?? 0;
 
     const date = editValues[record.id]?.date || record.rawDate;
     if (Number(mm) > 59 || Number(ss) > 59)
@@ -433,11 +441,11 @@ export default function RunLogPage() {
                               <div className="form-row">
                                 <label>제목</label>
                                 <input className="input-small"
-                                  value={editTitle[course.id] ?? course.title}
+                                  value={editTitle[course.dipId] ?? course.title}
                                   onChange={(e) =>
                                     setEditTitle((prev) => ({
                                       ...prev,
-                                      [course.id]: e.target.value
+                                      [course.dipId]: e.target.value
                                     }))
                                   }
                                 />
@@ -445,11 +453,11 @@ export default function RunLogPage() {
                               <div className="form-row">
                                 <label>거리</label>
                                 <input className="input-small"
-                                  value={editDistance[course.id] ?? course.distance}
+                                  value={editDistance[course.dipId] ?? course.distance}
                                   onChange={(e) =>
                                     setEditDistance((prev) => ({
                                       ...prev,
-                                      [course.id]: e.target.value
+                                      [course.dipId]: e.target.value
                                     }))
                                   }
                                 />
@@ -541,19 +549,33 @@ export default function RunLogPage() {
           <div className="record-list ">
             {records.map((record) => (
               <div key={record.dipId} className="record-item">
-                <LogCard
-                  type= {record.routeId ? "record" : "custom"}
-                  item={record}
-                  isOpen={editingRecordIds[record.dipId]}
-                  onMainButton={() =>
-                    setEditingRecordIds((p) => ({
-                      ...p,
-                      [record.dipId]: !p[record.dipId],
-                    }))
-                  }
-                  onCancel={() => deleteRec(record)}
-                />
-
+                {record.routeId ? (
+                  <LogCard
+                    type= "record"
+                    item={record}
+                    isOpen={editingRecordIds[record.dipId]}
+                    onMainButton={() =>
+                      setEditingRecordIds((p) => ({
+                        ...p,
+                        [record.dipId]: !p[record.dipId],
+                      }))
+                    }
+                    onCancel={() => deleteRec(record)}
+                  />
+                  ) : (
+                  <LogCard
+                    type= "custom"
+                    item={record}
+                    isOpen={editingRecordIds[record.dipId]}
+                    onMainButton={() =>
+                      setEditingRecordIds((p) => ({
+                        ...p,
+                        [record.dipId]: !p[record.dipId],
+                      }))
+                    }
+                    onDelete={() => handleRemoveDip(record)}
+                  />
+                )}
                 {editingRecordIds[record.dipId] && (
                   <div className="input-form-large">
                     <p className="form-title">기록 수정</p>
