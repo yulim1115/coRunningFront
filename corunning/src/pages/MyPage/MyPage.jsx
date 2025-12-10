@@ -249,22 +249,21 @@ const handleOpenApplications = async (crew) => {
 
   let totalSeconds = 0;
   let totalDistance = 0;
-  let myPace = 0;
 
   dashboards.forEach(d => {
     const timeStr = d.record.split(" ")[1];
     const [h, m, s] = timeStr.split(":").map(Number);
-    totalSeconds += h * 3600 + m * 60 + s;
+    const sec = h * 3600 + m * 60 + s;
+    totalSeconds += sec;
     totalDistance += d.distance;
-    myPace += h*3600 + m*60+ s;
   });
 
   const HH = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
   const MM = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
   const SS = String(totalSeconds % 60).padStart(2, "0");
-  const avgPace = myPace/dashboards.length;
-  const paceM = Math.floor(avgPace/60);
-  const paceS = avgPace%60;
+  const avgPaceSec = totalSeconds / totalDistance;
+  const paceM = Math.floor(avgPaceSec/60);
+  const paceS = String(Math.floor(avgPaceSec%60)).padStart(2, "0");
 
   return [`${HH}:${MM}:${SS}`, totalDistance, paceM, paceS];
 }
@@ -299,7 +298,7 @@ const handleOpenApplications = async (crew) => {
               </div>
               <div className="stat-card">
                 <h3>{isNaN(getTotalRecordTime(dashboards)[2]) ? 0 : getTotalRecordTime(dashboards)[2]}′{isNaN(getTotalRecordTime(dashboards)[3]) ? 0 : getTotalRecordTime(dashboards)[3]}″</h3>
-                <p>내 페이스</p>
+                <p>km 페이스</p>
               </div>
             </div>
           </div>
