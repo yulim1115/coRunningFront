@@ -6,6 +6,14 @@ import { getCrewDetailAPI, updateCrewAPI } from "../../api/crewApi";
 import { FiChevronDown } from "react-icons/fi";
 import { useParams, useNavigate } from "react-router-dom";
 
+const showSuccess = (msg) => {
+  alert(`성공: ${msg}`);
+};
+
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 function CrewModifyPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -60,10 +68,10 @@ function CrewModifyPage() {
     };
     try {
           await updateCrewAPI(id, data);
-          alert("크루 모집 글이 수정되었습니다!");
+          showSuccess("크루 모집 글이 수정되었습니다!");
           navigate("/mypage");
         } catch {
-          alert("수정 실패. 다시 시도해주세요.");
+          showError("수정 실패. 다시 시도해주세요.");
         }
       };
 

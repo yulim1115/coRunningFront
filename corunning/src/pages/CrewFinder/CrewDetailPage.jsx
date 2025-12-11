@@ -14,6 +14,10 @@ import {
   deleteCrewAPI
 } from "../../api/crewApi";
 
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 function CrewDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -139,13 +143,13 @@ function CrewDetailPage() {
 
   // 신청하기
   const handleApply = async () => {
-    if (!loginUserId) return alert("로그인 후 신청 가능합니다.");
+    if (!loginUserId) return showError("로그인 후 신청 가능합니다.");
 
     try {
       await applyCrewAPI(id);
       setIsApplied(true);
     } catch (err) {
-      alert(err.response?.data || "신청 실패");
+      showError(err.response?.data || "신청 실패");
     }
 
     setCrew((prev) => ({
@@ -164,7 +168,7 @@ function CrewDetailPage() {
       setComments((prev) => [...prev, newComment]);
       setCommentInput("");
     } catch {
-      alert("댓글 등록 실패");
+      showError("댓글 등록 실패");
     }
   };
 
@@ -176,7 +180,7 @@ function CrewDetailPage() {
       await deleteCrewCommentAPI(commentId);
       setComments((prev) => prev.filter((c) => c.id !== commentId));
     } catch {
-      alert("댓글 삭제 실패");
+      showError("댓글 삭제 실패");
     }
   };
 
@@ -186,7 +190,7 @@ function CrewDetailPage() {
       await deleteCrewAPI(crewId);
       navigate("/crews");
     } catch {
-      alert("게시물 삭제 실패");
+      showError("게시물 삭제 실패");
     }
   }
 

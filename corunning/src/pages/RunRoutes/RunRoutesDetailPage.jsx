@@ -32,6 +32,10 @@ import {
   deleteRouteAPI
 } from "../../api/routesApi";
 
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 function RunRoutesDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -209,7 +213,7 @@ function RunRoutesDetailPage() {
 
   // 추천
   const handleLike = async () => {
-    if (!loginUserId) return alert("로그인 후 추천이 가능합니다.");
+    if (!loginUserId) return showError("로그인 후 추천이 가능합니다.");
     try {
       if (!isLiked) {
         await addLike(route.id);
@@ -221,13 +225,13 @@ function RunRoutesDetailPage() {
         setRoute((prev) => ({ ...prev, liked: prev.liked - 1 }));
       }
     } catch {
-      alert("추천 처리 실패");
+      showError("추천 처리 실패");
     }
   };
 
   // 저장
   const handleToggleBookmark = async () => {
-    if (!loginUserId) return alert("로그인 후 저장이 가능합니다.");
+    if (!loginUserId) return showError("로그인 후 저장이 가능합니다.");
     try {
       if (!isBookmarked) {
         await addDip(route.id, loginUserId);
@@ -237,33 +241,33 @@ function RunRoutesDetailPage() {
         setIsBookmarked(false);
       }
     } catch {
-      alert("저장 기능 처리 실패");
+      showError("저장 기능 처리 실패");
     }
   };
 
   // 댓글 작성
   const handleAddComment = async () => {
-    if (!loginUserId) return alert("로그인 후 댓글 작성 가능");
+    if (!loginUserId) return showError("로그인 후 댓글 작성 가능");
     if (!commentInput.trim()) return;
     try {
       const newComment = await addRouteComment(id, commentInput.trim());
       setComments((prev) => [...prev, newComment]);
       setCommentInput("");
     } catch {
-      alert("댓글 등록 실패");
+      showError("댓글 등록 실패");
     }
   };
 
   // 댓글 삭제
   const handleDeleteComment = async (commentId, writerId) => {
     if (loginUserId !== writerId)
-      return alert("본인 댓글만 삭제할 수 있습니다.");
+      return showError("본인 댓글만 삭제할 수 있습니다.");
     if (!window.confirm("삭제하시겠습니까?")) return;
     try {
       await deleteRouteComment(commentId);
       setComments((prev) => prev.filter((c) => c.id !== commentId));
     } catch {
-      alert("댓글 삭제 실패");
+      showError("댓글 삭제 실패");
     }
   };
 
@@ -273,7 +277,7 @@ function RunRoutesDetailPage() {
       await deleteRouteAPI(writerId);
       navigate("/routes");
     } catch {
-      alert("경로 삭제 실패");
+      showError("경로 삭제 실패");
     }
 
   }

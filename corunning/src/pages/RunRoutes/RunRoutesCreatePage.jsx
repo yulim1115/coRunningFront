@@ -8,6 +8,14 @@ import { useNavigate } from "react-router-dom";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
+const showSuccess = (msg) => {
+  alert(`성공: ${msg}`);
+};
+
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 function RunRoutesCreatePage() {
   const navigate = useNavigate();
 
@@ -22,7 +30,7 @@ function RunRoutesCreatePage() {
   useEffect(() => {
     const isLogin = sessionStorage.getItem("isLogin") === "true";
     if (!isLogin) {
-      alert("코스 등록은 로그인 후 이용 가능합니다.");
+      showError("코스 등록은 로그인 후 이용 가능합니다.");
       navigate("/login");
       return null;
     }
@@ -195,7 +203,7 @@ function RunRoutesCreatePage() {
   // 경로 스냅 요청
   const finishRoute = async () => {
     if (routeCoords.length < 2) {
-      alert("경로가 너무 짧습니다.");
+      showError("경로가 너무 짧습니다.");
       return;
     }
 
@@ -207,7 +215,7 @@ function RunRoutesCreatePage() {
       const data = await res.json();
 
       if (!data.matchings?.length) {
-        alert("스냅 실패");
+        showError("스냅 실패");
         return;
       }
 
@@ -221,7 +229,7 @@ function RunRoutesCreatePage() {
       );
       setDistance(meters);
     } catch {
-      alert("스냅 요청 오류");
+      showError("스냅 요청 오류");
     }
   };
 
@@ -229,9 +237,9 @@ function RunRoutesCreatePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!snappedCoords.length) return alert("경로를 완성해주세요.");
+    if (!snappedCoords.length) return showError("경로를 완성해주세요.");
     if (!title.trim() || !region.sido || !difficulty)
-      return alert("필수 항목을 입력해주세요.");
+      return showError("필수 항목을 입력해주세요.");
 
     const data = {
       route: JSON.stringify(snappedCoords),
@@ -254,10 +262,10 @@ function RunRoutesCreatePage() {
       const out = await res.json();
       if (!res.ok) throw new Error(out.message);
 
-      alert("코스가 등록되었습니다.");
+      showSuccess("코스가 등록되었습니다!");
       window.history.back();
     } catch (err) {
-      alert("등록 실패: " + err.message);
+      showError("등록 실패: " + err.message);
     }
   };
 

@@ -13,6 +13,7 @@ import {
   removeDip,
   updateDip,
 } from "../../api/routesApi";
+
 export const formatToTime = (value) => {
   const str = String(value ?? "");
   // 숫자만 남기기
@@ -26,6 +27,7 @@ export const formatToTime = (value) => {
 
   return `${hh}:${mm}:${ss}`;
 };
+
 export const isValidTime = (t) => {
   if (!/^\d{2}:\d{2}:\d{2}$/.test(t)) return false;
 
@@ -37,6 +39,15 @@ export const isValidTime = (t) => {
     ss >= 0 && ss < 60
   );
 };
+
+const showSuccess = (msg) => {
+  alert(`성공: ${msg}`);
+};
+
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 // 현재 사용자 ID 가져오기
 const getCurrentUserId = () => {
   return sessionStorage.getItem("userEmail");
@@ -76,9 +87,9 @@ export default function RunLogPage() {
   const submitNewCustom = async () => {
     const { title, distance, location, date, hh, mm, ss } = newCustom;
     if (!title || !distance || !location || !date) 
-      return alert("모든 값을 입력해주세요.");
+      return showError("모든 값을 입력해주세요.");
     if (Number(mm) > 59 || Number(ss) > 59)
-      return alert("분과 초는 0~59여야 합니다.");
+      return showError("분과 초는 0~59여야 합니다.");
     const resolvedLocation =
       typeof location === "string"
         ? location
@@ -86,7 +97,7 @@ export default function RunLogPage() {
     const time = `${hh.padStart(2,"0")}:${mm.padStart(2,"0")}:${ss.padStart(2,"0")}`;
     const recordStr = `${date} ${time}`;
     try {
-      alert("자율 기록이 추가되었습니다!");
+      showSuccess("자율 기록이 추가되었습니다!");
       newCustom.title = "";
       newCustom.distance = "";
       newCustom.location = "";
@@ -98,7 +109,7 @@ export default function RunLogPage() {
       await addCustomDip(title, distance, resolvedLocation, recordStr);
       await loadData();
     } catch (err) {
-      alert("자율 기록 추가에 실패했습니다.");
+      showError("자율 기록 추가에 실패했습니다.");
     }
   };
 
@@ -187,7 +198,7 @@ export default function RunLogPage() {
 
   useEffect(() => {
     if (!userId) {
-      alert("로그인 후 이용해주세요.");
+      showError("로그인 후 이용해주세요.");
       navigate("/login");
       return;
     }
@@ -207,10 +218,10 @@ export default function RunLogPage() {
     const { date, hh, mm, ss } = inputValues[course.dipId] || {};
 
     if (!date || !hh || !mm || !ss)
-      return alert("날짜와 시간을 모두 입력해주세요.");
+      return showError("날짜와 시간을 모두 입력해주세요.");
 
     if (Number(mm) > 59 || Number(ss) > 59)
-      return alert("분과 초는 0~59여야 합니다.");
+      return showError("분과 초는 0~59여야 합니다.");
 
     const time = `${hh.padStart(2, "0")}:${mm.padStart(2,"0")}:${ss.padStart(2,"0")}`;
     const record = `${date} ${time}`;
@@ -239,11 +250,11 @@ export default function RunLogPage() {
       };
 
       setRecords((prev) => [...prev, newRecord]);
-      alert("기록이 저장되었습니다!");
+      showSuccess("기록이 저장되었습니다!");
 
       setOpenSavedIds((prev) => ({ ...prev, [course.dipId]: false }));
     } catch (err) {
-      alert("저장 실패: " + err.message);
+      showError("저장 실패: " + err.message);
     }
   };
 
@@ -269,7 +280,7 @@ export default function RunLogPage() {
 
     const date = editValues[record.id]?.date || record.rawDate;
     if (Number(mm) > 59 || Number(ss) > 59)
-      return alert("분과 초는 0~59여야 합니다.");
+      return showError("분과 초는 0~59여야 합니다.");
 
     const newTime = `${hh.padStart(2, "0")}:${mm.padStart(2,"0")}:${ss.padStart(2,"0")}`;
     const newRecordStr = `${date} ${newTime}`;
@@ -297,11 +308,11 @@ export default function RunLogPage() {
         )
       );
 
-      alert("기록이 수정되었습니다!");
+      showSuccess("기록이 수정되었습니다!");
       await loadData();
       setEditingRecordIds((p) => ({ ...p, [record.id]: false }));
     } catch (err) {
-      alert("수정 실패: " + err.message);
+      showError("수정 실패: " + err.message);
     }
   };
 
@@ -333,9 +344,9 @@ export default function RunLogPage() {
 
       setSavedCourses((prev) => [...prev, restoredItem]);
 
-      alert("삭제 완료!");
+      showSuccess("기록이 삭제되었습니다!");
     } catch (err) {
-      alert("삭제 실패: " + err.message);
+      showError("삭제 실패: " + err.message);
     }
   };
 
@@ -347,7 +358,7 @@ export default function RunLogPage() {
       setSavedCourses(prev => prev.filter(c => c.dipId !== course.dipId));
       await loadData();
     } catch (err) {
-      alert("실패: " + err.message);
+      showError("삭제 실패: " + err.message);
     }
   };
   

@@ -4,6 +4,10 @@ import "./Header.css";
 import logoImg from "../../assets/images/logo02.png";
 import { logoutAPI } from "../../api/userApi";
 
+const showSuccess = (msg) => {
+  alert(`성공: ${msg}`);
+};
+
 function Header() {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(false);
@@ -24,7 +28,7 @@ function Header() {
     sessionStorage.removeItem("userEmail");
     window.dispatchEvent(new Event("storage"));
     await logoutAPI();
-    alert("로그아웃 되었습니다.");
+    showSuccess("로그아웃 되었습니다!");
     navigate("/");
   };
 

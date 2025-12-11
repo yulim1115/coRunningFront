@@ -20,6 +20,14 @@ import MyRoutes from "./MyRoutes";
 import MyCrew from "./MyCrew";
 import Skeleton from "./Skeleton";
 
+const showSuccess = (msg) => {
+  alert(`성공: ${msg}`);
+};
+
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 function MyPage() {
   const navigate = useNavigate();
   const [openPostcode, setOpenPostcode] = useState(false);
@@ -53,7 +61,7 @@ function MyPage() {
   // 데이터 불러오기
   useEffect(() => {
     if (!isLogin) {
-      alert("로그인이 필요합니다.");
+      showError("로그인이 필요합니다.");
       navigate("/login");
       return;
     }
@@ -111,9 +119,9 @@ function MyPage() {
     try {
       await updateUserAPI(updateData);
       setActiveContent("dashboard");
-      alert("수정 완료");
+      showSuccess("수정 완료");
     } catch {
-      alert("수정 실패");
+      showError("수정 실패");
     }
   };
 
@@ -147,9 +155,9 @@ function MyPage() {
       await deleteRouteAPI(routeId);
       const data = await getRouteByIdAPI();
       setRoutes(data);
-      alert("코스 삭제 완료");
+      showSuccess("코스 삭제 완료");
     } catch {
-      alert("코스 삭제 실패");
+      showError("코스 삭제 실패");
     }
   };
 
@@ -159,9 +167,9 @@ function MyPage() {
       await deleteCrewAPI(crewId);
       const data = await getCrewByIdAPI();
       setCrews(data);
-      alert("크루 삭제 완료");
+      showSuccess("크루 삭제 완료");
     } catch {
-      alert("크루 삭제 실패");
+      showError("크루 삭제 실패");
     }
   };
 

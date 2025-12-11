@@ -4,6 +4,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { updatePassword } from "../../api/userApi";
 
+const showSuccess = (msg) => {
+  alert(`성공: ${msg}`);
+};
+
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 function PwResetPage() {
   const navigate = useNavigate();
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -36,7 +44,7 @@ function PwResetPage() {
   useEffect(() => {
     const isLogin = sessionStorage.getItem("isLogin") === "true";
     if (isLogin) {
-      alert("이미 로그인된 상태입니다.");
+      showError("이미 로그인된 상태입니다.");
       window.history.back();
     }
   });
@@ -50,27 +58,27 @@ function PwResetPage() {
   }, [password, passwordCheck]);
 
   const handleSendCode = async () => {
-    if (!email) return alert("이메일을 입력해주세요.");
+    if (!email) return showError("이메일을 입력해주세요.");
 
     try {
       const res = await axios.get(`/api/users/check-email?email=${email}`);
       if (res.data === false) {
-        alert("가입 되어 있지 않은 이메일입니다.");
+        showError("가입 되어 있지 않은 이메일입니다.");
         return;
       }
 
       await axios.post("/api/auth/send-code", { email });
-      alert("인증번호가 이메일로 전송되었습니다!");
+      showSuccess("인증번호가 이메일로 전송되었습니다!");
       setIsCodeSent(true);
       setShowCodeInput(true);
       setTimer(180);
     } catch (err) {
-      alert("인증번호 전송 중 오류 발생");
+      showError("인증번호 전송 중 오류 발생");
     }
   };
 
   const handleVerifyCode = async () => {
-    if (!verificationCode) return alert("인증번호를 입력해주세요.");
+    if (!verificationCode) return showError("인증번호를 입력해주세요.");
 
     try {
       const res = await axios.post("/api/auth/verify-code", {
@@ -79,14 +87,14 @@ function PwResetPage() {
       });
 
       if (res.data.valid) {
-        alert("인증 완료되었습니다!");
+        showSuccess("인증 완료되었습니다!");
         setIsEmailVerified(true);
         setTimer(0);
       } else {
-        alert("인증 실패! 인증번호가 올바르지 않습니다.");
+        showError("인증 실패! 인증번호가 올바르지 않습니다.");
       }
     } catch (err) {
-      alert("인증 요청 중 오류 발생");
+      showError("인증 요청 중 오류 발생");
     }
   };
 
@@ -94,11 +102,11 @@ function PwResetPage() {
     e.preventDefault();
     setErrorMsg("");
 
-    if (!isEmailVerified) return alert("이메일 인증을 완료해주세요.");
+    if (!isEmailVerified) return showError("이메일 인증을 완료해주세요.");
 
     try {
       await updatePassword(email,password);
-      alert("비밀번호 변경 성공!");
+      showSuccess("비밀번호 변경 성공!");
       navigate("/login");
     } catch (err) {
       setErrorMsg(err.response?.data?.message || "비밀번호 변경 실패!");

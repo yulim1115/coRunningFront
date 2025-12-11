@@ -6,6 +6,14 @@ import RegionSelector from "../../components/common/RegionSelector";
 import { crewCreateAPI } from "../../api/crewApi";
 import { FiChevronDown } from "react-icons/fi";
 
+const showSuccess = (msg) => {
+  alert(`성공: ${msg}`);
+};
+
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 function CrewCreatePage() {
   const navigate = useNavigate();
 
@@ -35,7 +43,7 @@ function CrewCreatePage() {
   useEffect(() => {
     const isLogin = sessionStorage.getItem("isLogin") === "true";
     if (!isLogin) {
-      alert("코스 등록은 로그인 후 이용 가능합니다.");
+      showError("코스 등록은 로그인 후 이용 가능합니다.");
       navigate("/login");
       return null;
     }
@@ -56,10 +64,10 @@ function CrewCreatePage() {
 
     try {
       await crewCreateAPI(data);
-      alert("크루 모집 글이 등록되었습니다!");
+      showSuccess("크루 모집 글이 등록되었습니다!");
       navigate("/crews");
     } catch {
-      alert("등록 실패. 다시 시도해주세요.");
+      showError("등록 실패. 다시 시도해주세요.");
     }
   };
 

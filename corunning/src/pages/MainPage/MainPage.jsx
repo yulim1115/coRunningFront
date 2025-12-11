@@ -23,6 +23,14 @@ import bannerImg from "../../assets/images/running-banner.jpg";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
+const showSuccess = (msg) => {
+  alert(`성공: ${msg}`);
+};
+
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 function MainPage() {
   const navigate = useNavigate();
 
@@ -268,7 +276,7 @@ function MainPage() {
   // 코스 스냅
   const finishRoute = async () => {
     if (routeCoords.length < 2) {
-      alert("경로가 너무 짧습니다.");
+      showError("경로가 너무 짧습니다.");
       return;
     }
 
@@ -281,7 +289,7 @@ function MainPage() {
       const data = await res.json();
 
       if (!data.matchings?.length) {
-        alert("스냅 실패");
+        showError("스냅 실패");
         return;
       }
 
@@ -295,7 +303,7 @@ function MainPage() {
       );
       setDistance(meters);
     } catch {
-      alert("스냅 요청 오류");
+      showError("스냅 요청 오류");
     }
   };
   // 되돌리기
@@ -328,7 +336,7 @@ function MainPage() {
   const downloadImage = async () => {
     const coords = snappedCoords.length ? snappedCoords : routeCoords;
     if (coords.length < 2) {
-      alert("먼저 코스를 그려주세요.");
+      showError("먼저 코스를 그려주세요.");
       return;
     }
 
@@ -372,7 +380,7 @@ function MainPage() {
       if (!res.ok) {
         const text = await res.text();
         console.error("Mapbox Error:", text);
-        alert("이미지 생성에 실패했습니다.");
+        showError("이미지 생성에 실패했습니다.");
         return;
       }
 
@@ -387,7 +395,7 @@ function MainPage() {
       URL.revokeObjectURL(blobUrl);
     } catch (e) {
       console.error(e);
-      alert("이미지 다운로드 중 오류가 발생했습니다.");
+      showError("이미지 다운로드 중 오류가 발생했습니다.");
     }
   };
 
@@ -395,11 +403,11 @@ function MainPage() {
   const copyRoute = () => {
     const coords = snappedCoords.length ? snappedCoords : routeCoords;
     if (!coords.length) {
-      alert("복사할 경로가 없습니다.");
+      showError("복사할 경로가 없습니다.");
       return;
     }
     navigator.clipboard.writeText(JSON.stringify(coords));
-    alert("경로가 복사되었습니다!");
+    showSuccess("경로가 복사되었습니다!");
   };
 
   return (

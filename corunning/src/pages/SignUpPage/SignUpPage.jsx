@@ -6,6 +6,14 @@ import "./SignUpPage.css";
 import axios from "axios";
 import { signUpAPI, nameCheckAPI } from "../../api/userApi";
 
+const showSuccess = (msg) => {
+  alert(`성공: ${msg}`);
+};
+
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 function SignUpPage() {
   const navigate = useNavigate();
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -48,7 +56,7 @@ function SignUpPage() {
   useEffect(() => {
     const isLogin = sessionStorage.getItem("isLogin") === "true";
     if (isLogin) {
-      alert("이미 로그인된 상태입니다.");
+      showError("이미 로그인된 상태입니다.");
       window.history.back();
     }
   });
@@ -62,27 +70,27 @@ function SignUpPage() {
   }, [password, passwordCheck]);
 
   const handleSendCode = async () => {
-    if (!email) return alert("이메일을 입력해주세요.");
+    if (!email) return showError("이메일을 입력해주세요.");
 
     try {
       const res = await axios.get(`/api/users/check-email?email=${email}`);
       if (res.data === true) {
-        alert("이미 사용 중인 이메일입니다.");
+        showError("이미 사용 중인 이메일입니다.");
         return;
       }
 
       await axios.post("/api/auth/send-code", { email });
-      alert("인증번호가 이메일로 전송되었습니다!");
+      showSuccess("인증번호가 이메일로 전송되었습니다!");
       setIsCodeSent(true);
       setShowCodeInput(true);
       setTimer(180);
     } catch (err) {
-      alert("인증번호 전송 중 오류 발생");
+      showError("인증번호 전송 중 오류 발생");
     }
   };
 
   const handleVerifyCode = async () => {
-    if (!verificationCode) return alert("인증번호를 입력해주세요.");
+    if (!verificationCode) return showError("인증번호를 입력해주세요.");
 
     try {
       const res = await axios.post("/api/auth/verify-code", {
@@ -91,14 +99,14 @@ function SignUpPage() {
       });
 
       if (res.data.valid) {
-        alert("인증 완료되었습니다!");
+        showSuccess("인증 완료되었습니다!");
         setIsEmailVerified(true);
         setTimer(0);
       } else {
-        alert("인증 실패! 인증번호가 올바르지 않습니다.");
+        showError("인증 실패! 인증번호가 올바르지 않습니다.");
       }
     } catch (err) {
-      alert("인증 요청 중 오류 발생");
+      showError("인증 요청 중 오류 발생");
     }
   };
 
@@ -134,11 +142,11 @@ function SignUpPage() {
       hireDate: new Date().toISOString().slice(0, 10),
     };
 
-    if (!isEmailVerified) return alert("이메일 인증을 완료해주세요.");
+    if (!isEmailVerified) return showError("이메일 인증을 완료해주세요.");
 
     try {
       await signUpAPI(data);
-      alert("회원가입 성공!");
+      showSuccess("회원가입 성공!");
       navigate("/login");
     } catch (err) {
       setErrorMsg(err.response?.data?.message || "회원가입 실패!");

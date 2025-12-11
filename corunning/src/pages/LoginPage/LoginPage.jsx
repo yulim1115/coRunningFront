@@ -3,6 +3,14 @@ import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 import { getMyInfo, loginAPI } from "../../api/userApi";
 
+const showSuccess = (msg) => {
+  alert(`성공: ${msg}`);
+};
+
+const showError = (msg) => {
+  alert(`오류: ${msg}`);
+};
+
 function LoginPage() {
   const navigate = useNavigate();
 
@@ -17,7 +25,7 @@ function LoginPage() {
   useEffect(() => {
     const isLogin = sessionStorage.getItem("isLogin") === "true";
     if (isLogin) {
-      alert("이미 로그인된 상태입니다.");
+      showError("이미 로그인된 상태입니다.");
       navigate("/");
     }
   }, [navigate]);
@@ -44,11 +52,11 @@ function LoginPage() {
       sessionStorage.setItem("userName", userdata.data.userName);
 
       window.dispatchEvent(new Event("storage"));
-      alert("로그인 성공!");
+      showSuccess("로그인 성공!");
       navigate("/");
     } catch (err) {
       console.error(err);
-      alert("로그인 실패! 아이디 또는 비밀번호를 확인하세요.");
+      showError("로그인 실패! 아이디 또는 비밀번호를 확인하세요.");
     }
   };
 
