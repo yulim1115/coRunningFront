@@ -30,11 +30,7 @@ export default function AccountEdit({
           <label className="form-label">
             이름 <span className="required">수정 불가</span>
           </label>
-          <input
-            type="text"
-            value={userName}
-            disabled
-          />
+          <input type="text" value={userName} disabled />
         </div>
 
         {/* 생년월일 */}
@@ -114,9 +110,8 @@ export default function AccountEdit({
                 }}
               />
               <button
-                className="btn btn-secondary btn-small"
+                className="btn btn-soft btn-small"
                 onClick={() => setOpenPostcode(false)}
-                style={{ marginTop: "10px" }}
               >
                 닫기
               </button>

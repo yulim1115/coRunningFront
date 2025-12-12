@@ -357,9 +357,8 @@ function SignUpPage() {
               <div className="postcode-modal">
                 <DaumPostcode autoClose onComplete={onCompleteAddress} />
                 <button
-                  className="btn btn-secondary btn-small"
+                  className="btn btn-soft btn-small"
                   onClick={() => setShowPostcode(false)}
-                  style={{ marginTop: "10px" }}
                 >
                   닫기
                 </button>

@@ -216,14 +216,47 @@
   align-items: center;
   justify-content: center;
   z-index: 999;
+  animation: postcodeOverlayFadeIn 0.2s ease-out;
 }
 
 .postcode-modal {
   background: #fff;
   padding: 20px;
   border-radius: var(--card-radius);
+  box-shadow: var(--shadow-card);
   width: 500px;
   max-width: 92%;
+  display: flex;
+  flex-direction: column;
+  animation: postcodeModalFadeIn 0.25s ease-out;
+}
+
+/* 주소 모달 닫기 버튼 위치 */
+.mypage-container .postcode-modal > .btn {
+  align-self: flex-end;
+  margin-top: 16px;
+}
+
+/* 주소 모달 배경 애니메이션 */
+@keyframes postcodeOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 주소 모달 등장 애니메이션 */
+@keyframes postcodeModalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* 코스 관리 제목 */

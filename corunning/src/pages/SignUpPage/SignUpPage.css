@@ -106,25 +106,57 @@
   cursor: pointer;
 }
 
-/* 주소 검색 모달 배경 */
-.postcode-modal-overlay {
+/* 주소 모달 배경 */
+.signup-container .postcode-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 2000;
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 999;
+  animation: signupOverlayFadeIn 0.2s ease-out;
 }
 
-/* 주소 검색 모달 박스 */
-.postcode-modal {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 480px;
-  width: 90%;
+/* 주소 모달 박스 */
+.signup-container .postcode-modal {
+  background: #fff;
+  width: 500px;
+  max-width: 92%;
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-card);
+  padding: 20px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  animation: signupModalFadeIn 0.25s ease-out;
+}
+
+/* 주소 모달 닫기 버튼 위치 */
+.signup-container .postcode-modal > .btn {
+  align-self: flex-end;
+  margin-top: 16px;
+}
+
+/* 주소 모달 배경 애니메이션 */
+@keyframes signupOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 주소 모달 등장 애니메이션 */
+@keyframes signupModalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Validation */
