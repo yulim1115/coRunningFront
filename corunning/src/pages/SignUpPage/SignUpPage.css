@@ -43,6 +43,10 @@
   margin-bottom: var(--space-xs);
 }
 
+.signup-container .form-group input {
+  font-family: "Noto Sans KR", sans-serif;
+}
+
 /* 플렉스 정렬 (이메일 / 이름 공용 / 우편번호) */
 .signup-container .flex-row {
   display: flex;
