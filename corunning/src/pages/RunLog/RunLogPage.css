@@ -9,6 +9,7 @@
 
 /* 내부 래퍼 */
 .runlog-container .runlog-wrapper {
+  margin-top: 20px;
   width: 900px;
 }
 
