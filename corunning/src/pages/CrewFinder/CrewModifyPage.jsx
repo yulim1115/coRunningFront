@@ -26,27 +26,26 @@ function CrewModifyPage() {
   const [deadline, setDeadline] = useState("");
 
   useEffect(() => {
-      const fetchCrews = async () => {
-        try {
-          const data = await getCrewDetailAPI(id); 
-          console.log("내 크루 정보:", data);
-          setTitle(data.title?? "");
-          setContent(data.content?? "");
-          setRoutePath(data.routePathJson??"");
-          const [sido, gu] = (data.region?? "").split(" ");
-          setRegion({ sido, gu });
-          setBoardType(data.boardType);
-          setRecruitCount(data.recruitCount);
-          setDeadline(data.deadline);
-        } catch (error) {
-          console.error("크루 정보 불러오기 실패:", error);
-        }  
-      };
-      fetchCrews();
-  
-    }, [id]);
+    const fetchCrews = async () => {
+      try {
+        const data = await getCrewDetailAPI(id);
+        console.log("내 크루 정보:", data);
+        setTitle(data.title ?? "");
+        setContent(data.content ?? "");
+        setRoutePath(data.routePathJson ?? "");
+        const [sido, gu] = (data.region ?? "").split(" ");
+        setRegion({ sido, gu });
+        setBoardType(data.boardType);
+        setRecruitCount(data.recruitCount);
+        setDeadline(data.deadline);
+      } catch (error) {
+        console.error("크루 정보 불러오기 실패:", error);
+      }
+    };
+    fetchCrews();
+  }, [id]);
 
-    const isDisabled =
+  const isDisabled =
     !title.trim() ||
     !content.trim() ||
     !region.sido ||
@@ -54,26 +53,26 @@ function CrewModifyPage() {
     !recruitCount ||
     !deadline;
 
-    //수정
-    const handleSubmit = async (e) => {
+  //수정
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       title,
       content,
-      routePathJson: routePath??null,
+      routePathJson: routePath ?? null,
       region: `${region.sido} ${region.gu}`,
       boardType,
       recruitCount,
       deadline,
     };
     try {
-          await updateCrewAPI(id, data);
-          showSuccess("크루 모집 글이 수정되었습니다!");
-          navigate(-1);
-        } catch {
-          showError("수정 실패. 다시 시도해주세요.");
-        }
-      };
+      await updateCrewAPI(id, data);
+      showSuccess("크루 모집 글이 수정되었습니다!");
+      navigate(-1);
+    } catch {
+      showError("수정 실패. 다시 시도해주세요.");
+    }
+  };
 
   return (
     <main className="route-create-container">
@@ -180,14 +179,12 @@ function CrewModifyPage() {
           <div className="create-btn-row">
             <button
               type="submit"
-              className="btn-medium main"
+              className="btn btn-medium btn-main btn-hover-float"
               disabled={isDisabled}
             >
-              수정
+              수정하기
             </button>
-            <button
-              type="button"
-              className="btn-medium"            >
+            <button type="button" className="btn btn-medium btn-soft">
               취소
             </button>
           </div>
