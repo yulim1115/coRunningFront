@@ -9,7 +9,7 @@ import {
   FaThumbsUp,
   FaBookmark,
   FaChevronLeft,
-  FaTimes
+  FaTimes,
 } from "react-icons/fa";
 
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -29,7 +29,7 @@ import {
   removeLike,
   checkLiked,
   removeDipByRoute,
-  deleteRouteAPI
+  deleteRouteAPI,
 } from "../../api/routesApi";
 
 const showError = (msg) => {
@@ -152,7 +152,9 @@ function RunRoutesDetailPage() {
       if (!Array.isArray(coords) || coords.length < 2) return;
 
       if (mapRef.current) {
-        try { mapRef.current.remove(); } catch {}
+        try {
+          mapRef.current.remove();
+        } catch {}
         mapRef.current = null;
       }
 
@@ -209,7 +211,9 @@ function RunRoutesDetailPage() {
     return () => {
       clearTimeout(timer);
       if (mapRef.current) {
-        try { mapRef.current.remove(); } catch {}
+        try {
+          mapRef.current.remove();
+        } catch {}
         mapRef.current = null;
       }
     };
@@ -283,8 +287,7 @@ function RunRoutesDetailPage() {
     } catch {
       showError("경로 삭제 실패");
     }
-
-  }
+  };
 
   // 로딩 화면
   if (loading) {
@@ -354,7 +357,6 @@ function RunRoutesDetailPage() {
   // 정상 화면
   return (
     <main className="route-detail-container">
-
       {/* 제목 및 태그 */}
       <section className="title-section">
         <div className="title-row">
@@ -369,17 +371,32 @@ function RunRoutesDetailPage() {
         </div>
 
         <div className="meta-row">
-          <span><FaMapMarkerAlt /> {route.region}</span>
-          <span><FaRunning /> {difficultyLabel}</span>
-          <span><FaRoute /> {route.distance} km</span>
-          <span><FaUser /> 작성자 {route.writerName}</span>
+          <span>
+            <FaMapMarkerAlt /> {route.region}
+          </span>
+          <span>
+            <FaRunning /> {difficultyLabel}
+          </span>
+          <span>
+            <FaRoute /> {route.distance} km
+          </span>
+          <span>
+            <FaUser /> 작성자 {route.writerName}
+          </span>
           {loginUserId === route.writer && (
-            <div style={{display: "flex",  marginLeft: "auto", gap: "6px",}}>
-            <button className="btn-inline-action" onClick={() => handleDeleteroute(route.id)} 
-            style={{ height: "32px", padding: "0 10px", fontSize: "13px", 
-            fontWeight: "500", borderRadius: "4px", background: "none", border: "1px solid #D9534F", color: "#D9534F" }}>
-              삭제
-            </button>
+            <div
+              style={{
+                display: "flex",
+                marginLeft: "auto",
+                gap: "var(--space-xs)",
+              }}
+            >
+              <button
+                className="btn btn-small btn-outline-danger"
+                onClick={() => handleDeleteroute(route.id)}
+              >
+                삭제
+              </button>
             </div>
           )}
         </div>
@@ -394,14 +411,18 @@ function RunRoutesDetailPage() {
         <div className="right-area">
           <div className="recommend-row">
             <button
-              className={`btn btn-action btn-hover-float ${isLiked ? "on" : ""}`}
+              className={`btn btn-action btn-hover-float ${
+                isLiked ? "on" : ""
+              }`}
               onClick={handleLike}
             >
               <FaThumbsUp /> 추천 ({route.liked})
             </button>
 
             <button
-              className={`btn btn-action btn-hover-float ${isBookmarked ? "on" : ""}`}
+              className={`btn btn-action btn-hover-float ${
+                isBookmarked ? "on" : ""
+              }`}
               onClick={handleToggleBookmark}
             >
               <FaBookmark /> {isBookmarked ? "저장됨" : "저장"}
@@ -433,7 +454,10 @@ function RunRoutesDetailPage() {
             value={commentInput}
             onChange={(e) => setCommentInput(e.target.value)}
           />
-          <button className="btn btn-accent btn-medium" onClick={handleAddComment}>
+          <button
+            className="btn btn-accent btn-medium"
+            onClick={handleAddComment}
+          >
             등록
           </button>
         </div>
@@ -443,9 +467,7 @@ function RunRoutesDetailPage() {
             <div className="comment-item" key={item.id}>
               <div className="comment-writer">{item.writer_name}</div>
 
-              <div className="comment-date">
-                {formatDate(item.createdAt)}
-              </div>
+              <div className="comment-date">{formatDate(item.createdAt)}</div>
 
               <div className="comment-text">
                 {item.content}

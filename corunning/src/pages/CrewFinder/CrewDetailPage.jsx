@@ -11,7 +11,7 @@ import {
   postCrewCommentAPI,
   deleteCrewCommentAPI,
   checkApplicationAPI,
-  deleteCrewAPI
+  deleteCrewAPI,
 } from "../../api/crewApi";
 
 const showError = (msg) => {
@@ -42,26 +42,33 @@ function CrewDetailPage() {
   const formatDate = (date) => {
     if (!date) return "";
     const d = new Date(date);
-    return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(
-      d.getDate()
-    ).padStart(2, "0")}`;
+    return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}.${String(d.getDate()).padStart(2, "0")}`;
   };
 
   // 타입 텍스트
   const getTypeLabel = (type) => {
     switch (type) {
-      case "FLASH": return "번개";
-      case "DRAWING": return "드로잉";
-      default: return "일반";
+      case "FLASH":
+        return "번개";
+      case "DRAWING":
+        return "드로잉";
+      default:
+        return "일반";
     }
   };
 
   // 타입 태그 클래스
   const getTypeTagClass = (type) => {
     switch (type) {
-      case "FLASH": return "tag-type-flash";
-      case "DRAWING": return "tag-type-drawing";
-      default: return "tag-type-normal";
+      case "FLASH":
+        return "tag-type-flash";
+      case "DRAWING":
+        return "tag-type-drawing";
+      default:
+        return "tag-type-normal";
     }
   };
 
@@ -99,7 +106,8 @@ function CrewDetailPage() {
       return;
     }
 
-    if (!Array.isArray(coords) || coords.length < 2 || !mapContainerRef.current) return;
+    if (!Array.isArray(coords) || coords.length < 2 || !mapContainerRef.current)
+      return;
 
     if (mapRef.current) {
       mapRef.current.remove();
@@ -121,7 +129,10 @@ function CrewDetailPage() {
     map.on("load", () => {
       map.addSource("routeLine", {
         type: "geojson",
-        data: { type: "Feature", geometry: { type: "LineString", coordinates: coords } },
+        data: {
+          type: "Feature",
+          geometry: { type: "LineString", coordinates: coords },
+        },
       });
 
       map.addLayer({
@@ -131,7 +142,10 @@ function CrewDetailPage() {
         paint: { "line-width": 5, "line-color": "#e5634f" },
       });
 
-      const bounds = coords.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds());
+      const bounds = coords.reduce(
+        (b, c) => b.extend(c),
+        new mapboxgl.LngLatBounds()
+      );
       map.fitBounds(bounds, { padding: 40 });
       map.resize();
     });
@@ -168,7 +182,9 @@ function CrewDetailPage() {
     if (!commentInput.trim()) return;
 
     try {
-      const newComment = await postCrewCommentAPI(id, { content: commentInput.trim() });
+      const newComment = await postCrewCommentAPI(id, {
+        content: commentInput.trim(),
+      });
       setComments((prev) => [...prev, newComment]);
       setCommentInput("");
     } catch {
@@ -196,7 +212,7 @@ function CrewDetailPage() {
     } catch {
       showError("게시물 삭제 실패");
     }
-  }
+  };
 
   // 스켈레톤
   if (loading) {
@@ -253,7 +269,6 @@ function CrewDetailPage() {
 
   return (
     <main className="crew-detail-container">
-
       {/* 제목 영역 */}
       <section className="title-section">
         <div className="title-row">
@@ -264,19 +279,34 @@ function CrewDetailPage() {
         </div>
 
         <div className="meta-row">
-          <span><FaUser />작성자 {crew.writer_name}</span>
-          <span><FaClock />작성일 {formatDate(crew.createdAt)}</span>
+          <span>
+            <FaUser />
+            작성자 {crew.writer_name}
+          </span>
+          <span>
+            <FaClock />
+            작성일 {formatDate(crew.createdAt)}
+          </span>
           {loginUserId === crew.writerId && (
-            <div  style={{ display: "flex",  marginLeft: "auto", gap: "6px" }}>
-            <button className="btn-inline-action" onClick={() => navigate(`/crews/modify/${crew.id}`)} 
-              style={{ height: 32, padding: "0 10px", fontSize: 13, fontWeight: 500, borderRadius: 4, 
-              background: "none", border: "1px solid #DDDDDD", color: "#666666"}}>
-              수정
-            </button>
-            <button className="btn-inline-action" onClick={() => handleDeleteboard(crew.id)} 
-            style={{ height: "32px", padding: "0 10px", fontSize: "13px", fontWeight: "500", borderRadius: "4px", background: "none", border: "1px solid #D9534F", color: "#D9534F" }}>
-              삭제
-            </button>
+            <div
+              style={{
+                display: "flex",
+                marginLeft: "auto",
+                gap: "var(--space-xs)",
+              }}
+            >
+              <button
+                className="btn btn-small btn-outline-soft"
+                onClick={() => navigate(`/crews/modify/${crew.id}`)}
+              >
+                수정
+              </button>
+              <button
+                className="btn btn-small btn-outline-danger"
+                onClick={() => handleDeleteboard(crew.id)}
+              >
+                삭제
+              </button>
             </div>
           )}
         </div>
@@ -310,7 +340,8 @@ function CrewDetailPage() {
             <div className="info-row">
               <span className="info-label">모집 인원</span>
               <span className="info-value">
-                <span className="recruit-current">{crew.currentCount}명</span> / {crew.recruitCount}명
+                <span className="recruit-current">{crew.currentCount}명</span> /{" "}
+                {crew.recruitCount}명
               </span>
             </div>
 
@@ -324,7 +355,11 @@ function CrewDetailPage() {
               <span className="info-value">{crew.region}</span>
             </div>
 
-            <div className={`info-status-tag ${isClosed ? "closed" : "recruiting"}`}>
+            <div
+              className={`info-status-tag ${
+                isClosed ? "closed" : "recruiting"
+              }`}
+            >
               {isClosed ? "모집마감" : "모집중"}
             </div>
           </div>
@@ -335,11 +370,18 @@ function CrewDetailPage() {
             </div>
 
             {isApplied ? (
-              <button className="btn btn-medium btn-green" disabled>신청완료</button>
+              <button className="btn btn-medium btn-green" disabled>
+                신청완료
+              </button>
             ) : isClosed ? (
-              <button className="btn btn-medium btn-disabled" disabled>모집마감</button>
+              <button className="btn btn-medium btn-disabled" disabled>
+                모집마감
+              </button>
             ) : (
-              <button className="btn btn-medium btn-main btn-hover-float" onClick={handleApply}>
+              <button
+                className="btn btn-medium btn-main btn-hover-float"
+                onClick={handleApply}
+              >
                 신청하기
               </button>
             )}
@@ -361,7 +403,10 @@ function CrewDetailPage() {
             value={commentInput}
             onChange={(e) => setCommentInput(e.target.value)}
           />
-          <button className="btn btn-accent btn-medium" onClick={handleAddComment}>
+          <button
+            className="btn btn-accent btn-medium"
+            onClick={handleAddComment}
+          >
             등록
           </button>
         </div>
@@ -390,7 +435,6 @@ function CrewDetailPage() {
       <Link to="/crews" className="link-back">
         <FaChevronLeft /> 목록으로
       </Link>
-
     </main>
   );
 }
