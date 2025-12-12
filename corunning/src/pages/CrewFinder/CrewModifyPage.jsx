@@ -69,7 +69,7 @@ function CrewModifyPage() {
     try {
           await updateCrewAPI(id, data);
           showSuccess("크루 모집 글이 수정되었습니다!");
-          navigate("/mypage");
+          navigate(-1);
         } catch {
           showError("수정 실패. 다시 시도해주세요.");
         }
@@ -187,9 +187,7 @@ function CrewModifyPage() {
             </button>
             <button
               type="button"
-              className="btn-medium"
-              onClick={()=>navigate(window.history.back())}
-            >
+              className="btn-medium"            >
               취소
             </button>
           </div>
