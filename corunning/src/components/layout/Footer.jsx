@@ -19,14 +19,6 @@ function Footer() {
             <a href="/runlog">Run Log</a>
             <a href="/mypage">My Page</a>
           </div>
-
-          {/* 정책 관련 */}
-          <div className="footer-policy">
-            <a href="#">이용약관</a>
-            <a href="#">개인정보처리방침</a>
-            <a href="#">고객센터</a>
-          </div>
-
         </div>
 
         {/* 하단 카피라이트 */}

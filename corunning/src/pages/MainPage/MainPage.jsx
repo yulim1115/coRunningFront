@@ -429,15 +429,12 @@ function MainPage() {
 
         <div className="banner-inner">
           <div className="banner-text">
-            <h1>
-              나만의 러닝 코스를 만들고,
-              <br />
-              함께 달릴 크루를 찾아보세요.
+            <h1><br /><br /><br />
+              나만의 러닝 코스를 공유하고,<br />
+              함께 땀 흘릴 러닝 메이트를 만나보세요.<br /><br /><br />
             </h1>
             <h3>
-              러너들이 직접 코스를 공유하고
-              <br />
-              같은 목표를 가진 사람들과 연결되는 공간입니다.
+              러너들이 직접 만든 코스로 소통하고, 같은 목표를 향해 달리는 사람들과 이어지는 공간입니다.
             </h3>
           </div>
         </div>
@@ -447,10 +444,10 @@ function MainPage() {
       <section className="course-map-section">
         <div className="container">
           <div className="course-map-header">
-            <h1>러닝 코스 그리기 및 생성</h1>
+            <h1>러닝 코스 그리기</h1>
             <p>
-              지도 위에서 클릭하여 나만의 러닝 경로를 직접 드로잉하고, 코스를
-              생성해보세요.
+              지도 위에서 클릭하여 나만의 러닝 경로를 직접 드로잉 해보세요.<br />
+              실제로 뛰어서 달릴 수 있는 경로를 확인해볼 수 있습니다.
             </p>
           </div>
 
@@ -480,7 +477,7 @@ function MainPage() {
                     onClick={finishRoute}
                   >
                     <FaFlagCheckered />
-                    코스 생성
+                    코스 확인
                   </button>
                 </div>
               </div>
@@ -529,7 +526,7 @@ function MainPage() {
             <div className="filter-text">
               <h2>코스 탐색 필터</h2>
               <p>
-                지역, 난이도, 종류를 설정해 오늘 달릴 코스를 빠르게 찾아보세요.
+                러너들이 이미 생성해놓은 코스를 빠르게 찾아보세요.
               </p>
             </div>
 
