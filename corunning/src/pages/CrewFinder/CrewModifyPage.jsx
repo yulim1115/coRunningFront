@@ -39,7 +39,6 @@ function CrewModifyPage() {
     const fetchCrews = async () => {
       try {
         const data = await getCrewDetailAPI(id);
-        console.log("내 크루 정보:", data);
         setTitle(data.title ?? "");
         setContent(data.content ?? "");
         setRoutePath(data.routePathJson ?? "");

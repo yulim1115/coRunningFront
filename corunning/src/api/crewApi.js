@@ -102,7 +102,6 @@ export const deleteCrewCommentAPI = async (commentId) => {
 export const getCrewByIdAPI = async (userId) => {
     try {
         const response = await axios.get(`/api/crew-board/user/${userId}`, {withCredentials: true});
-        console.log("크루 정보 조회 API 응답:", response.data);
         return response.data;
     } catch (error) {
         console.error("크루 정보 조회 실패:", error);
@@ -114,7 +113,6 @@ export const getCrewByIdAPI = async (userId) => {
 export const updateCrewAPI = async(id, updateData) =>{
   try {
     const response = await axios.put(`/api/crew-board/${id}`, updateData, {withCredentials: true});
-    console.log("크루정보 수정 성공");
     return response.data
   }
   catch (error){
@@ -127,7 +125,6 @@ export const updateCrewAPI = async(id, updateData) =>{
 export const deleteCrewAPI = async (crewId) => {
     try {   
         const response = await axios.delete(`/api/crew-board/${crewId}`, {withCredentials: true}) 
-        console.log("크루 삭제 API 응답:", response.data);
         return response.data;
     } catch (error) {
         console.error("크루 삭제 실패:", error);

@@ -4,7 +4,6 @@ import axios from "axios";
 export const getUserAPI = async () => {
     try {
         const response = await axios.get(`/api/users/info`, {withCredentials: true});          
-        console.log("회원정보 조회 API 응답:", response.data);
         return response.data;
     } catch (error) {
         console.error("회원정보 조회 실패:", error);
@@ -16,7 +15,6 @@ export const getUserAPI = async () => {
 export const updateUserAPI = async (userData) => {
     try {
         const response = await axios.put(`/api/users`, userData, {withCredentials: true})
-        console.log("프로필/계정 정보 수정 API 응답:", response.data);
         return response.data;
     } catch (error) {
         console.error("프로필/계정 정보 수정 실패:", error);
@@ -28,7 +26,6 @@ export const updateUserAPI = async (userData) => {
 export const getRouteByIdAPI = async () => {
     try {
         const response = await axios.get(`/api/routes/user`, {withCredentials: true});          
-        console.log("코스 정보 조회 API 응답:", response.data);
         return response.data;
     } catch (error) {
         console.error("코스 정보 조회 실패:", error);
@@ -39,7 +36,6 @@ export const getRouteByIdAPI = async () => {
 export const deleteRouteAPI = async (routeId) => {
     try {   
         const response = await axios.delete(`/api/routes/${routeId}/remove`, {withCredentials: true})
-        console.log("코스 삭제 API 응답:", response.data);
         return response.data;
     } catch (error) {
         console.error("코스 삭제 실패:", error);
@@ -51,7 +47,6 @@ export const deleteRouteAPI = async (routeId) => {
 export const getCrewByIdAPI = async () => {
     try {
         const response = await axios.get(`/api/crew-board/user`, {withCredentials: true});
-        console.log("크루 정보 조회 API 응답:", response.data);
         return response.data;
     } catch (error) {
         console.error("크루 정보 조회 실패:", error);
@@ -62,7 +57,6 @@ export const getCrewByIdAPI = async () => {
 export const deleteCrewAPI = async (crewId) => {
     try {   
         const response = await axios.delete(`/api/crew-board/${crewId}`, {withCredentials: true}) 
-        console.log("크루 삭제 API 응답:", response.data);
         return response.data;
     } catch (error) {
         console.error("크루 삭제 실패:", error);
@@ -73,7 +67,6 @@ export const deleteCrewAPI = async (crewId) => {
 export const getApplicationsAPI = async(crewId) => {
     try {
         const response = await axios.get(`/api/crew-board/${crewId}/applications`, {withCredentials: true})
-        console.log("신청자 명단 가져오기 API 응답: ", response.data);
         return response.data;
     }catch (error){
         console.error("신청자 명단 가져오기 실패:", error);
@@ -85,7 +78,6 @@ export const getApplicationsAPI = async(crewId) => {
 export const getDashboardAPI = async() => {
     try{
         const response = await axios.get(`/api/mypage/dashboard`, {withCredentials: true} )
-        console.log("대시보드 가져오기 API 응답 : ",response.data);
         return response.data;
     }catch(error){
         console.error("대시보드 가져오기 실패 : error");

@@ -156,7 +156,6 @@ export const updateDip = async (id, complete, record, title, distance, location)
 export const deleteRouteAPI = async (routeId) => {
     try {   
         const response = await axios.delete(`/api/routes/${routeId}/remove`, {withCredentials: true})
-        console.log("코스 삭제 API 응답:", response.data);
         return response.data;
     } catch (error) {
         console.error("코스 삭제 실패:", error);
