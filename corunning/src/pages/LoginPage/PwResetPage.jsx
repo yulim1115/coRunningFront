@@ -35,7 +35,6 @@ function PwResetPage() {
   const [passwordCheck, setPasswordCheck] = useState("");
   const [isPwMatch, setIsPwMatch] = useState(null);
 
-
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
@@ -115,7 +114,7 @@ function PwResetPage() {
     if (!isEmailVerified) return showError("이메일 인증을 완료해주세요.");
 
     try {
-      await updatePassword(email,password);
+      await updatePassword(email, password);
       showSuccess("비밀번호 변경 성공!");
       navigate("/login");
     } catch (err) {
@@ -168,7 +167,7 @@ function PwResetPage() {
                 />
                 <button
                   type="button"
-                  className="btn btn-sub"
+                  className="btn btn-large btn-outline-accent"
                   onClick={handleVerifyCode}
                 >
                   확인
@@ -216,10 +215,7 @@ function PwResetPage() {
           <button
             type="submit"
             className="btn btn-main btn-large signup-btn"
-            disabled={
-              isPwMatch === false ||
-              !isEmailVerified 
-            }
+            disabled={isPwMatch === false || !isEmailVerified}
           >
             비밀번호 변경
           </button>

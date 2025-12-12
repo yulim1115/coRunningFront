@@ -208,7 +208,7 @@ function SignUpPage() {
                 />
                 <button
                   type="button"
-                  className="btn btn-sub"
+                  className="btn btn-large btn-outline-accent"
                   onClick={handleVerifyCode}
                 >
                   확인
