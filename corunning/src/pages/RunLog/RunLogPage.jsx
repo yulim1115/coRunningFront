@@ -614,20 +614,40 @@ export default function RunLogPage() {
                       placeholder="HH"
                       maxLength={2}
                       value={newCustom.hh}
+                      onChange={(e) =>
+                        handleNewCustomChange(
+                          "hh",
+                          e.target.value.replace(/\D/g, "")
+                        )
+                      }
                     />
                     <span>:</span>
+
                     <input
                       className="input-tiny"
                       placeholder="MM"
                       maxLength={2}
                       value={newCustom.mm}
+                      onChange={(e) =>
+                        handleNewCustomChange(
+                          "mm",
+                          e.target.value.replace(/\D/g, "")
+                        )
+                      }
                     />
                     <span>:</span>
+
                     <input
                       className="input-tiny"
                       placeholder="SS"
                       maxLength={2}
                       value={newCustom.ss}
+                      onChange={(e) =>
+                        handleNewCustomChange(
+                          "ss",
+                          e.target.value.replace(/\D/g, "")
+                        )
+                      }
                     />
                   </div>
                 </div>

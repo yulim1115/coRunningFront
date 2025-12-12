@@ -306,7 +306,10 @@ function RunRoutesCreatePage() {
                   경로 배열 입력
                 </button>
               </div>
-              <div className="right-controls" style={{ display: mode === "draw" ? "inline-block" : "none" }}>
+              <div
+                className="right-controls"
+                style={{ display: mode === "draw" ? "flex" : "none" }}
+              >
                 <button
                   type="button"
                   className="btn btn-small btn-soft"
@@ -357,7 +360,9 @@ function RunRoutesCreatePage() {
                       // 거리 계산
                       if (parsed.length > 1) {
                         const line = turf.lineString(parsed);
-                        const meters = Math.round(turf.length(line, { units: "kilometers" }) * 1000);
+                        const meters = Math.round(
+                          turf.length(line, { units: "kilometers" }) * 1000
+                        );
                         setDistance(meters);
                       } else {
                         setDistance(0);

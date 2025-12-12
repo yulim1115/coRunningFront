@@ -55,7 +55,7 @@
   min-height: 120px;
   padding: 12px;
   resize: vertical;
-  font-family: "Noto Sans KR", sans-serif;;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 /* 지도 컨테이너 */
@@ -69,7 +69,6 @@
   margin-top: var(--space-sm);
 }
 
-
 /* 지도 위 버튼 전체 라인 */
 .route-create-container .map-btn-row {
   display: flex;
@@ -81,31 +80,61 @@
 /* 왼쪽 탭 버튼 */
 .route-create-container .left-controls {
   display: flex;
-  gap: var(--space-xs);
+  align-items: center;
+  gap: 20px;
 }
 
+/* 기본 텍스트 탭 */
 .route-create-container .left-controls button {
-  padding: 6px 12px;
-  border-radius: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+
   font-size: var(--font-small);
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  font-weight: var(--fw-medium); /* 항상 동일 */
+  color: var(--color-text-light);
+
+  position: relative;
   cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-/* 활성화 탭 */
+/* hover */
+.route-create-container .left-controls button:hover {
+  color: var(--color-main);
+}
+
+/* 활성 탭 */
 .route-create-container .left-controls button.active {
-  background: var(--color-accent);
-  color: white;
-  border-color: var(--color-accent);
+  color: var(--color-main);
+}
+
+.route-create-container .left-controls button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background: var(--color-main);
+  border-radius: 2px;
+
+  opacity: 0;
+  transform: scaleX(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.route-create-container .left-controls button.active::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 /* 오른쪽 기존 버튼들 */
 .route-create-container .right-controls {
   display: flex;
-  gap: var(--space-sm);
+  align-items: center;
+  gap: var(--space-xs);
 }
-
 
 /* 지도 안내 */
 .route-create-container .map-desc {
