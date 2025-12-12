@@ -11,6 +11,7 @@ import {
   FaFlagCheckered,
   FaUsers,
   FaRegCalendarCheck,
+  FaChevronDown,
 } from "react-icons/fa";
 
 import "./MainPage.css";
@@ -534,31 +535,43 @@ function MainPage() {
 
             <div className="filter-box">
               <div className="filter-row">
-                <select
-                  value={region}
-                  onChange={(e) => setRegion(e.target.value)}
-                >
-                  <option>전체 지역</option>
-                  {sidoList.map((s) => (
-                    <option key={s.code}>{s.name}</option>
-                  ))}
-                </select>
+                <div className="custom-select">
+                  <select
+                    value={region}
+                    onChange={(e) => setRegion(e.target.value)}
+                  >
+                    <option>전체 지역</option>
+                    {sidoList.map((s) => (
+                      <option key={s.code}>{s.name}</option>
+                    ))}
+                  </select>
+                  <FaChevronDown className="select-arrow" />
+                </div>
 
-                <select
-                  value={difficulty}
-                  onChange={(e) => setDifficulty(e.target.value)}
-                >
-                  <option>전체 난이도</option>
-                  <option>초급</option>
-                  <option>중급</option>
-                  <option>고급</option>
-                </select>
+                <div className="custom-select">
+                  <select
+                    value={difficulty}
+                    onChange={(e) => setDifficulty(e.target.value)}
+                  >
+                    <option>전체 난이도</option>
+                    <option>초급</option>
+                    <option>중급</option>
+                    <option>고급</option>
+                  </select>
+                  <FaChevronDown className="select-arrow" />
+                </div>
 
-                <select value={type} onChange={(e) => setType(e.target.value)}>
-                  <option>전체 타입</option>
-                  <option>드로잉런</option>
-                  <option>레귤러런</option>
-                </select>
+                <div className="custom-select">
+                  <select
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                  >
+                    <option>전체 타입</option>
+                    <option>드로잉런</option>
+                    <option>레귤러런</option>
+                  </select>
+                  <FaChevronDown className="select-arrow" />
+                </div>
 
                 <button
                   className="btn btn-accent btn-large btn-hover-float"

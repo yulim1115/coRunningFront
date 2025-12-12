@@ -223,21 +223,42 @@
   padding: 24px 28px;
 }
 
-/* 필터 row */
+/* 필터 한 줄 */
 .main-page .filter-row {
   display: flex;
-  gap: var(--space-md);
+  align-items: center;
+  gap: 16px;
 }
 
-/* Select */
-.main-page .filter-row select {
+/* 셀렉트 영역은 동일 비율로 확장 */
+.main-page .custom-select {
+  position: relative;
   flex: 1;
-  appearance: none;
 }
 
-.main-page .filter-box button {
-  /* font-size: var(--font-small);/ */
+/* 셀렉트 */
+.main-page .custom-select select {
+  font-size: var(--font-small);
+  width: 100%;
+  appearance: none;
+  padding-right: 40px;
 }
+
+/* 드롭다운 아이콘 */
+.main-page .custom-select .select-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--color-text-light);
+}
+
+/* 포커스 시 */
+.main-page .custom-select select:focus + .select-arrow {
+  color: var(--color-accent);
+}
+
 /* 코스+크루 섹션 */
 .main-page .course-crew-section {
   padding: 60px 0 80px;
