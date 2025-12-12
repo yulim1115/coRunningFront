@@ -43,6 +43,7 @@ const showSuccess = (msg) => {
     icon: "success",
     title: "성공",
     text: msg,
+    confirmButtonColor: "#0f1c2e",
   });
 };
 
@@ -51,6 +52,18 @@ const showError = (msg) => {
     icon: "error",
     title: "오류",
     text: msg,
+    confirmButtonColor: "#0f1c2e",
+  });
+};
+
+const confirmDelete = async () => {
+  return window.Swal.fire({
+    title: "삭제하시겠습니까?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#0f1c2e",
+    confirmButtonText: "확인",
+    cancelButtonText: "취소",
   });
 };
 
@@ -343,7 +356,8 @@ export default function RunLogPage() {
 
   // 기록 삭제 후 저장한 코스로 되돌리기
   const deleteRec = async (record) => {
-    if (!window.confirm("기록을 삭제하시겠습니까?")) return;
+    const res = await confirmDelete();
+    if (!res.isConfirmed) return;
     const location = record.location;
     const resolvedLocation =
       typeof location === "string"
@@ -383,7 +397,8 @@ export default function RunLogPage() {
 
   // 찜 삭제
   const handleRemoveDip = async (course) => {
-    if (!window.confirm("삭제하시겠습니까?")) return;
+    const res = await confirmDelete();
+    if (!res.isConfirmed) return;
     try {
       await removeDip(course.dipId); // dipId로 바로 삭제!
       setSavedCourses((prev) => prev.filter((c) => c.dipId !== course.dipId));

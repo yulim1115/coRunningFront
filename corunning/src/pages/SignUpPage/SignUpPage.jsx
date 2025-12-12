@@ -11,6 +11,7 @@ const showSuccess = (msg) => {
     icon: "success",
     title: "성공",
     text: msg,
+    confirmButtonColor: "#0f1c2e",
   });
 };
 
@@ -19,6 +20,7 @@ const showError = (msg) => {
     icon: "error",
     title: "오류",
     text: msg,
+    confirmButtonColor: "#0f1c2e",
   });
 };
 

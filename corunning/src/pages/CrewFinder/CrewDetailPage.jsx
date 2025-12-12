@@ -19,6 +19,18 @@ const showError = (msg) => {
     icon: "error",
     title: "오류",
     text: msg,
+    confirmButtonColor: "#0f1c2e",
+  });
+};
+
+const confirmDelete = async () => {
+  return window.Swal.fire({
+    title: "삭제하시겠습니까?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#0f1c2e",
+    confirmButtonText: "확인",
+    cancelButtonText: "취소",
   });
 };
 
@@ -178,7 +190,7 @@ function CrewDetailPage() {
 
   // 댓글 등록
   const handleAddComment = async () => {
-    if (!loginUserId) return alert("로그인 후 댓글 작성");
+    if (!loginUserId) return showError("로그인 후 댓글 작성");
     if (!commentInput.trim()) return;
 
     try {
@@ -194,7 +206,8 @@ function CrewDetailPage() {
 
   // 댓글 삭제
   const handleDeleteComment = async (commentId) => {
-    if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
+    const res = await confirmDelete();
+    if (!res.isConfirmed) return;
 
     try {
       await deleteCrewCommentAPI(commentId);

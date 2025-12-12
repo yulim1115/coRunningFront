@@ -7,11 +7,21 @@ import { FiChevronDown } from "react-icons/fi";
 import { useParams, useNavigate } from "react-router-dom";
 
 const showSuccess = (msg) => {
-  alert(`성공: ${msg}`);
+  window.Swal.fire({
+    icon: "success",
+    title: "성공",
+    text: msg,
+    confirmButtonColor: "#0f1c2e",
+  });
 };
 
 const showError = (msg) => {
-  alert(`오류: ${msg}`);
+  window.Swal.fire({
+    icon: "error",
+    title: "오류",
+    text: msg,
+    confirmButtonColor: "#0f1c2e",
+  });
 };
 
 function CrewModifyPage() {

@@ -37,6 +37,18 @@ const showError = (msg) => {
     icon: "error",
     title: "오류",
     text: msg,
+    confirmButtonColor: "#0f1c2e",
+  });
+};
+
+const confirmDelete = async () => {
+  return window.Swal.fire({
+    title: "삭제하시겠습니까?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#0f1c2e",
+    confirmButtonText: "확인",
+    cancelButtonText: "취소",
   });
 };
 
@@ -268,9 +280,10 @@ function RunRoutesDetailPage() {
 
   // 댓글 삭제
   const handleDeleteComment = async (commentId, writerId) => {
+    const res = await confirmDelete();
     if (loginUserId !== writerId)
       return showError("본인 댓글만 삭제할 수 있습니다.");
-    if (!window.confirm("삭제하시겠습니까?")) return;
+    if (!res.isConfirmed) return;
     try {
       await deleteRouteComment(commentId);
       setComments((prev) => prev.filter((c) => c.id !== commentId));
