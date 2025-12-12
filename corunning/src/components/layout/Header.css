@@ -25,7 +25,7 @@
 
 /* 로고 */
 .logo img {
-  height: 28px;
+  height: 24px;
   cursor: pointer;
   display: block;
 }
@@ -39,9 +39,8 @@
   gap: 26px;
 }
 
-/* 네비, 헤더 통합 */
-.nav a,
-.header-link {
+/* 네비 */
+.nav a {
   background: none;
   border: none;
   font-size: var(--font-caption);
@@ -53,15 +52,13 @@
   transition: color 0.25s ease;
 }
 
-/* hover */
-.nav a:hover,
-.header-link:hover {
+/* 네비 hover 색상 */
+.nav a:hover {
   color: var(--color-accent);
 }
 
-/* 밑줄 */
-.nav a::after,
-.header-link::after {
+/* 네비 밑줄 */
+.nav a::after {
   content: "";
   position: absolute;
   left: 50%;
@@ -72,8 +69,19 @@
   transition: width 0.3s ease, left 0.3s ease;
 }
 
-.nav a:hover::after,
-.header-link:hover::after {
+.nav a:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/* 현재 페이지 active 상태 */
+.nav a.active {
+  color: var(--color-accent);
+  font-weight: var(--fw-bold);
+}
+
+/* active 상태에서도 밑줄 유지 */
+.nav a.active::after {
   width: 100%;
   left: 0;
 }
@@ -84,4 +92,24 @@
   display: flex;
   align-items: center;
   gap: 20px;
+}
+
+.header-link {
+  background: none;
+  border: none;
+  font-size: var(--font-caption);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-light);
+  padding: 4px 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+/* 로그인 hover */
+.header-link:hover {
+  color: var(--color-main);
+}
+
+.header-link::after {
+  display: none;
 }
