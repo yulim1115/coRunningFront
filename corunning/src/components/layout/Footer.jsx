@@ -1,4 +1,4 @@
-import React from "react";
+import logoImg from "../../assets/images/logo02.png";
 import "./Footer.css";
 
 function Footer() {
@@ -10,7 +10,9 @@ function Footer() {
         <div className="footer-top">
 
           {/* 로고 */}
-          <div className="footer-logo">coRunning</div>
+          <div className="footer-logo">
+           <img src={logoImg} alt="coRunning Logo" />            
+          </div>
 
           {/* 메뉴 */}
           <div className="footer-links">
@@ -19,14 +21,6 @@ function Footer() {
             <a href="/runlog">Run Log</a>
             <a href="/mypage">My Page</a>
           </div>
-
-          {/* 정책 관련 */}
-          <div className="footer-policy">
-            <a href="#">이용약관</a>
-            <a href="#">개인정보처리방침</a>
-            <a href="#">고객센터</a>
-          </div>
-
         </div>
 
         {/* 하단 카피라이트 */}

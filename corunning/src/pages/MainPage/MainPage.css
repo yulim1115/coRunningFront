@@ -184,7 +184,7 @@
 
 /* 필터 섹션 */
 .main-page .filter-section {
-  background: var(--color-bg-light);
+  background: var(--color-bg-gray);
   padding: 60px 0;
 }
 
