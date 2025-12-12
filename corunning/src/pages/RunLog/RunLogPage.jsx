@@ -41,11 +41,19 @@ export const isValidTime = (t) => {
 };
 
 const showSuccess = (msg) => {
-  alert(`성공: ${msg}`);
+  window.Swal.fire({
+    icon: "success",
+    title: "성공",
+    text: msg,
+  });
 };
 
 const showError = (msg) => {
-  alert(`오류: ${msg}`);
+  window.Swal.fire({
+    icon: "error",
+    title: "오류",
+    text: msg,
+  });
 };
 
 // 현재 사용자 ID 가져오기

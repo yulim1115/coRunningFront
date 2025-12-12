@@ -9,11 +9,19 @@ import { useNavigate } from "react-router-dom";
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
 const showSuccess = (msg) => {
-  alert(`성공: ${msg}`);
+  window.Swal.fire({
+    icon: "success",
+    title: "성공",
+    text: msg,
+  });
 };
 
 const showError = (msg) => {
-  alert(`오류: ${msg}`);
+  window.Swal.fire({
+    icon: "error",
+    title: "오류",
+    text: msg,
+  });
 };
 
 function RunRoutesCreatePage() {

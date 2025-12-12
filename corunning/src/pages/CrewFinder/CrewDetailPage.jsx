@@ -15,7 +15,11 @@ import {
 } from "../../api/crewApi";
 
 const showError = (msg) => {
-  alert(`오류: ${msg}`);
+  window.Swal.fire({
+    icon: "error",
+    title: "오류",
+    text: msg,
+  });
 };
 
 function CrewDetailPage() {

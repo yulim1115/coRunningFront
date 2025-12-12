@@ -5,7 +5,11 @@ import logoImg from "../../assets/images/logo02.png";
 import { logoutAPI } from "../../api/userApi";
 
 const showSuccess = (msg) => {
-  alert(`성공: ${msg}`);
+  window.Swal.fire({
+    icon: "success",
+    title: "성공",
+    text: msg,
+  });
 };
 
 function Header() {
