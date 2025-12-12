@@ -173,7 +173,7 @@ export default function RunLogPage() {
                 ? route.distance
                 : dip.distance || 0,
             level: route?.difficulty || dip.difficulty || "자율기록",
-            complete: dip.complete === true,
+            complete: dip.complete === 1,
             record: dip.record || "",
           };
         })
@@ -257,7 +257,7 @@ export default function RunLogPage() {
         ? editTitle[course.dipId]
         : course.title;
     try {
-      await updateDip(course.dipId, true, record, newTitle);
+      await updateDip(course.dipId, 1, record, newTitle);
 
       setSavedCourses((prev) => prev.filter((c) => c.dipId !== course.dipId));
 
@@ -326,7 +326,7 @@ export default function RunLogPage() {
     try {
       await updateDip(
         record.id,
-        true,
+        1,
         newRecordStr,
         newTitle,
         distance,
@@ -367,7 +367,7 @@ export default function RunLogPage() {
     try {
       await updateDip(
         record.dipId,
-        false,
+        0,
         "",
         record.title,
         record.distance,

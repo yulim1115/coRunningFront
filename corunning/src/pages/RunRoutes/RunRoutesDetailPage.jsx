@@ -60,7 +60,7 @@ function RunRoutesDetailPage() {
   const [route, setRoute] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -121,10 +121,10 @@ function RunRoutesDetailPage() {
             getDipList(loginUserId),
             checkLiked(id),
           ]);
-          setIsBookmarked(dips.some((v) => Number(v.routeId) === Number(id)));
+          setIsBookmarked(Number(dips.some((v) => Number(v.routeId) === Number(id))));
           setIsLiked(liked);
         } else {
-          setIsBookmarked(false);
+          setIsBookmarked(0);
           setIsLiked(false);
         }
       } catch (err) {
@@ -255,10 +255,10 @@ function RunRoutesDetailPage() {
     try {
       if (!isBookmarked) {
         await addDip(route.id, loginUserId);
-        setIsBookmarked(true);
+        setIsBookmarked(1);
       } else {
         await removeDipByRoute(route.id);
-        setIsBookmarked(false);
+        setIsBookmarked(0);
       }
     } catch {
       showError("저장 기능 처리 실패");
