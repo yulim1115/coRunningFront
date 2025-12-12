@@ -14,6 +14,8 @@ import {
   updateDip,
 } from "../../api/routesApi";
 
+import { FaPlus } from "react-icons/fa";
+
 export const formatToTime = (value) => {
   const str = String(value ?? "");
   // 숫자만 남기기
@@ -33,11 +35,7 @@ export const isValidTime = (t) => {
 
   const [hh, mm, ss] = t.split(":").map(Number);
 
-  return (
-    hh >= 0 &&
-    mm >= 0 && mm < 60 &&
-    ss >= 0 && ss < 60
-  );
+  return hh >= 0 && mm >= 0 && mm < 60 && ss >= 0 && ss < 60;
 };
 
 const showSuccess = (msg) => {
@@ -76,7 +74,7 @@ export default function RunLogPage() {
   const [editValues, setEditValues] = useState({});
   const [editTitle, setEditTitle] = useState({});
   const [editDistance, setEditDistance] = useState({});
-  const [editLocation , setEditLocation] = useState({});
+  const [editLocation, setEditLocation] = useState({});
   const [newCustomOpen, setNewCustomOpen] = useState(false);
   const [newCustom, setNewCustom] = useState({
     title: "",
@@ -89,12 +87,12 @@ export default function RunLogPage() {
   });
 
   const handleNewCustomChange = (field, value) => {
-    setNewCustom(prev => ({ ...prev, [field]: value }));
+    setNewCustom((prev) => ({ ...prev, [field]: value }));
   };
 
   const submitNewCustom = async () => {
     const { title, distance, location, date, hh, mm, ss } = newCustom;
-    if (!title || !distance || !location || !date) 
+    if (!title || !distance || !location || !date)
       return showError("모든 값을 입력해주세요.");
     if (Number(mm) > 59 || Number(ss) > 59)
       return showError("분과 초는 0~59여야 합니다.");
@@ -102,7 +100,10 @@ export default function RunLogPage() {
       typeof location === "string"
         ? location
         : `${location.sido ?? ""} ${location.gu ?? ""}`.trim();
-    const time = `${hh.padStart(2,"0")}:${mm.padStart(2,"0")}:${ss.padStart(2,"0")}`;
+    const time = `${hh.padStart(2, "0")}:${mm.padStart(2, "0")}:${ss.padStart(
+      2,
+      "0"
+    )}`;
     const recordStr = `${date} ${time}`;
     try {
       showSuccess("자율 기록이 추가되었습니다!");
@@ -135,33 +136,35 @@ export default function RunLogPage() {
       const dips = await getDipList(userId);
 
       const fullList = await Promise.all(
-      dips.map(async (dip) => {
-        let route = null;
+        dips.map(async (dip) => {
+          let route = null;
 
-        // ⭐ routeId가 있는 경우에만 API 호출
-        if (dip.routeId) {
-          try {
-            route = await getRouteById(dip.routeId);
-          } catch (e) {
-            console.warn("route 조회 실패:", dip.routeId, e);
+          // ⭐ routeId가 있는 경우에만 API 호출
+          if (dip.routeId) {
+            try {
+              route = await getRouteById(dip.routeId);
+            } catch (e) {
+              console.warn("route 조회 실패:", dip.routeId, e);
+            }
           }
-        }
 
-        return {
-          dipId: dip.dipId,
-          routeId: dip.routeId,   // null 일 수 있음
-          title: route?.title || dip.title || "커스텀 코스",
-          location: parseLocation(route?.location || dip.location || "자율기록"),
-          distance:
-            typeof route?.distance === "number"
-              ? route.distance
-              : dip.distance || 0,
-          level: route?.difficulty || dip.difficulty || "자율기록",
-          complete: dip.complete === true,
-          record: dip.record || ""
-        };
-      })
-    );
+          return {
+            dipId: dip.dipId,
+            routeId: dip.routeId, // null 일 수 있음
+            title: route?.title || dip.title || "커스텀 코스",
+            location: parseLocation(
+              route?.location || dip.location || "자율기록"
+            ),
+            distance:
+              typeof route?.distance === "number"
+                ? route.distance
+                : dip.distance || 0,
+            level: route?.difficulty || dip.difficulty || "자율기록",
+            complete: dip.complete === true,
+            record: dip.record || "",
+          };
+        })
+      );
 
       setSavedCourses(fullList.filter((c) => !c.complete));
       setRecords(
@@ -231,7 +234,10 @@ export default function RunLogPage() {
     if (Number(mm) > 59 || Number(ss) > 59)
       return showError("분과 초는 0~59여야 합니다.");
 
-    const time = `${hh.padStart(2, "0")}:${mm.padStart(2,"0")}:${ss.padStart(2,"0")}`;
+    const time = `${hh.padStart(2, "0")}:${mm.padStart(2, "0")}:${ss.padStart(
+      2,
+      "0"
+    )}`;
     const record = `${date} ${time}`;
     const newTitle =
       editTitle[course.dipId] !== undefined
@@ -240,9 +246,7 @@ export default function RunLogPage() {
     try {
       await updateDip(course.dipId, true, record, newTitle);
 
-      setSavedCourses((prev) =>
-        prev.filter((c) => c.dipId !== course.dipId)
-      );
+      setSavedCourses((prev) => prev.filter((c) => c.dipId !== course.dipId));
 
       const newRecord = {
         id: course.dipId,
@@ -265,7 +269,6 @@ export default function RunLogPage() {
       showError("저장 실패: " + err.message);
     }
   };
-
 
   // 기록 수정 입력값 업데이트
   const updateEditInput = (id, field, value) => {
@@ -290,28 +293,42 @@ export default function RunLogPage() {
     if (Number(mm) > 59 || Number(ss) > 59)
       return showError("분과 초는 0~59여야 합니다.");
 
-    const newTime = `${hh.padStart(2, "0")}:${mm.padStart(2,"0")}:${ss.padStart(2,"0")}`;
+    const newTime = `${hh.padStart(2, "0")}:${mm.padStart(
+      2,
+      "0"
+    )}:${ss.padStart(2, "0")}`;
     const newRecordStr = `${date} ${newTime}`;
     const newTitle =
-      editTitle[record.id] !== undefined
-        ? editTitle[record.id]
-        : record.title;
-    const distance = editDistance[record.id] !== undefined
+      editTitle[record.id] !== undefined ? editTitle[record.id] : record.title;
+    const distance =
+      editDistance[record.id] !== undefined
         ? editDistance[record.id]
         : record.distance;
-    const locationObj = editLocation[record.id]; 
+    const locationObj = editLocation[record.id];
     const resolvedLocation =
       typeof locationObj === "string"
         ? locationObj
         : `${locationObj?.sido ?? ""} ${locationObj?.gu ?? ""}`.trim();
 
     try {
-      await updateDip(record.id, true, newRecordStr, newTitle, distance, resolvedLocation);
+      await updateDip(
+        record.id,
+        true,
+        newRecordStr,
+        newTitle,
+        distance,
+        resolvedLocation
+      );
 
       setRecords((prev) =>
         prev.map((r) =>
           r.id === record.id
-            ? { ...r, rawDate: date, date: date.replace(/-/g, "."), time: newTime }
+            ? {
+                ...r,
+                rawDate: date,
+                date: date.replace(/-/g, "."),
+                time: newTime,
+              }
             : r
         )
       );
@@ -324,7 +341,6 @@ export default function RunLogPage() {
     }
   };
 
-
   // 기록 삭제 후 저장한 코스로 되돌리기
   const deleteRec = async (record) => {
     if (!window.confirm("기록을 삭제하시겠습니까?")) return;
@@ -335,7 +351,14 @@ export default function RunLogPage() {
         : `${location.sido ?? ""} ${location.gu ?? ""}`.trim();
 
     try {
-      await updateDip(record.dipId, false, "", record.title, record.distance, resolvedLocation);
+      await updateDip(
+        record.dipId,
+        false,
+        "",
+        record.title,
+        record.distance,
+        resolvedLocation
+      );
 
       setRecords((prev) => prev.filter((r) => r.id !== record.id));
 
@@ -363,13 +386,12 @@ export default function RunLogPage() {
     if (!window.confirm("삭제하시겠습니까?")) return;
     try {
       await removeDip(course.dipId); // dipId로 바로 삭제!
-      setSavedCourses(prev => prev.filter(c => c.dipId !== course.dipId));
+      setSavedCourses((prev) => prev.filter((c) => c.dipId !== course.dipId));
       await loadData();
     } catch (err) {
       showError("삭제 실패: " + err.message);
     }
   };
-  
 
   // 로딩 화면
   if (loading) return <Skeleton />;
@@ -388,59 +410,7 @@ export default function RunLogPage() {
             <h3>
               저장한 코스 <span>({savedCourses.length})</span>
             </h3>
-            <button className="btn btn-main btn-medium btn-hover-float" onClick={() => setNewCustomOpen(p => !p)}>자율 기록 추가</button>
           </header>
-          {newCustomOpen && (
-            <div className="input-form-large">
-              <p className="form-title">자율 기록 입력</p>
-              <div className="runlog-inline-row">
-                <div className="form-row-horizontal">
-                  <label>제목</label>
-                  <input className="input-small"
-                    value={newCustom.title}
-                    onChange={e => handleNewCustomChange("title", e.target.value)}
-                  />
-                  <label>거리</label>
-                  <input className="input-small"
-                    value={newCustom.distance}
-                    onChange={e => handleNewCustomChange("distance", e.target.value)}
-                  />
-                  <label>지역</label>
-                  <RegionSelector
-                    value={newCustom.location}
-                    onChange={value => handleNewCustomChange("location", value)}
-                  />
-                  <label>날짜</label>
-                  <input type="date"
-                    className="input-small"
-                    value={newCustom.date}
-                    onChange={e => handleNewCustomChange("date", e.target.value)}
-                  />
-                  <label>시간</label>
-                  <input className="input-tiny" placeholder="HH" maxLength={2}
-                    value={newCustom.hh}
-                    onChange={e => handleNewCustomChange("hh", e.target.value.replace(/\D/g, ""))}
-                  />
-                  <span>:</span>
-                  <input className="input-tiny" placeholder="MM" maxLength={2}
-                    value={newCustom.mm}
-                    onChange={e => handleNewCustomChange("mm", e.target.value.replace(/\D/g, ""))}
-                  />
-                  <span>:</span>
-                  <input className="input-tiny" placeholder="SS" maxLength={2}
-                    value={newCustom.ss}
-                    onChange={e => handleNewCustomChange("ss", e.target.value.replace(/\D/g, ""))}
-                  />
-                </div>
-                <button
-                  className="btn btn-main btn-medium btn-hover-float"
-                  onClick={submitNewCustom}
-                >
-                  저장
-                </button>
-              </div>
-            </div>
-          )}
           <div className="saved-list">
             {savedCourses.map((course) => (
               <div key={course.dipId} className="saved-item">
@@ -454,7 +424,6 @@ export default function RunLogPage() {
                       [course.dipId]: !p[course.dipId],
                     }))
                   }
-                  
                   onDelete={() => handleRemoveDip(course)}
                 />
 
@@ -463,33 +432,37 @@ export default function RunLogPage() {
                     <p className="form-title">완주 기록 입력</p>
                     <div className="runlog-inline-row">
                       {course.routeId === null && (
-                            <>
-                              <div className="form-row">
-                                <label>제목</label>
-                                <input className="input-small"
-                                  value={editTitle[course.dipId] ?? course.title}
-                                  onChange={(e) =>
-                                    setEditTitle((prev) => ({
-                                      ...prev,
-                                      [course.dipId]: e.target.value
-                                    }))
-                                  }
-                                />
-                              </div>
-                              <div className="form-row">
-                                <label>거리</label>
-                                <input className="input-small"
-                                  value={editDistance[course.dipId] ?? course.distance}
-                                  onChange={(e) =>
-                                    setEditDistance((prev) => ({
-                                      ...prev,
-                                      [course.dipId]: e.target.value
-                                    }))
-                                  }
-                                />
-                              </div>
-                            </>
-                          )}
+                        <>
+                          <div className="form-row">
+                            <label>제목</label>
+                            <input
+                              className="input-small"
+                              value={editTitle[course.dipId] ?? course.title}
+                              onChange={(e) =>
+                                setEditTitle((prev) => ({
+                                  ...prev,
+                                  [course.dipId]: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                          <div className="form-row">
+                            <label>거리</label>
+                            <input
+                              className="input-small"
+                              value={
+                                editDistance[course.dipId] ?? course.distance
+                              }
+                              onChange={(e) =>
+                                setEditDistance((prev) => ({
+                                  ...prev,
+                                  [course.dipId]: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                        </>
+                      )}
                     </div>
                     <div className="runlog-inline-row">
                       <div className="form-row">
@@ -545,7 +518,6 @@ export default function RunLogPage() {
                         </div>
                       </div>
 
-
                       <button
                         className="btn btn-main btn-medium btn-hover-float"
                         onClick={() => submitFinish(course)}
@@ -570,14 +542,112 @@ export default function RunLogPage() {
             <h3>
               완주 기록 <span>({records.length})</span>
             </h3>
+
+            <button
+              className={`add-custom-text ${newCustomOpen ? "active" : ""}`}
+              onClick={() => setNewCustomOpen((p) => !p)}
+            >
+              <FaPlus className="add-icon" />
+              <span>자율 기록 추가</span>
+            </button>
           </header>
+
+          {/* 자율 기록 입력 카드 → 완주 기록 맨 위 */}
+          {newCustomOpen && (
+            <div className="input-form-large">
+              <p className="form-title">자율 기록 입력</p>
+
+              {/* 제목 - 한 줄 */}
+              <div className="runlog-inline-row">
+                <div className="form-row">
+                  <label>제목</label>
+                  <input
+                    className="input-small"
+                    value={newCustom.title}
+                    onChange={(e) =>
+                      handleNewCustomChange("title", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* 거리 + 지역 - 한 줄 */}
+              <div className="runlog-inline-row">
+                <div className="form-row">
+                  <label>거리</label>
+                  <input
+                    className="input-small"
+                    value={newCustom.distance}
+                    onChange={(e) =>
+                      handleNewCustomChange("distance", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="form-row">
+                  <label>지역</label>
+                  <RegionSelector
+                    value={newCustom.location}
+                    onChange={(v) => handleNewCustomChange("location", v)}
+                  />
+                </div>
+              </div>
+
+              {/* 날짜 + 시간 - 한 줄 */}
+              <div className="runlog-inline-row">
+                <div className="form-row">
+                  <label>날짜</label>
+                  <input
+                    type="date"
+                    className="input-small"
+                    value={newCustom.date}
+                    onChange={(e) =>
+                      handleNewCustomChange("date", e.target.value)
+                    }
+                  />
+                </div>
+
+                <div className="form-row">
+                  <label>시간</label>
+                  <div className="time-split-row">
+                    <input
+                      className="input-tiny"
+                      placeholder="HH"
+                      maxLength={2}
+                      value={newCustom.hh}
+                    />
+                    <span>:</span>
+                    <input
+                      className="input-tiny"
+                      placeholder="MM"
+                      maxLength={2}
+                      value={newCustom.mm}
+                    />
+                    <span>:</span>
+                    <input
+                      className="input-tiny"
+                      placeholder="SS"
+                      maxLength={2}
+                      value={newCustom.ss}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  className="btn btn-accent btn-medium btn-hover-float"
+                  onClick={submitNewCustom}
+                >
+                  추가
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="record-list ">
             {records.map((record) => (
               <div key={record.dipId} className="record-item">
                 {record.routeId ? (
                   <LogCard
-                    type= "record"
+                    type="record"
                     item={record}
                     isOpen={editingRecordIds[record.dipId]}
                     onMainButton={() =>
@@ -588,9 +658,9 @@ export default function RunLogPage() {
                     }
                     onCancel={() => deleteRec(record)}
                   />
-                  ) : (
+                ) : (
                   <LogCard
-                    type= "custom"
+                    type="custom"
                     item={record}
                     isOpen={editingRecordIds[record.dipId]}
                     onMainButton={() =>
@@ -605,61 +675,70 @@ export default function RunLogPage() {
                 {editingRecordIds[record.dipId] && (
                   <div className="input-form-large">
                     <p className="form-title">기록 수정</p>
-                      {record.routeId === null && (
-                        <>
+                    {record.routeId === null && (
+                      <>
+                        <div className="runlog-inline-row">
+                          <div className="form-row">
+                            <label>제목</label>
+                            <input
+                              className="input-small"
+                              value={editTitle[record.dipId] ?? record.title}
+                              onChange={(e) =>
+                                setEditTitle((prev) => ({
+                                  ...prev,
+                                  [record.dipId]: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                          <div className="form-row">
+                            <label>거리</label>
+                            <input
+                              className="input-small"
+                              value={
+                                editDistance[record.dipId] ?? record.distance
+                              }
+                              onChange={(e) =>
+                                setEditDistance((prev) => ({
+                                  ...prev,
+                                  [record.dipId]: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div className="runlog-inline-row">
                           <div className="runlog-inline-row">
                             <div className="form-row">
-                              <label>제목</label>
-                              <input className="input-small"
-                                value={editTitle[record.dipId] ?? record.title}
-                                onChange={(e) =>
-                                  setEditTitle((prev) => ({
+                              <label>지역</label>
+                              <RegionSelector
+                                value={record.location}
+                                onChange={(value) =>
+                                  setEditLocation((prev) => ({
                                     ...prev,
-                                    [record.dipId]: e.target.value
-                                  }))
-                                }
-                              />
-                            </div>
-                            <div className="form-row">
-                              <label>거리</label>
-                              <input className="input-small"
-                                value={editDistance[record.dipId] ?? record.distance}
-                                onChange={(e) =>
-                                  setEditDistance((prev) => ({
-                                    ...prev,
-                                    [record.dipId]: e.target.value
+                                    [record.dipId]: value,
                                   }))
                                 }
                               />
                             </div>
                           </div>
-                          <div className="runlog-inline-row">
-                            <div className="runlog-inline-row">
-                              <div className="form-row">
-                                <label>지역</label>
-                                <RegionSelector
-                                  value={record.location}
-                                  onChange={value => setEditLocation((prev) => ({
-                                    ...prev,
-                                    [record.dipId]: value
-                                  }))}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      )}
+                        </div>
+                      </>
+                    )}
                     <div className="runlog-inline-row">
                       <div className="form-row">
-                        <div className="runlog-inline-row">
-                        </div>
+                        <div className="runlog-inline-row"></div>
                         <label>날짜</label>
                         <input
                           className="input-small"
                           type="date"
                           defaultValue={record.rawDate}
                           onChange={(e) =>
-                            updateEditInput(record.dipId, "date", e.target.value)
+                            updateEditInput(
+                              record.dipId,
+                              "date",
+                              e.target.value
+                            )
                           }
                         />
                       </div>
@@ -673,7 +752,13 @@ export default function RunLogPage() {
                             placeholder="HH"
                             maxLength={2}
                             defaultValue={record.time?.split(":")[0]}
-                            onChange={(e) => updateEditInput(record.dipId, "hh", e.target.value.replace(/\D/g, ""))}
+                            onChange={(e) =>
+                              updateEditInput(
+                                record.dipId,
+                                "hh",
+                                e.target.value.replace(/\D/g, "")
+                              )
+                            }
                           />
                           <span>:</span>
 
@@ -683,7 +768,13 @@ export default function RunLogPage() {
                             placeholder="MM"
                             maxLength={2}
                             defaultValue={record.time?.split(":")[1]}
-                            onChange={(e) => updateEditInput(record.id, "mm", e.target.value.replace(/\D/g, ""))}
+                            onChange={(e) =>
+                              updateEditInput(
+                                record.id,
+                                "mm",
+                                e.target.value.replace(/\D/g, "")
+                              )
+                            }
                           />
                           <span>:</span>
 
@@ -693,17 +784,22 @@ export default function RunLogPage() {
                             placeholder="SS"
                             maxLength={2}
                             defaultValue={record.time?.split(":")[2]}
-                            onChange={(e) => updateEditInput(record.id, "ss", e.target.value.replace(/\D/g, ""))}
+                            onChange={(e) =>
+                              updateEditInput(
+                                record.id,
+                                "ss",
+                                e.target.value.replace(/\D/g, "")
+                              )
+                            }
                           />
                         </div>
                       </div>
-
 
                       <button
                         className="btn btn-accent btn-medium btn-hover-float"
                         onClick={() => submitEditRecord(record)}
                       >
-                        수정 완료
+                        수정
                       </button>
                     </div>
                   </div>
