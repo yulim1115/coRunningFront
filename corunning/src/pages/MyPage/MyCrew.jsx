@@ -88,30 +88,42 @@ export default function MyCrew({
       {/* 모달 영역 */}
       {openCheck && (
         <div className="modal-overlay" onClick={handleCloseApplications}>
-          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="modal-box modal-applications"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="modal-title">
-              {selectedCrew && `${selectedCrew.title}`} (신청자 명단)
+              [ {selectedCrew && `${selectedCrew.title}`} ] 신청자 명단
             </div>
 
             {crewApplications.length === 0 ? (
               <p className="modal-empty">아직 신청자가 없습니다.</p>
             ) : (
-              <ul className="application-list">
+              <ul className="application-table">
+                {/* 테이블 헤더 */}
+                <li className="table-head">
+                  <span>이름</span>
+                  <span>이메일</span>
+                </li>
+
+                {/* 테이블 바디 */}
                 {crewApplications.map((app) => (
-                  <li key={app.id} className="application-item">
-                    <div>이름 : {app.applicantName}</div>
-                    <div>이메일 : {app.applicantId}</div>
+                  <li key={app.id} className="table-row">
+                    <span className="cell-name">{app.applicantName}</span>
+                    <span className="cell-email">{app.applicantId}</span>
                   </li>
                 ))}
               </ul>
             )}
 
-            <button
-              className="btn btn-small btn-soft"
-              onClick={handleCloseApplications}
-            >
-              닫기
-            </button>
+            <div className="modal-footer">
+              <button
+                className="btn btn-small btn-soft"
+                onClick={handleCloseApplications}
+              >
+                닫기
+              </button>
+            </div>
           </div>
         </div>
       )}

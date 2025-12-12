@@ -315,8 +315,8 @@
   margin-left: var(--space-xs);
 }
 
-/* 모달 배경 */
-.modal-overlay {
+/* 모달 오버레이 */
+.mypage-container .modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
@@ -326,60 +326,119 @@
   z-index: 999;
 }
 
-/* 모달 박스 */
-.modal-box {
-  background: var(--color-bg);
-  padding: 20px;
+/* 신청자 명단 모달 박스 */
+.mypage-container .modal-box.modal-applications {
+  width: 460px;
+  max-width: 92%;
+  background: #fff;
   border-radius: var(--card-radius);
-  width: 420px;
-  max-width: 90%;
   box-shadow: var(--shadow-card);
-  animation: modalFade 0.2s ease-out;
+  padding: 20px 24px 16px;
 }
 
-/* 제목 */
-.modal-title {
-  font-size: var(--font-medium);
+/* 모달 제목 */
+.mypage-container .modal-title {
+  font-size: var(--font-h4);
   font-weight: var(--fw-bold);
-  margin-bottom: var(--space-sm);
+  margin-bottom: 16px;
+  color: var(--color-text-dark);
 }
 
-/* 신청자 리스트 */
-.application-list {
-  max-height: 350px;
-  overflow-y: auto;
-  margin-bottom: var(--space-sm);
-  padding-right: 6px;
-}
-
-/* 신청자 항목 */
-.application-item {
-  padding: 8px 0;
-  border-bottom: 1px solid var(--color-border);
-  font-size: var(--font-body);
-}
-
-/* 신청자 없음 */
-.modal-empty {
-  font-size: var(--font-body);
-  padding: 10px 0;
+/* 빈 상태 문구 */
+.mypage-container .modal-empty {
   text-align: center;
+  padding: 32px 0;
+  font-size: var(--font-small);
   color: var(--color-text-light);
 }
 
-/* 등장 애니메이션 */
-@keyframes modalFade {
+/* 신청자 테이블 */
+.mypage-container .application-table {
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+/* 테이블 헤더 */
+.mypage-container .table-head {
+  display: grid;
+  grid-template-columns: 0.8fr 2fr;
+  padding: 10px 14px;
+  background: var(--color-bg-light);
+  font-size: var(--font-small);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-light);
+  border-bottom: 1px solid var(--color-border);
+  border-top-left-radius: var(--card-radius);
+  border-top-right-radius: var(--card-radius);
+}
+
+/* 테이블 행 */
+.mypage-container .table-row {
+  display: grid;
+  grid-template-columns: 0.8fr 2fr;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-base);
+  color: var(--color-text-dark);
+}
+
+.mypage-container .table-row:last-child {
+  border-bottom: none;
+  border-bottom-left-radius: var(--card-radius);
+  border-bottom-right-radius: var(--card-radius);
+}
+
+/* 이름 셀 */
+.mypage-container .cell-name {
+  font-weight: var(--fw-medium);
+}
+
+/* 이메일 셀 */
+.mypage-container .cell-email {
+  font-size: var(--font-small);
+  color: var(--color-text-light);
+  word-break: break-all;
+}
+
+/* 하단 버튼 영역 */
+.mypage-container .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 모달 등장 애니메이션 */
+@keyframes modalFadeIn {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-12px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-/* MyPage.css 하단에 추가 */
+/* 모달 애니메이션 적용 */
+.mypage-container .modal-box.modal-applications {
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+/* 배경 페이드 효과 */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mypage-container .modal-overlay {
+  animation: overlayFadeIn 0.2s ease-out;
+}
 
 /* === 스켈레톤 공통 스타일 === */
 .skeleton {
@@ -390,8 +449,12 @@
 }
 
 @keyframes skeleton-loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* 프로필 영역 */
@@ -401,8 +464,16 @@
   margin: 0 auto 12px;
 }
 
-.profile-name { width: 120px; height: 20px; margin: 0 auto; }
-.profile-days { width: 80px; height: 16px; margin: 0 auto; }
+.profile-name {
+  width: 120px;
+  height: 20px;
+  margin: 0 auto;
+}
+.profile-days {
+  width: 80px;
+  height: 16px;
+  margin: 0 auto;
+}
 
 /* 사이드바 메뉴 */
 .skeleton-menu-item {
@@ -412,10 +483,10 @@
 }
 
 /* 콘텐츠 제목 */
-.skeleton-title-large { 
-  width: 200px; 
-  height: 28px; 
-  margin-bottom: var(--space-md); 
+.skeleton-title-large {
+  width: 200px;
+  height: 28px;
+  margin-bottom: var(--space-md);
 }
 
 /* 대시보드 통계 카드 */
@@ -426,69 +497,74 @@
   text-align: center;
 }
 
-.skeleton-number { 
-  width: 100px; 
-  height: 50px; 
-  margin: 0 auto 8px; 
+.skeleton-number {
+  width: 100px;
+  height: 50px;
+  margin: 0 auto 8px;
   border-radius: 4px;
 }
 
-.skeleton-label { 
-  width: 80px; 
-  height: 14px; 
+.skeleton-label {
+  width: 80px;
+  height: 14px;
   margin: 0 auto;
-  margin-bottom: 10px; 
+  margin-bottom: 10px;
 }
 
 /* 입력 필드 */
-.skeleton-input-large { 
-  width: 100%; 
-  height: 44px; 
-  margin-bottom: var(--space-sm); 
+.skeleton-input-large {
+  width: 100%;
+  height: 44px;
+  margin-bottom: var(--space-sm);
 }
 
-.skeleton-input-medium { 
-  width: 70%; 
-  height: 44px; 
+.skeleton-input-medium {
+  width: 70%;
+  height: 44px;
 }
 
-.skeleton-button-small { 
-  width: 120px; 
-  height: 44px; 
+.skeleton-button-small {
+  width: 120px;
+  height: 44px;
 }
 
-.skeleton-button { 
-  width: 100px; 
-  height: 44px; 
+.skeleton-button {
+  width: 100px;
+  height: 44px;
 }
 
-.skeleton-button-icon { 
-  width: 40px; 
-  height: 40px; 
-  border-radius: 6px; 
+.skeleton-button-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
 }
 
 /* 코스/크루 리스트 */
-.title-mini { 
-  width: 200px; 
-  height: 20px; 
+.title-mini {
+  width: 200px;
+  height: 20px;
 }
 
-.skeleton-label.small { 
-  width: 50px; 
-  height: 12px; 
+.skeleton-label.small {
+  width: 50px;
+  height: 12px;
 }
 
-.form-section { 
-  width: 120px; 
-  height: 18px; 
-  margin-bottom: var(--space-xs); 
+.form-section {
+  width: 120px;
+  height: 18px;
+  margin-bottom: var(--space-xs);
 }
 
 /* 그리드 오버라이드 */
 .stats-section-grid .skeleton-stat-card {
   animation: none;
-  background: linear-gradient(90deg, rgba(46, 204, 113, 0.1) 25%, rgba(46, 204, 113, 0.05) 50%, rgba(46, 204, 113, 0.1) 75%) !important;
+  background: linear-gradient(
+    90deg,
+    rgba(46, 204, 113, 0.1) 25%,
+    rgba(46, 204, 113, 0.05) 50%,
+    rgba(46, 204, 113, 0.1) 75%
+  ) !important;
   background-size: 200% 100%;
   animation: skeleton-loading 2s infinite;
 }
@@ -498,12 +574,12 @@
   .mypage-wrapper {
     flex-direction: column;
   }
-  
+
   .sidebar {
     width: 100%;
     order: 2;
   }
-  
+
   .skeleton-title-large {
     width: 150px;
   }
