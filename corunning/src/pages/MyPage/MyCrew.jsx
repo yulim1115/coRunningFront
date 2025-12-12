@@ -100,7 +100,7 @@ export default function MyCrew({
                 {crewApplications.map((app) => (
                   <li key={app.id} className="application-item">
                     <div>이름 : {app.applicantName}</div>
-                    <div>번호 : {app.phone}</div>
+                    <div>이메일 : {app.applicantId}</div>
                   </li>
                 ))}
               </ul>
