@@ -193,7 +193,7 @@ function PwResetPage() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-group" style={{ marginBottom: "24px" }}>
             <label className="form-label">
               비밀번호 확인 <span className="required">*</span>
             </label>
