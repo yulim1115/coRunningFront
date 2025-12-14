@@ -86,7 +86,7 @@
 }
 
 /* 안내 */
-.signup-container .login-guide {
+.login-guide {
   margin-top: var(--space-sm);
   text-align: center;
   font-size: var(--font-caption);
@@ -94,14 +94,14 @@
   font-weight: var(--fw-regular);
 }
 
-.signup-container .link-text {
+.login-guide .link-text {
   color: var(--color-accent);
   font-size: var(--font-small);
   font-weight: var(--fw-medium);
   margin-left: var(--space-xs);
 }
 
-.signup-container .link-text:hover {
+.login-guide .link-text:hover {
   color: var(--color-accent-hover);
   cursor: pointer;
 }

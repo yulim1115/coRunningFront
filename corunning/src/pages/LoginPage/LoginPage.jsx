@@ -114,16 +114,21 @@ function LoginPage() {
         </form>
 
         {/* 회원가입 안내 */}
-        <p className="signup-guide">
-          아직 회원이 아니신가요?
-          <span className="link-text" onClick={() => navigate("/signup")}>
-            회원가입
-          </span><br/>
-          비밀번호를 잊으셨나요?
-          <span className="link-text" onClick={() => navigate("/pwreset")}>
-            비밀번호 재설정
+        <div className="login-links">
+          <span>
+            아직 계정이 없으신가요?
+            <button type="button" onClick={() => navigate("/signup")}>
+              회원가입
+            </button>
           </span>
-        </p>
+
+          <span>
+            비밀번호를 잊으셨나요?
+            <button type="button" onClick={() => navigate("/pwreset")}>
+              비밀번호 재설정
+            </button>
+          </span>
+        </div>
       </div>
     </div>
   );

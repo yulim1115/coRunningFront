@@ -384,7 +384,10 @@ function SignUpPage() {
 
         <p className="login-guide">
           이미 회원이신가요?
-          <span className="link-text" onClick={() => navigate("/login")}>
+          <span
+            className="link-text"
+            onClick={() => navigate("/login")}
+          >
             로그인
           </span>
         </p>
