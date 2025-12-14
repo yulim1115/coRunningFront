@@ -17,7 +17,11 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text-dark);
   line-height: 1.6;
-  overflow-y: scroll;
+  overflow-y: scroll; /* window 스크롤 */
+}
+
+#root {
+  min-height: 100%;
 }
 
 .page-container {
@@ -189,20 +193,4 @@ select:focus {
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
   --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
   --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.18);
-}
-
-html,
-body,
-#root {
-  height: 100%;
-}
-
-.page-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.main-content {
-  flex: 1;
 }
