@@ -256,6 +256,13 @@
   color: var(--color-text-dark);
 }
 
+/* 카드 제목 한 줄 말줄임 */
+.crews-container .crew-content h3 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .crews-container .crew-meta-item strong {
   font-weight: var(--fw-bold);
 }
