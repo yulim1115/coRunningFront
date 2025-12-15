@@ -12,6 +12,11 @@ import {
   FaUsers,
   FaRegCalendarCheck,
   FaChevronDown,
+  FaCopy,
+  FaDownload,
+  FaExpand,
+  FaTimes,
+  FaCrosshairs
 } from "react-icons/fa";
 
 import "./MainPage.css";
@@ -49,6 +54,9 @@ function MainPage() {
   const [routeCoords, setRouteCoords] = useState([]);
   const [snappedCoords, setSnappedCoords] = useState([]);
   const [distance, setDistance] = useState(0);
+  // 맵 크게 보기
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+
 
   const mapContainer = useRef(null);
   const mapRef = useRef(null);
@@ -284,6 +292,41 @@ function MainPage() {
     });
   }, [snappedCoords]);
 
+  // 지도 리사이즈 처리
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    if (isMapModalOpen) {
+      document.body.style.overflow = "hidden";
+      setTimeout(() => mapRef.current.resize(), 0);
+    } else {
+      document.body.style.overflow = "";
+      setTimeout(() => mapRef.current.resize(), 0);
+    }
+  }, [isMapModalOpen]);
+
+  // 경로 위치로 이동
+  const moveToRouteBounds = () => {
+    if (!mapRef.current) return;
+
+    const coords = snappedCoords.length ? snappedCoords : routeCoords;
+    if (coords.length < 2) {
+      showError("이동할 경로가 없습니다.");
+      return;
+    }
+
+    const bounds = new mapboxgl.LngLatBounds();
+
+    coords.forEach(([lng, lat]) => {
+      bounds.extend([lng, lat]);
+    });
+
+    mapRef.current.fitBounds(bounds, {
+      padding: 80,
+      duration: 600,
+    });
+  };
+
   // 코스 스냅
   const finishRoute = async () => {
     if (routeCoords.length < 2) {
@@ -449,14 +492,46 @@ function MainPage() {
             <h1>러닝 코스 그리기</h1>
             <p>
               지도 위에서 클릭하여 나만의 러닝 경로를 직접 드로잉 해보세요.<br />
-              실제로 뛰어서 달릴 수 있는 경로를 확인해볼 수 있습니다.
+              <strong>최소 2개 이상의 지점을 선택해야</strong> 코스를 확인할 수 있습니다.
             </p>
           </div>
 
           <div className="course-map-layout">
-            <div className="course-map-box" ref={mapContainer} />
+            {/* 지도 영역 */}
+            <div className="map-wrap">
+              <div
+                className={`course-map-box ${
+                  isMapModalOpen ? "fullscreen" : ""
+                }`}
+                ref={mapContainer}
+              />
 
+              {!isMapModalOpen && (
+                <div className="map-top-controls">
+                  <button
+                    type="button"
+                    className="map-icon-btn"
+                    onClick={moveToRouteBounds}
+                    title="경로 위치로 이동"
+                  >
+                    <FaCrosshairs />
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn btn-small btn-soft map-full-btn"
+                    onClick={() => setIsMapModalOpen(true)}
+                  >
+                    <FaExpand />
+                    전체 화면
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* 우측 패널 */}
             <div className="course-map-panel">
+              {/* 드로잉 컨트롤 */}
               <div className="panel-block">
                 <h3>드로잉 컨트롤</h3>
                 <div className="panel-btn-group">
@@ -474,34 +549,41 @@ function MainPage() {
                     <FaEraser />
                     초기화
                   </button>
-                  <button
-                    className="btn btn-medium btn-accent btn-hover-float"
-                    onClick={finishRoute}
-                  >
-                    <FaFlagCheckered />
-                    코스 확인
-                  </button>
                 </div>
               </div>
 
+              {/* 코스 확정 */}
+              <div className="panel-block confirm-block">
+                <h3>코스 확인</h3>
+                <button
+                  className={`btn btn-medium ${
+                    routeCoords.length < 2
+                      ? "btn-disabled"
+                      : "btn-accent btn-hover-float"
+                  }`}
+                  onClick={finishRoute}
+                  disabled={routeCoords.length < 2}
+                >
+                  <FaFlagCheckered />
+                  코스 확인
+                </button>
+              </div>
+
+              {/* 총 거리 */}
               <div className="panel-block distance-block">
                 <h3>총 거리</h3>
-                <p className="panel-distance">
+                <p
+                  className={`panel-distance ${
+                    snappedCoords.length ? "active" : "inactive"
+                  }`}
+                >
                   {(distance / 1000).toFixed(1)} km
                 </p>
               </div>
 
-              <div className="panel-block img-down">
-                <button
-                  className="btn btn-medium btn-main btn-hover-float"
-                  onClick={downloadImage}
-                >
-                  이미지 다운로드
-                </button>
-              </div>
-
+              {/* 경로 배열 */}
               <div className="panel-block">
-                <h3>경로 좌표 배열</h3>
+                <h3>경로 배열</h3>
                 <textarea
                   readOnly
                   className="panel-coord-box"
@@ -509,17 +591,80 @@ function MainPage() {
                     snappedCoords.length ? snappedCoords : routeCoords
                   )}
                 />
-                <button
-                  className="btn btn-medium btn-main btn-hover-float"
-                  onClick={copyRoute}
-                >
-                  경로 복사
-                </button>
+              </div>
+
+              {/* 결과 액션 */}
+              <div className="panel-block">
+                <div className="panel-btn-group">
+                  <button
+                    className={`btn btn-medium ${
+                      snappedCoords.length
+                        ? "btn-main btn-hover-float"
+                        : "btn-disabled"
+                    }`}
+                    onClick={copyRoute}
+                  >
+                    <FaCopy />
+                    경로 복사
+                  </button>
+                  <button
+                    className={`btn btn-medium ${
+                      snappedCoords.length
+                        ? "btn-main btn-hover-float"
+                        : "btn-disabled"
+                    }`}
+                    onClick={downloadImage}
+                  >
+                    <FaDownload />
+                    이미지 다운로드
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* 전체화면 오버레이 */}
+        {isMapModalOpen && (
+          <>
+            <div className="map-modal-overlay" />
+
+            <button
+              type="button"
+              className="btn btn-small btn-soft map-modal-close"
+              onClick={() => setIsMapModalOpen(false)}
+            >
+              <FaTimes />
+              닫기
+            </button>
+
+            <div className="map-full-controls">
+              <button
+                className="btn btn-medium btn-accent"
+                onClick={undoLastPoint}
+              >
+                <FaUndo />
+                되돌리기
+              </button>
+              <button
+                className="btn btn-medium btn-soft"
+                onClick={resetRoute}
+              >
+                <FaEraser />
+                초기화
+              </button>
+              <button 
+                className="map-icon-btn" 
+                onClick={moveToRouteBounds}
+                title="경로 위치로 이동"
+                >
+                <FaCrosshairs />
+              </button>
+            </div>
+          </>
+        )}
       </section>
+
 
       {/* 필터 섹션 */}
       <section className="filter-section">
@@ -620,7 +765,7 @@ function MainPage() {
                                 : "tag-regular"
                             }`}
                           >
-                            {route.type === "drawing" ? "드로잉런" : "레귤러런"}
+                            {typeLabel}
                           </div>
                         </div>
 

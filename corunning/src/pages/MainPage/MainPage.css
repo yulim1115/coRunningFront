@@ -60,7 +60,7 @@
 
 /* 지도 드로잉 섹션 */
 .main-page .course-map-section {
-  margin: var(--space-xl) 0;
+  margin: var(--space-xl) 0 var(--space-xxl);
 }
 
 /* 지도 섹션 헤더 */
@@ -81,20 +81,144 @@
   color: var(--color-text-light);
 }
 
+.main-page .course-map-header strong {
+  color: var(--color-accent);
+  font-weight: var(--fw-bold);
+}
+
 /* 지도 + 패널 레이아웃 */
 .main-page .course-map-layout {
   display: flex;
   gap: 20px;
 }
 
-/* 지도 영역 */
+/* 지도 래퍼 */
+.main-page .map-wrap {
+  position: relative;
+  flex: 8;
+}
+
+/* 지도 박스 기본 */
 .main-page .course-map-box {
-  flex: 7;
-  height: 470px;
-  border-radius: var(--card-radius);
+  width: 100%;
+  height: 486px;
   background: var(--color-bg-light);
+  border-radius: var(--card-radius);
   overflow: hidden;
   box-shadow: var(--shadow-medium);
+  position: relative;
+}
+
+/* 지도 전체화면 */
+.main-page .course-map-box.fullscreen {
+  position: fixed;
+  inset: 20px;
+  width: auto;
+  height: auto;
+  border-radius: var(--card-radius);
+  z-index: 1000;
+  box-shadow: var(--shadow-strong);
+}
+
+/* 맵 상단 경로위치이동, 크게보기 */
+.main-page .map-top-controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+
+.main-page .map-top-controls .map-icon-btn {
+  background: rgba(255,255,255,0.75);
+  border: 1px solid var(--color-border);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.main-page .map-top-controls .map-icon-btn:hover {
+  background: var(--color-border);
+}
+
+.main-page .map-top-controls .map-icon-btn svg {
+  font-size: 14px;
+  color: var(--color-text-light)
+}
+
+.main-page .map-top-controls .map-icon-btn svg:hover {
+  color: var(--color-text-dark)
+}
+
+/* 지도 전체화면 오버레이 */
+.main-page .map-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 999;
+}
+
+/* 전체화면 닫기 버튼 */
+.main-page .map-modal-close {
+  position: fixed;
+  top: 36px;
+  right: 36px;
+  z-index: 1001;
+}
+
+.main-page .map-modal-close svg {
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+/* 전체화면 하단 컨트롤 */
+.main-page .map-full-controls {
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-sm);
+  z-index: 1001;
+  margin-left: 30px;
+}
+
+.main-page .map-full-btn svg {
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+/* 하단 경로 위치 이동 버튼 */
+.main-page .map-full-controls .map-icon-btn {
+  background: rgba(255,255,255,0.75);
+  border: 1px solid var(--color-border);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.main-page .map-full-controls .map-icon-btn:hover {
+  background: var(--color-border);
+}
+
+.main-page .map-full-controls .map-icon-btn svg {
+  font-size: 16px;
+  color: var(--color-text-light);;
+}
+
+.main-page .map-full-controls .map-icon-btn svg:hover {
+  color: var(--color-text-dark);
 }
 
 /* 맵 마커 */
@@ -113,9 +237,43 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
+.map-modal-container {
+  position: fixed;
+  inset: 20px;
+  background: #fff;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: var(--shadow-strong);
+}
+
+.map-modal-map {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* 지도 모달 배경 애니메이션 */
+@keyframes mapOverlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 지도 모달 등장 애니메이션 */
+@keyframes mapOverlayFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* 사이드 패널 */
 .main-page .course-map-panel {
-  flex: 4;
+  flex: 3;
   background: var(--color-bg);
   border-radius: var(--card-radius);
   border: 1px solid var(--color-border);
@@ -123,16 +281,16 @@
   box-shadow: var(--shadow-medium);
   display: flex;
   flex-direction: column;
-  height: 470px;
+  height: fit-content;
 }
 
 /* 패널 블록 */
 .main-page .panel-block h3 {
   font-size: var(--font-medium);
   font-weight: var(--fw-bold);
-  color: #34455a;
+  color: var(--color-main);
   margin-bottom: var(--space-sm);
-  border-left: 3px solid var(--color-accent);
+  border-left: 3px solid var(--color-main);
   padding-left: 8px;
 }
 
@@ -150,7 +308,7 @@
 
 .main-page .panel-btn-group button svg {
   font-size: 12px;
-  margin-right: 4px;
+  margin-right: 2px;
   vertical-align: middle;
 }
 
@@ -159,7 +317,19 @@
   width: 100%;
 }
 
+.main-page .confirm-block button {
+  flex: 1;
+  width: 100%;
+}
+
+.main-page .panel-block:last-of-type {
+  margin-top: -18px;
+}
+
 .main-page .distance-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: var(--space-sm);
 }
 
@@ -167,6 +337,17 @@
 .main-page .panel-distance {
   font-size: var(--font-section);
   font-weight: var(--fw-bold);
+  color: var(--color-accent);
+  margin-bottom: var(--space-sm);
+}
+
+/* 거리 비활성 상태 */
+.main-page .panel-distance.inactive {
+  color: #666;
+}
+
+/* 거리 활성 상태 */
+.main-page .panel-distance.active {
   color: var(--color-accent);
 }
 
