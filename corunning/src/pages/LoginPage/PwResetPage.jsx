@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { updatePassword } from "../../api/userApi";
+import { FiLoader } from "react-icons/fi";
 
 const showSuccess = (msg) => {
   window.Swal.fire({
@@ -34,6 +35,7 @@ function PwResetPage() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [isPwMatch, setIsPwMatch] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -75,8 +77,9 @@ function PwResetPage() {
         showError("가입 되어 있지 않은 이메일입니다.");
         return;
       }
-
+      setLoading(true);
       await axios.post("/api/auth/send-code", { email });
+      setLoading(false);
       showSuccess("인증번호가 이메일로 전송되었습니다!");
       setIsCodeSent(true);
       setShowCodeInput(true);
@@ -123,7 +126,6 @@ function PwResetPage() {
   };
 
   useEffect(() => window.scrollTo(0, 0), []);
-
   return (
     <div className="signup-container">
       <div className="signup-wrapper">
@@ -157,7 +159,9 @@ function PwResetPage() {
               </button>
             </div>
 
-            {showCodeInput && !isEmailVerified && (
+            {loading && <div><FiLoader /> &nbsp; 인증번호 전송중입니다.</div>}
+
+            {!loading && showCodeInput && !isEmailVerified && (
               <div className="flex-row" style={{ marginTop: "8px" }}>
                 <input
                   type="text"
@@ -174,6 +178,8 @@ function PwResetPage() {
                 </button>
               </div>
             )}
+
+
 
             {isEmailVerified && (
               <p className="valid-msg success">✔ 이메일 인증 완료</p>
