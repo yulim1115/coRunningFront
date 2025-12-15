@@ -3,6 +3,13 @@ import mapboxgl from "mapbox-gl";
 import * as turf from "@turf/turf";
 import RegionSelector from "../../components/common/RegionSelector";
 import { FiChevronDown } from "react-icons/fi";
+import { 
+  FaCrosshairs,
+  FaExpand,
+  FaTimes,
+  FaUndo,
+  FaEraser
+} from "react-icons/fa";
 import "./RunRoutesCreatePage.css";
 import { useNavigate } from "react-router-dom";
 
@@ -49,6 +56,8 @@ function RunRoutesCreatePage() {
   const [routeCoords, setRouteCoords] = useState([]);
   const [snappedCoords, setSnappedCoords] = useState([]);
   const [distance, setDistance] = useState(0);
+  // 맵 크게 보기
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [region, setRegion] = useState({ sido: "", gu: "" });
@@ -209,6 +218,41 @@ function RunRoutesCreatePage() {
     }
   };
 
+  // 지도 리사이즈 처리
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    if (isMapModalOpen) {
+      document.body.style.overflow = "hidden";
+      setTimeout(() => mapRef.current.resize(), 0);
+    } else {
+      document.body.style.overflow = "";
+      setTimeout(() => mapRef.current.resize(), 0);
+    }
+  }, [isMapModalOpen]);
+
+  // 경로 위치로 이동
+  const moveToRouteBounds = () => {
+    if (!mapRef.current) return;
+
+    const coords = snappedCoords.length ? snappedCoords : routeCoords;
+    if (coords.length < 2) {
+      showError("이동할 경로가 없습니다.");
+      return;
+    }
+
+    const bounds = new mapboxgl.LngLatBounds();
+
+    coords.forEach(([lng, lat]) => {
+      bounds.extend([lng, lat]);
+    });
+
+    mapRef.current.fitBounds(bounds, {
+      padding: 80,
+      duration: 600,
+    });
+  };
+
   // 경로 스냅 요청
   const finishRoute = async () => {
     if (routeCoords.length < 2) {
@@ -307,6 +351,7 @@ function RunRoutesCreatePage() {
                   경로 배열 입력
                 </button>
               </div>
+
               <div
                 className="right-controls"
                 style={{ display: mode === "draw" ? "flex" : "none" }}
@@ -334,9 +379,79 @@ function RunRoutesCreatePage() {
                 </button>
               </div>
             </div>
+
+            {/* 지도 영역 */}
             {mode === "draw" && (
               <>
-                <div ref={mapContainer} className="mapbox-container" />
+                <div
+                  className={`create-map-wrap ${
+                    isMapModalOpen ? "fullscreen" : ""
+                  }`}
+                >
+                  <div ref={mapContainer} className="mapbox-container" />
+
+                  {/* 기본 모드 컨트롤 */}
+                  {!isMapModalOpen && (
+                    <div className="map-top-controls">
+                      <button
+                        type="button"
+                        className="map-icon-btn"
+                        onClick={moveToRouteBounds}
+                        title="경로 위치로 이동"
+                      >
+                        <FaCrosshairs />
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn btn-small btn-soft map-full-btn"
+                        onClick={() => setIsMapModalOpen(true)}
+                      >
+                        <FaExpand />
+                        전체 화면
+                      </button>
+                    </div>
+                  )}
+
+                  {/* 전체화면 모드 컨트롤 */}
+                  {isMapModalOpen && (
+                    <>
+                      <div className="map-modal-overlay" />
+                      <button
+                        type="button"
+                        className="btn btn-small btn-soft map-modal-close"
+                        onClick={() => setIsMapModalOpen(false)}
+                      >
+                        <FaTimes /> 닫기
+                      </button>
+
+                      <div className="map-full-controls">
+                        <button
+                          className="btn btn-medium btn-accent"
+                          onClick={undoLastPoint}
+                        >
+                          <FaUndo />
+                          되돌리기
+                        </button>
+                        <button
+                          className="btn btn-medium btn-soft"
+                          onClick={resetRoute}
+                        >
+                          <FaEraser />
+                          초기화
+                        </button>
+                        <button
+                          className="map-icon-btn"
+                          onClick={moveToRouteBounds}
+                          title="경로 위치로 이동"
+                        >
+                          <FaCrosshairs />
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
                 <p className="map-desc">
                   지도를 클릭하여 경로를 그릴 수 있습니다.
                 </p>
@@ -348,6 +463,8 @@ function RunRoutesCreatePage() {
                 )}
               </>
             )}
+
+            {/* 배열 입력 모드 */}
             {mode === "array" && (
               <div className="array-input-box">
                 <textarea
@@ -357,8 +474,8 @@ function RunRoutesCreatePage() {
                     try {
                       const parsed = JSON.parse(e.target.value);
                       setSnappedCoords(parsed);
-                      setRouteCoords(parsed); // 🚀 routeCoords에도 반영
-                      // 거리 계산
+                      setRouteCoords(parsed);
+
                       if (parsed.length > 1) {
                         const line = turf.lineString(parsed);
                         const meters = Math.round(
@@ -378,6 +495,7 @@ function RunRoutesCreatePage() {
               </div>
             )}
           </div>
+
 
           {/* 제목 입력 */}
           <div className="form-group">
