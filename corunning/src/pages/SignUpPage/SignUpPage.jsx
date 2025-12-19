@@ -255,12 +255,12 @@ function SignUpPage() {
 
           <div className="form-group">
             <label className="form-label">
-              이름 <span className="required">*</span>
+              닉네임 <span className="required">*</span>
             </label>
             <div className="flex-row">
               <input
                 type="text"
-                placeholder="이름 입력"
+                placeholder="닉네임 입력"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required

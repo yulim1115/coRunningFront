@@ -34,6 +34,7 @@ function CrewCreatePage() {
   const [boardType, setBoardType] = useState("");
   const [recruitCount, setRecruitCount] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [runAt, setRunAt] = useState("");
 
   useEffect(() => {
     document.body.style.backgroundColor = "var(--color-bg-light)";
@@ -69,6 +70,7 @@ function CrewCreatePage() {
       boardType,
       recruitCount,
       deadline,
+      runAt,
     };
 
     try {
@@ -98,7 +100,18 @@ function CrewCreatePage() {
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
-
+          {/* 러닝 예정일 */}
+          <div className="form-group">
+            <label className="form-label">
+              러닝 예정일 <span className="required">*</span>
+            </label>
+            <input
+              type="text"
+              value={runAt}
+              placeholder="ex ) YYYY-MM-DD, 미정, 매주 주말, 매주 수금"
+              onChange={(e) => setRunAt(e.target.value)}
+            />
+          </div>
           {/* 내용 */}
           <div className="form-group">
             <label className="form-label">
@@ -165,7 +178,7 @@ function CrewCreatePage() {
                 onChange={(e) => setRecruitCount(e.target.value)}
               />
             </div>
-
+            
             {/* 모집 마감일 */}
             <div className="form-group">
               <label className="form-label">

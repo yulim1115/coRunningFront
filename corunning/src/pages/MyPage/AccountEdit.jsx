@@ -25,10 +25,10 @@ export default function AccountEdit({
       <h3 className="form-section-title">회원 정보</h3>
 
       <form method="post" className="accountedit-form">
-        {/* 이름 */}
+        {/* 닉네임 */}
         <div className="form-group">
           <label className="form-label">
-            이름 <span className="required">수정 불가</span>
+            닉네임 <span className="required">수정 불가</span>
           </label>
           <input type="text" value={userName} disabled />
         </div>

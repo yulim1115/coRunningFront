@@ -243,7 +243,10 @@ function CrewListPage() {
                     <strong>작성자</strong>
                     <span>{crew.writer_name}</span>
                   </div>
-
+                  <div className="crew-meta-item">
+                    <strong>러닝 예정일</strong>
+                    <span>{crew.runAt}</span>
+                  </div>
                   <div className="crew-meta-item">
                     <strong>모집 마감일</strong>
                     <span>{crew.deadline}</span>

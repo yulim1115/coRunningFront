@@ -166,11 +166,20 @@ function CrewDetailPage() {
   }, [crew?.routePathJson, loading]);
 
   // 모집마감 체크
-  const isClosed =
-    !crew ||
-    crew.currentCount >= crew.recruitCount ||
-    new Date(crew.deadline) < new Date();
+  const isClosed = (() => {
+    if (!crew) return true;
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const deadline = new Date(crew.deadline);
+    deadline.setHours(0, 0, 0, 0);
+
+    return (
+      crew.currentCount >= crew.recruitCount ||
+      deadline < today
+    );
+  })();
   // 신청하기
   const handleApply = async () => {
     if (!loginUserId) return showError("로그인 후 신청 가능합니다.");
@@ -357,7 +366,10 @@ function CrewDetailPage() {
                 {crew.recruitCount}명
               </span>
             </div>
-
+            <div className="info-row">
+              <span className="info-label">러닝 예정일</span>
+              <span className="info-value">{crew.runAt}</span>
+            </div>
             <div className="info-row">
               <span className="info-label">마감일</span>
               <span className="info-value">{crew.deadline}</span>
